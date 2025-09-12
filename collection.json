@@ -1,0 +1,1706 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "https:\/\/softlemon.ddev.site"
+        }
+    ],
+    "info": {
+        "name": "Softlemon API Documentation",
+        "_postman_id": "f62549d2-1e82-42f9-8fb9-6323cd62f6b3",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "description": "",
+            "item": [
+                {
+                    "name": "Register Merchant",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/register\/merchant",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/register\/merchant"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"architecto\",\"email\":\"merchant@example.com\",\"password\":\"|]|{+-\",\"merchant_name\":\"architecto\",\"mcc\":\"5999\",\"terms_accepted\":true}"
+                        },
+                        "description": "Register a new merchant user.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"Merchant registered successfully. Please complete verification.\",\n    \"code\": \"\",\n    \"data\": {\n        \"user_id\": 13,\n        \"merchant_id\": 17\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Validation error\",\n    \"code\": \"ERR_VALIDATION_FAILED\",\n    \"data\": null,\n    \"errors\": {\n        \"name\": [\n            \"The name field is required.\"\n        ],\n        \"email\": [\n            \"The email has already been taken.\"\n        ]\n    }\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Register Partner",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/register\/partner",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/register\/partner"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"architecto\",\"email\":\"partner@example.com\",\"password\":\"|]|{+-\",\"partner_name\":\"architecto\",\"partner_type\":\"service_provider\",\"terms_accepted\":true}"
+                        },
+                        "description": "Register a new partner user.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"Partner registered successfully. Please complete verification.\",\n    \"code\": \"\",\n    \"data\": {\n        \"user_id\": 14,\n        \"partner_id\": 3\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Validation error\",\n    \"code\": \"ERR_VALIDATION_FAILED\",\n    \"data\": null,\n    \"errors\": {\n        \"name\": [\n            \"The name field is required.\"\n        ],\n        \"email\": [\n            \"The email has already been taken.\"\n        ]\n    }\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"user@example.com\",\"password\":\"|]|{+-\"}"
+                        },
+                        "description": "Log in a user and return an OAuth token.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"Login successful\",\n    \"code\": \"\",\n    \"data\": {\n        \"user_id\": 1,\n        \"merchant_ids\": [\n            1\n        ],\n        \"partner_ids\": [],\n        \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZTdhMGQ5NC1hNTRkLTQyMDEtYWQwNC02NWE0NGM3YWZjMzYiLCJqdGkiOiJhYTVmMzFkY2VhZjczNThjNGE4YjFkMDQxMWMzY2ZlNDJhMjE0Y2FiMGY2ZGExZmYwNzcxN2NlMDIyYmYzYmFhOGQzNWQ4NzY0Y2EyODU0NCIsImlhdCI6MTc0NDAxNzgzMS4wOTAxNTEsIm5iZiI6MTc0NDAxNzgzMS4wOTAxNTIsImV4cCI6MTc3NTU1MzgzMS4wODIzNywic3ViIjoiMSIsInNjb3BlcyI6WyJtZXJjaGFudCJdfQ.j3sUOLXsohELC32pFKzi_owBu9_sUSWsxm0y2x85ilYOT5sfQbXcIW51vEmY-qp4mGEHRr1seuOPS7Zq_XLBiNa4VBrmiaFkive3U93PFBuUsxTmQTt9wTWaiGDrQEXnMmlx9uVhhl6YImV4RvY2DqVtAovM1SSEwVSYdYwBFfLFtgdMv4ohVrh_q0AeCrsLj4vZvUjyADJTfMv4e005Jcb1uSOMkIgOmWJd6dk5y56s0oL4agw-H2Ug69R9oujW5g29kY5oZiCGlTZEOTz_FN6rtIG4MMKauIi4Te9iBMR4eYFxC7vVWpSwGhalSk8ELm-niXgjMeKD5PNHRt8YLBxRu3Gs3tF1LgEcMZQlSvA0QPXN7-_9klDWX90otPwb06jgrSxj3XfJHVhuENUJSA8lK5arBzrk09Tb620Wz9QKEVx1-gJwdCGmT6BnIpBe10NBbZzv1RtYl7it9h8-dO2IT6MJA6CVlo8MZbSk7Dn2MIbtU9oliP1mrpPCsM_wZHtzo-eLWJeqkCeOeFnnTMzRlUdIZlKfHS6lnS39YjNbXjGmxMrH52RopoHRCbaA4pMO8h0xNeC1MLC6Qyeh6J-9KfxhnAsY5w13c_foujaN0qhIGhykpu-bYUBBuWlurygSs2p7Txu2FFfyN5T3IWyDGPme-pr_yF_m4M2QJ-E\"\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Invalid credentials\",\n    \"code\": \"ERR_AUTH_FAILED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Validation error\",\n    \"code\": \"ERR_VALIDATION_FAILED\",\n    \"errors\": {\n        \"email\": [\n            \"The email field is required.\"\n        ]\n    }\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Log out a user by revoking tokens."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"success\": true, \"message\": \"Login successful\", \"code\": \"\",\"data\": null}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Unauthenticated.\",\n    \"code\": \"ERR_AUTH_REQUIRED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Self-Service API Keys",
+            "description": "",
+            "item": [
+                {
+                    "name": "Generate Own Merchant API Key",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/my\/merchant\/api-keys",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/my\/merchant\/api-keys"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"architecto\",\"expires_at\":\"2026-12-31\",\"ip_addresses\":{\"0\":{\"address\":\"1.102.226.211\",\"description\":\"Animi quos velit et fugiat.\"},\"address\":\"198.51.100.5\",\"description\":\"Eius et animi quos velit et.\"}}"
+                        },
+                        "description": "Generate an API key for the authenticated user's own merchant."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"API key generated successfully\",\n    \"code\": \"\",\n    \"data\": {\n        \"id\": 9,\n        \"name\": \"Merchant API Key\",\n        \"api_key\": \"sl_20250411103012_id1YCQGG.7kzTEl3fcql6DUFoNgNNiAUYExed2pwlD0kUSUDjSQPPOhJ1\",\n        \"expires_at\": \"2026-12-31T00:00:00.000000Z\",\n        \"entity_type\": \"merchant\",\n        \"entity_id\": 1\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Unauthenticated.\",\n    \"code\": \"ERR_AUTH_REQUIRED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Your merchant account is not active. Please complete verification.\",\n    \"code\": \"ERR_NO_PERMISSION\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"code\": \"ERR_VALIDATION_FAILED\",\n    \"data\": null,\n    \"errors\": {\n        \"name\": [\n            \"The name field is required.\"\n        ]\n    }\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get Own Merchant API Keys",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/my\/merchant\/api-keys",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/my\/merchant\/api-keys"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "List API keys for the authenticated user's own merchant."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"API keys retrieved successfully\",\n    \"code\": \"\",\n    \"data\": {\n        \"merchant_id\": 1,\n        \"merchant_name\": \"Example Merchant Inc\",\n        \"api_keys\": [\n            {\n                \"id\": 21,\n                \"name\": \"My Merchant API Key\",\n                \"key_identifier\": \"sl_20250411105714_TTwbAVtw\",\n                \"status\": \"active\",\n                \"expires_at\": \"2025-12-31T00:00:00.000000Z\",\n                \"last_used_at\": null,\n                \"created_at\": \"2025-04-11T10:57:15.000000Z\"\n            },\n            {\n                \"id\": 6,\n                \"name\": \"Admin-Generated Merchant API Key\",\n                \"key_identifier\": \"sl_20250407101253_ktmINIqG\",\n                \"status\": \"revoked\",\n                \"expires_at\": null,\n                \"last_used_at\": null,\n                \"created_at\": \"2025-04-07T10:12:54.000000Z\"\n            }\n        ]\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Unauthenticated.\",\n    \"code\": \"ERR_AUTH_REQUIRED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"You do not have permission to view API keys\",\n    \"code\": \"ERR_NO_PERMISSION\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Merchant account not found\",\n    \"code\": \"ERR_NOT_FOUND\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Generate Own partner API key",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/my\/partner\/api-keys",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/my\/partner\/api-keys"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"architecto\",\"expires_at\":\"2026-12-31\",\"ip_addresses\":{\"0\":{\"address\":\"1.102.226.211\",\"description\":\"Animi quos velit et fugiat.\"},\"address\":\"198.51.100.5\",\"description\":\"Eius et animi quos velit et.\"}}"
+                        },
+                        "description": "Generate an API key for the authenticated user's own partner."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"API key generated successfully\",\n    \"code\": \"\",\n    \"data\": {\n        \"id\": 22,\n        \"name\": \"Partner API Key\",\n        \"api_key\": \"sl_20250411112312_AcxkH1Ym.jXnYvPSrP6rZaAXDK8Dvg1EFDuXEh5dbG1FJmqn8FY9gvE3Z\",\n        \"expires_at\": \"2025-12-31T00:00:00.000000Z\",\n        \"entity_type\": \"partner\",\n        \"entity_id\": 1\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Unauthenticated.\",\n    \"code\": \"ERR_AUTH_REQUIRED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Your partner account is not active. Please complete verification.\",\n    \"code\": \"ERR_NO_PERMISSION\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"code\": \"ERR_VALIDATION_FAILED\",\n    \"data\": null,\n    \"errors\": {\n        \"name\": [\n            \"The name field is required.\"\n        ]\n    }\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get Own Partner API Keys",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/my\/partner\/api-keys",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/my\/partner\/api-keys"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "List API keys for the authenticated user's own partner."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"API keys retrieved successfully\",\n    \"code\": \"\",\n    \"data\": {\n        \"partner_id\": 1,\n        \"partner_name\": \"Example Partner Corp\",\n        \"api_keys\": [\n            {\n                \"id\": 22,\n                \"name\": \"My Partner API Key\",\n                \"key_identifier\": \"sl_20250411112312_AcxkH1Ym\",\n                \"status\": \"active\",\n                \"expires_at\": \"2025-12-31T00:00:00.000000Z\",\n                \"last_used_at\": null,\n                \"created_at\": \"2025-04-11T11:23:12.000000Z\"\n            }\n        ]\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Unauthenticated.\",\n    \"code\": \"ERR_AUTH_REQUIRED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"You do not have permission to view API keys\",\n    \"code\": \"ERR_NO_PERMISSION\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Partner account not found\",\n    \"code\": \"ERR_NOT_FOUND\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin API Key Management",
+            "description": "",
+            "item": [
+                {
+                    "name": "Generate Merchant API key",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/merchants\/:merchant_id\/api-keys",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/merchants\/:merchant_id\/api-keys",
+                            "variable": [
+                                {
+                                    "id": "merchant_id",
+                                    "key": "merchant_id",
+                                    "value": "16",
+                                    "description": "The ID of the merchant."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"architecto\",\"expires_at\":\"2026-12-31\",\"ip_addresses\":{\"0\":{\"address\":\"1.102.226.211\",\"description\":\"Animi quos velit et fugiat.\"},\"address\":\"198.51.100.5\",\"description\":\"Eius et animi quos velit et.\"}}"
+                        },
+                        "description": "Generate an API key for a merchant."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"API key generated successfully\",\n    \"code\": \"\",\n    \"data\": {\n        \"id\": 9,\n        \"name\": \"Merchant API Key\",\n        \"api_key\": \"sl_20250411103012_id1YCQGG.7kzTEl3fcql6DUFoNgNNiAUYExed2pwlD0kUSUDjSQPPOhJ1\",\n        \"expires_at\": \"2026-12-31T00:00:00.000000Z\",\n        \"entity_type\": \"merchant\",\n        \"entity_id\": 1\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Unauthenticated.\",\n    \"code\": \"ERR_AUTH_REQUIRED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"code\": \"ERR_VALIDATION_FAILED\",\n    \"data\": null,\n    \"errors\": {\n        \"name\": [\n            \"The name field is required.\"\n        ]\n    }\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get Merchant API Keys",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/merchants\/:merchant_id\/api-keys",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/merchants\/:merchant_id\/api-keys",
+                            "variable": [
+                                {
+                                    "id": "merchant_id",
+                                    "key": "merchant_id",
+                                    "value": "16",
+                                    "description": "The ID of the merchant."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "List API keys for a merchant."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"List of API keys returned\",\n    \"code\": \"\",\n    \"data\": [\n        {\n            \"id\": 21,\n            \"name\": \"My Merchant API Key\",\n            \"key_identifier\": \"sl_20250411105714_TTwbAVtw\",\n            \"status\": \"active\",\n            \"expires_at\": \"2025-12-31T00:00:00.000000Z\",\n            \"last_used_at\": null,\n            \"created_at\": \"2025-04-11T10:57:15.000000Z\"\n        },\n        {\n            \"id\": 6,\n            \"name\": \"Admin-Generated Merchant API Key\",\n            \"key_identifier\": \"sl_20250407101253_ktmINIqG\",\n            \"status\": \"revoked\",\n            \"expires_at\": null,\n            \"last_used_at\": null,\n            \"created_at\": \"2025-04-07T10:12:54.000000Z\"\n        }\n    ]\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Unauthenticated.\",\n    \"code\": \"ERR_AUTH_REQUIRED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Merchant account not found\",\n    \"code\": \"ERR_NOT_FOUND\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Generate Partner API key",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/partners\/:partner_id\/api-keys",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/partners\/:partner_id\/api-keys",
+                            "variable": [
+                                {
+                                    "id": "partner_id",
+                                    "key": "partner_id",
+                                    "value": "16",
+                                    "description": "The ID of the partner."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"architecto\",\"expires_at\":\"2026-12-31\",\"ip_addresses\":{\"0\":{\"address\":\"1.102.226.211\",\"description\":\"Animi quos velit et fugiat.\"},\"address\":\"198.51.100.5\",\"description\":\"Eius et animi quos velit et.\"}}"
+                        },
+                        "description": "Generate an API key for a partner."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"API key generated successfully\",\n    \"code\": \"\",\n    \"data\": {\n        \"id\": 22,\n        \"name\": \"Partner API Key\",\n        \"api_key\": \"sl_20250411112312_AcxkH1Ym.jXnYvPSrP6rZaAXDK8Dvg1EFDuXEh5dbG1FJmqn8FY9gvE3Z\",\n        \"expires_at\": \"2025-12-31T00:00:00.000000Z\",\n        \"entity_type\": \"partner\",\n        \"entity_id\": 1\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Unauthenticated.\",\n    \"code\": \"ERR_AUTH_REQUIRED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"code\": \"ERR_VALIDATION_FAILED\",\n    \"data\": null,\n    \"errors\": {\n        \"name\": [\n            \"The name field is required.\"\n        ]\n    }\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get Partner API Keys",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/partners\/:partner_id\/api-keys",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/partners\/:partner_id\/api-keys",
+                            "variable": [
+                                {
+                                    "id": "partner_id",
+                                    "key": "partner_id",
+                                    "value": "16",
+                                    "description": "The ID of the partner."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "List API keys for a partner."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"List of API keys returned\",\n    \"code\": \"\",\n    \"data\": [\n        {\n            \"id\": 22,\n            \"name\": \"My Partner API Key\",\n            \"key_identifier\": \"sl_20250411112312_AcxkH1Ym\",\n            \"status\": \"active\",\n            \"expires_at\": \"2025-12-31T00:00:00.000000Z\",\n            \"last_used_at\": null,\n            \"created_at\": \"2025-04-11T11:23:12.000000Z\"\n        }\n    ]\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Unauthenticated.\",\n    \"code\": \"ERR_AUTH_REQUIRED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Revoke API Key",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/api-keys\/:apiKey_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/api-keys\/:apiKey_id",
+                            "variable": [
+                                {
+                                    "id": "apiKey_id",
+                                    "key": "apiKey_id",
+                                    "value": "16",
+                                    "description": "The ID of the apiKey."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Revoke an API key."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"API key revoked successfully\",\n    \"code\": \"\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Unauthenticated.\",\n    \"code\": \"ERR_AUTH_REQUIRED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"You do not have permission to revoke API keys\",\n    \"code\": \"ERR_NO_PERMISSION\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "IP Management",
+            "description": "",
+            "item": [
+                {
+                    "name": "Add Whitelist IP",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/ip-whitelist",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/ip-whitelist"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"ip_address\":\"198.51.100.5\",\"description\":\"Eius et animi quos velit et.\",\"entity_type\":\"api_key\",\"entity_id\":16,\"expires_at\":\"2026-12-31\"}"
+                        },
+                        "description": "Add an IP address to the whitelist."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"IP whitelisted successfully\",\n    \"code\": \"\",\n    \"data\": {\n        \"ip_whitelist\": {\n            \"ip_address\": \"203.0.113.1\",\n            \"description\": \"Corporate Office\",\n            \"status\": \"active\",\n            \"expires_at\": \"2025-12-31T00:00:00.000000Z\",\n            \"merchant_id\": 1,\n            \"updated_at\": \"2025-04-14T07:39:51.000000Z\",\n            \"created_at\": \"2025-04-14T07:39:51.000000Z\",\n            \"id\": 15,\n            \"merchant\": {\n                \"id\": 1,\n                \"name\": \"Example Merchant Inc\",\n                \"mcc\": \"5499\",\n                \"status\": \"active\",\n                \"address\": \"test address\",\n                \"city\": null,\n                \"country_code\": \"RS\",\n                \"email\": null,\n                \"phone\": null,\n                \"website\": \"\",\n                \"created_by\": 1,\n                \"created_at\": \"2025-03-21T08:49:47.000000Z\",\n                \"updated_at\": \"2025-03-27T09:42:26.000000Z\"\n            }\n        }\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Unauthenticated.\",\n    \"code\": \"ERR_AUTH_REQUIRED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"You do not have permission to add IP addresses\",\n    \"code\": \"ERR_NO_PERMISSION\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Entity not found\",\n    \"code\": \"ERR_NOT_FOUND\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"code\": \"ERR_VALIDATION_FAILED\",\n    \"data\": null,\n    \"errors\": {\n        \"entity_id\": [\n            \"The entity id field is required.\"\n        ]\n    }\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get Whitelist IP",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/ip-whitelist",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/ip-whitelist"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"entity_type\":\"partner\",\"entity_id\":16}"
+                        },
+                        "description": "List IP addresses in the whitelist for an entity"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"List of IP addresses returned\",\n    \"code\": \"\",\n    \"data\": {\n        \"ip_whitelist\": [\n            {\n                \"id\": 13,\n                \"ip_address\": \"192.168.1.12\",\n                \"description\": \"Office IP Address\",\n                \"status\": \"active\",\n                \"expires_at\": \"2025-12-31T00:00:00.000000Z\",\n                \"created_at\": \"2025-04-11T10:57:15.000000Z\"\n            },\n            {\n                \"id\": 3,\n                \"ip_address\": \"203.0.113.11\",\n                \"description\": \"Corporate Office\",\n                \"status\": \"inactive\",\n                \"expires_at\": \"2025-12-31T00:00:00.000000Z\",\n                \"created_at\": \"2025-04-07T12:11:08.000000Z\"\n            }\n        ]\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Unauthenticated.\",\n    \"code\": \"ERR_AUTH_REQUIRED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"You do not have permission to view IP addresses\",\n    \"code\": \"ERR_NO_PERMISSION\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Entity not found\",\n    \"code\": \"ERR_NOT_FOUND\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"code\": \"ERR_VALIDATION_FAILED\",\n    \"data\": null,\n    \"errors\": {\n        \"entity_id\": [\n            \"The entity id field is required.\"\n        ]\n    }\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Remove Whitelist IP",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/ip-whitelist\/:ipWhitelist_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/ip-whitelist\/:ipWhitelist_id",
+                            "variable": [
+                                {
+                                    "id": "ipWhitelist_id",
+                                    "key": "ipWhitelist_id",
+                                    "value": "16",
+                                    "description": "The ID of the ipWhitelist."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Remove an IP address from the whitelist"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"IP address removed from whitelist\",\n    \"code\": \"\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Unauthenticated.\",\n    \"code\": \"ERR_AUTH_REQUIRED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"You do not have permission to remove IP addresses\",\n    \"code\": \"ERR_NO_PERMISSION\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Entity not found\",\n    \"code\": \"ERR_NOT_FOUND\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Card Verification",
+            "description": "",
+            "item": [
+                {
+                    "name": "Initiate Card Verification",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/3ds\/verify",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/3ds\/verify"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"amount\":12.5,\"currency\":\"GBP\",\"card\":{\"name\":\"John Doe\",\"number\":\"4111111111111111\",\"exp_month\":\"12\",\"exp_year\":\"29\",\"cvv\":\"iyvd\"},\"auth_url\":\"http:\\\/\\\/www.bailey.biz\\\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html\"}"
+                        },
+                        "description": "Initiate a 3D Secure card verification process."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"3DS authentication completed (frictionless)\",\n    \"code\": \"\",\n    \"data\": {\n        \"id\": 166,\n        \"amount\": 12,\n        \"currency\": \"EUR\",\n        \"version\": null,\n        \"eci\": \"05\",\n        \"cavv\": \"AAABA0UREQAAAAAAAAAAAAAAAAA=\",\n        \"xid\": null,\n        \"ds_trans_id\": \"6b66be83-f692-405c-9079-92f7182af5e5\",\n        \"status\": \"full_auth\",\n        \"auth_type\": \"frictionless\",\n        \"challenge_url\": \"https:\/\/softlemon.com\/api\/3ds\/callback\",\n        \"post_url\": null,\n        \"html\": null,\n        \"created_at\": \"2025-06-12 09:47:15\",\n        \"updated_at\": \"2025-06-12 09:47:15\"\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Authentication failed\",\n    \"code\": \"ERR_AUTH_FAILED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"code\": \"ERR_VALIDATION_FAILED\",\n    \"data\": null,\n    \"errors\": {\n        \"amount\": [\n            \"The amount is required.\"\n        ]\n    }\n}\n",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Transactions",
+            "description": "",
+            "item": [
+                {
+                    "name": "Initiate Transaction",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/transactions",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/transactions"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"amount\":12.5,\"currency\":\"GBP\",\"transaction_type\":\"sale\",\"card\":{\"number\":\"4111111111111111\",\"exp_month\":\"12\",\"exp_year\":\"29\",\"cvv\":\"111\",\"name\":\"John Doe\"},\"reference\":\"architecto\",\"merchant_id\":\"architecto\",\"success_url\":\"http:\\\/\\\/www.bailey.biz\\\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html\",\"error_url\":\"http:\\\/\\\/www.bailey.biz\\\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html\",\"customer\":{\"merchant_customer_id\":\"architecto\",\"first_name\":\"architecto\",\"last_name\":\"architecto\",\"email\":\"zbailey@example.net\",\"phone\":\"architecto\",\"address\":\"architecto\",\"city\":\"architecto\",\"postal_code\":\"architecto\",\"ip_address\":\"1.102.226.211\"},\"card_verification_data\":{\"id\":4326.41688,\"status\":\"architecto\",\"cavv\":\"architecto\",\"xid\":\"architecto\",\"ds_trans_id\":\"architecto\",\"three_ds_version\":\"architecto\",\"eci\":\"architecto\"}}"
+                        },
+                        "description": "Initiate a new transaction (sale or auth)."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"Transaction initiated\",\n    \"code\": \"\",\n    \"data\": {\n        \"id\": 2,\n        \"related_trans_id\": null,\n        \"merchant_id\": 1,\n        \"cardholder_id\": 2,\n        \"amount\": 1250,\n        \"currency\": \"EUR\",\n        \"status\": \"auth\",\n        \"transaction_type\": \"auth\",\n        \"merchant_trans_id\": \"ORDER-912346\",\n        \"acquirer_trans_id\": \"514009741995\",\n        \"acquirer_auth_code\": \"400066\",\n        \"acquirer_ref_num\": \"741995\",\n        \"ip_address\": \"172.19.0.7\",\n        \"updated_at\": \"2025-05-20T09:18:48.000000Z\",\n        \"created_at\": \"2025-05-20T09:18:47.000000Z\"\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Authentication failed\",\n    \"code\": \"ERR_AUTH_FAILED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"code\": \"ERR_VALIDATION_FAILED\",\n    \"data\": null,\n    \"errors\": {\n        \"amount\": [\n            \"The transaction amount must be a number.\"\n        ]\n    }\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Capture Transaction",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/transactions\/:transaction_id\/capture",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/transactions\/:transaction_id\/capture",
+                            "variable": [
+                                {
+                                    "id": "transaction_id",
+                                    "key": "transaction_id",
+                                    "value": "16",
+                                    "description": "The ID of the transaction."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"amount\":12.5}"
+                        },
+                        "description": "Capture a previously authorized transaction."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"Transaction captured\",\n    \"code\": \"\",\n    \"data\": {\n        \"id\": 3,\n        \"related_trans_id\": 2,\n        \"merchant_id\": 1,\n        \"cardholder_id\": 2,\n        \"amount\": 1250,\n        \"currency\": \"EUR\",\n        \"status\": \"captured\",\n        \"transaction_type\": \"capture\",\n        \"merchant_trans_id\": \"ORDER-912346\",\n        \"acquirer_trans_id\": \"995140741995\",\n        \"acquirer_auth_code\": \"400066\",\n        \"acquirer_ref_num\": \"741995\",\n        \"ip_address\": \"172.19.0.7\",\n        \"updated_at\": \"2025-05-20T09:18:48.000000Z\",\n        \"created_at\": \"2025-05-20T09:18:47.000000Z\"\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Authentication failed\",\n    \"code\": \"ERR_AUTH_FAILED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"code\": \"ERR_VALIDATION_FAILED\",\n    \"data\": null,\n    \"errors\": {\n        \"amount\": [\n            \"The capture amount must be a number.\"\n        ]\n    }\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Refund Transaction",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/transactions\/:transaction_id\/refund",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/transactions\/:transaction_id\/refund",
+                            "variable": [
+                                {
+                                    "id": "transaction_id",
+                                    "key": "transaction_id",
+                                    "value": "16",
+                                    "description": "The ID of the transaction."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"amount\":12.5,\"reason\":\"architecto\"}"
+                        },
+                        "description": "Refund a previously captured transaction."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"success\": true,\n    \"message\": \"Transaction refunded\",\n    \"code\": \"\",\n    \"data\": {\n        \"id\": 4,\n        \"related_trans_id\": 3,\n        \"merchant_id\": 1,\n        \"cardholder_id\": 2,\n        \"amount\": 1250,\n        \"currency\": \"EUR\",\n        \"status\": \"refunded\",\n        \"transaction_type\": \"refund\",\n        \"merchant_trans_id\": \"ORDER-912346\",\n        \"acquirer_trans_id\": \"514009741995\",\n        \"acquirer_auth_code\": \"400066\",\n        \"acquirer_ref_num\": \"741995\",\n        \"ip_address\": \"172.19.0.7\",\n        \"updated_at\": \"2025-05-20T09:18:48.000000Z\",\n        \"created_at\": \"2025-05-20T09:18:47.000000Z\"\n    }\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Authentication failed\",\n    \"code\": \"ERR_AUTH_FAILED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Validation errors\",\n    \"code\": \"ERR_VALIDATION_FAILED\",\n    \"data\": null,\n    \"errors\": {\n        \"amount\": [\n            \"The refund amount must be a number.\"\n        ]\n    }\n}\n",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Transaction Status",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/transactions\/:transaction_id\/status",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/transactions\/:transaction_id\/status",
+                            "variable": [
+                                {
+                                    "id": "transaction_id",
+                                    "key": "transaction_id",
+                                    "value": "16",
+                                    "description": "The ID of the transaction."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get the status of a transaction."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"success\":true,\"message\":\"Transaction status\",\"code\":\"\",\"data\":{\"id\":2,\"related_trans_id\":null,\"merchant_id\":1,\"cardholder_id\":2,\"amount\":1250,\"currency\":\"EUR\",\"status\":\"auth\",\"transaction_type\":\"auth\",\"merchant_trans_id\":\"ORDER-912346\",\"acquirer_trans_id\":\"514009741995\",\"acquirer_auth_code\":\"400066\",\"acquirer_ref_num\":\"741995\",\"ip_address\":\"172.19.0.7\",\"updated_at\":\"2025-05-20T09:18:48.000000Z\",\"created_at\":\"2025-05-20T09:18:47.000000Z\"}}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"success\": false,\n    \"message\": \"Authentication failed\",\n    \"code\": \"ERR_AUTH_FAILED\",\n    \"data\": null\n}\n",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "API Operations",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get API Key Information",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/key-info",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/key-info"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns information about the API key being used to authenticate the request."
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-correlation-id",
+                                    "value": "5f259eaa-ebd4-49b6-b941-b036bc0673fd"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"success\":false,\"message\":\"Authentication failed\",\"code\":\"ERR_AUTH_FAILED\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Other Endpoints",
+            "description": "",
+            "item": [
+                {
+                    "name": "Test an API key (for internal use)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/validate-key",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/validate-key"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Handle 3DS callback",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/3ds\/callback",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/3ds\/callback"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"three_d_secure_id\":\"architecto\",\"redirect_url\":\"http:\\\/\\\/bailey.com\\\/\",\"mdStatus\":\"architecto\",\"cavv\":\"architecto\",\"xid\":\"architecto\",\"dsTransId\":\"architecto\",\"threeDsVersion\":\"architecto\",\"eci\":\"architecto\"}"
+                        },
+                        "description": "Handle the callback from the 3DS authentication process."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST api\/webhooks\/xpate",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/webhooks\/xpate",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/webhooks\/xpate"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"event\":\"status_changed\",\"project_id\":\"architecto\",\"order_id\":\"architecto\",\"transaction_id\":\"architecto\",\"transaction_status\":\"architecto\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "GET api\/user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/user",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/user"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-correlation-id",
+                                    "value": "6f5462eb-84f7-414a-8596-6f9a7cfba627"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 500,
+                            "body": "{\"success\":false,\"message\":\"Invalid key supplied\",\"code\":\"ERR_UNEXPECTED\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Display a listing of regions.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/regions",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/regions"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-correlation-id",
+                                    "value": "7e02bfcc-8b70-44bf-9d63-d1ff84888f7b"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 500,
+                            "body": "{\"success\":false,\"message\":\"Invalid key supplied\",\"code\":\"ERR_UNEXPECTED\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Store a newly created region.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/regions",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/regions"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"code\":\"ngzmiy\",\"description\":\"Eius et animi quos velit et.\",\"is_blocked\":true}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Display the specified region.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/regions\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/regions\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "16",
+                                    "description": "The ID of the region."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-correlation-id",
+                                    "value": "7b7a4680-ec5e-471e-8caa-cf1d5a15effa"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 500,
+                            "body": "{\"success\":false,\"message\":\"Invalid key supplied\",\"code\":\"ERR_UNEXPECTED\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update the specified region.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/regions\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/regions\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "16",
+                                    "description": "The ID of the region."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"b\",\"description\":\"Eius et animi quos velit et.\",\"is_blocked\":false}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Remove the specified region.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/regions\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/regions\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "16",
+                                    "description": "The ID of the region."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Toggle the blocked status of a region.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/regions\/:region_id\/toggle-block",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/regions\/:region_id\/toggle-block",
+                            "variable": [
+                                {
+                                    "id": "region_id",
+                                    "key": "region_id",
+                                    "value": "16",
+                                    "description": "The ID of the region."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "GET api\/v1\/test",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/test",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/test"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-correlation-id",
+                                    "value": "0d60d8c8-1fe6-424c-8994-48a5896fb3f4"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"success\":false,\"message\":\"Authentication failed\",\"code\":\"ERR_AUTH_FAILED\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/v1\/log-test",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/log-test",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/log-test"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-correlation-id",
+                                    "value": "72af0602-a1f2-4d4b-b4b2-c08e3cb71dc5"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"success\":false,\"message\":\"Authentication failed\",\"code\":\"ERR_AUTH_FAILED\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "GET api\/v1\/test-auth-guard",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/test-auth-guard",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/test-auth-guard"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-correlation-id",
+                                    "value": "5fdaee27-5a24-4b79-ab73-dfd92db2a2c1"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"success\":false,\"message\":\"Authentication failed\",\"code\":\"ERR_AUTH_FAILED\",\"data\":null}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "key",
+                "type": "string"
+            }
+        ]
+    }
+}
