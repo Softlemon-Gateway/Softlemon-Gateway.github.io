@@ -1,0 +1,215 @@
+openapi: 3.0.3
+info:
+  title: 'Softlemon Partner API'
+  description: 'Production-ready partner integration endpoints for admin-provisioned API keys.'
+  version: 0.9.0
+servers:
+  -
+    url: 'https://api.sandbox.softlemons.com'
+tags:
+  -
+    name: 'Partner API'
+    description: ''
+  -
+    name: 'API Operations'
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'Use the API key provisioned by your SoftLemon admin team. Self-service onboarding and API key generation are not currently available.'
+security:
+  -
+    default: []
+paths:
+  /api/v1/merchants:
+    get:
+      summary: 'List merchants linked to the authenticated partner.'
+      operationId: listMerchantsLinkedToTheAuthenticatedPartner
+      description: 'Partner API keys only.'
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'Partner API'
+  '/api/v1/merchants/{merchant_id}':
+    get:
+      summary: 'Get a specific merchant linked to the authenticated partner.'
+      operationId: getASpecificMerchantLinkedToTheAuthenticatedPartner
+      description: 'Partner API keys only.'
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'Partner API'
+    parameters:
+      -
+        in: path
+        name: merchant_id
+        description: 'The ID of the merchant.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/v1/merchants/{merchant_id}/transactions':
+    get:
+      summary: 'Get transactions for a merchant linked to the authenticated partner.'
+      operationId: getTransactionsForAMerchantLinkedToTheAuthenticatedPartner
+      description: 'Partner API keys only.'
+      parameters:
+        -
+          in: query
+          name: status
+          description: 'Filter transactions by status.'
+          example: success
+          required: false
+          schema:
+            type: string
+            description: 'Filter transactions by status.'
+            example: success
+        -
+          in: query
+          name: from
+          description: 'Filter transactions created on or after this date.'
+          example: '2024-01-01'
+          required: false
+          schema:
+            type: string
+            description: 'Filter transactions created on or after this date.'
+            example: '2024-01-01'
+        -
+          in: query
+          name: to
+          description: 'Filter transactions created on or before this date.'
+          example: '2024-12-31'
+          required: false
+          schema:
+            type: string
+            description: 'Filter transactions created on or before this date.'
+            example: '2024-12-31'
+        -
+          in: query
+          name: per_page
+          description: 'Number of transactions per page. Maximum 100.'
+          example: 25
+          required: false
+          schema:
+            type: integer
+            description: 'Number of transactions per page. Maximum 100.'
+            example: 25
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'Partner API'
+    parameters:
+      -
+        in: path
+        name: merchant_id
+        description: 'The ID of the merchant.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/v1/key-info:
+    get:
+      summary: 'Get API Key Information'
+      operationId: getAPIKeyInformation
+      description: "Returns information about the API key being used to authenticate the request.\nAPI keys are provisioned by SoftLemon admins for merchants and partners.\nSelf-service onboarding and API key generation are not currently available."
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'API Operations'
