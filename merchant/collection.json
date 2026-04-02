@@ -98,7 +98,7 @@
                             "mode": "raw",
                             "raw": "{\"amount\":12.5}"
                         },
-                        "description": "Capture a previously authorized transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
+                        "description": "Capture a previously authorized transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions."
                     },
                     "response": [
                         {
@@ -153,7 +153,7 @@
                             "mode": "raw",
                             "raw": "{\"amount\":12.5,\"reason\":\"architecto\"}"
                         },
-                        "description": "Refund a previously captured transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
+                        "description": "Refund a previously captured transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions."
                     },
                     "response": [
                         {
@@ -254,7 +254,7 @@
                             "mode": "raw",
                             "raw": "{\"amount\":12.5,\"reason\":\"architecto\"}"
                         },
-                        "description": "Void a previously initiated auth transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
+                        "description": "Void a previously initiated auth transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions."
                     },
                     "response": [
                         {
@@ -307,7 +307,7 @@
                             "mode": "raw",
                             "raw": "{\"amount\":12.5,\"currency\":\"GBP\",\"card\":{\"name\":\"John Doe\",\"number\":\"4111111111111111\",\"exp_month\":\"12\",\"exp_year\":\"29\",\"cvv\":\"iyvd\"},\"auth_url\":\"http:\\\/\\\/www.bailey.biz\\\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html\"}"
                         },
-                        "description": "Initiate a 3D Secure card verification process.\n\nThis endpoint is intended for merchant API keys before a payment request.\nDo not expose this as a partner-facing operation in external integrations."
+                        "description": "Initiate a 3D Secure card verification process.\n\nThis endpoint is intended for merchant API keys before a payment request."
                     },
                     "response": [
                         {

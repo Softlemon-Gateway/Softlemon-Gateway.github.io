@@ -364,7 +364,7 @@ paths:
     post:
       summary: 'Capture Transaction'
       operationId: captureTransaction
-      description: "Capture a previously authorized transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
+      description: "Capture a previously authorized transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions."
       parameters: []
       responses:
         200:
@@ -538,7 +538,7 @@ paths:
     post:
       summary: 'Refund Transaction'
       operationId: refundTransaction
-      description: "Refund a previously captured transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
+      description: "Refund a previously captured transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions."
       parameters: []
       responses:
         200:
@@ -843,7 +843,7 @@ paths:
     post:
       summary: 'Void Transaction'
       operationId: voidTransaction
-      description: "Void a previously initiated auth transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
+      description: "Void a previously initiated auth transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions."
       parameters: []
       responses:
         200:
@@ -1022,7 +1022,7 @@ paths:
     post:
       summary: 'Initiate Card Verification'
       operationId: initiateCardVerification
-      description: "Initiate a 3D Secure card verification process.\n\nThis endpoint is intended for merchant API keys before a payment request.\nDo not expose this as a partner-facing operation in external integrations."
+      description: "Initiate a 3D Secure card verification process.\n\nThis endpoint is intended for merchant API keys before a payment request."
       parameters: []
       responses:
         200:
