@@ -1038,13 +1038,13 @@ paths:
                         example: 166
                       amount:
                         type: integer
-                        example: 12
+                        example: 1250
                       currency:
                         type: string
                         example: EUR
                       version:
                         type: string
-                        example: null
+                        example: '2.2.0'
                       eci:
                         type: string
                         example: '05'
