@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: 'Softlemon Merchant API'
-  description: 'Production-ready merchant integration endpoints for admin-provisioned API keys.'
+  description: "Production-ready merchant integration endpoints for admin-provisioned API keys.\n\n## 3D Secure Integration Flow\n\nSoftLemon uses a server-managed 3DS flow. You do **not** need to handle CAVV, ECI, or DS Transaction IDs yourself.\n\n### Step 1 — Initiate 3DS Verification\n\n`POST /api/v1/3ds/verify` with card details, amount, currency, and `auth_url` (your frontend return URL).\n\n### Step 2 — Handle the response\n\n- **Frictionless:** The response returns immediately with `status: full_auth`. Use the returned `id` in Step 3.\n- **Challenge:** The response includes a `challenge_url`. Redirect the cardholder to this URL to complete the bank challenge.\n\n### Step 3 — Cardholder completes challenge (if applicable)\n\nAfter the cardholder completes the challenge, they are redirected to your `auth_url` with query parameters:\n\n`?card_verification_id={id}&status=full_auth` (or `status=failed`)\n\n### Step 4 — Initiate the transaction\n\n`POST /api/v1/transactions` with `card_verification_data.id` set to the verification ID from Step 1 or the redirect.\n\n```json\n\"card_verification_data\": { \"id\": 43 }\n```\n\nThe API automatically retrieves the stored 3DS authentication data (CAVV, ECI, etc.) and passes it to the payment gateway."
   version: 0.9.0
 servers:
   -
@@ -27,7 +27,7 @@ paths:
     post:
       summary: 'Initiate Transaction'
       operationId: initiateTransaction
-      description: "Initiate a new transaction (sale or auth).\n\nMerchant API keys can call this endpoint for their own account.\nPartner API keys can also call this endpoint, but they must include `merchant_id`\nfor a merchant linked to that partner.\nCapture, refund, and void operations remain merchant-only."
+      description: "Initiate a new transaction (sale or auth).\n\nMerchant API keys can call this endpoint for their own account.\nPartner API keys can also call this endpoint, but they must include `merchant_id`\nfor a merchant linked to that partner.\nCapture, refund, and void operations remain merchant-only.\n\nIf 3DS verification was performed via `POST /api/v1/3ds/verify`, pass `card_verification_data.id` to link the stored 3DS authentication data. You do not need to resend CAVV, ECI, or other 3DS fields — they are retrieved automatically from the verification record."
       parameters: []
       responses:
         200:
@@ -192,7 +192,7 @@ paths:
                   description: 'Transaction currency.'
                   example: GBP
                 transaction_type:
-                  type: required
+                  type: string
                   description: 'Transaction type.'
                   example: sale
                   enum:
@@ -200,8 +200,8 @@ paths:
                     - auth
                 vault_token:
                   type: string
-                  description: 'The <code>tokenized_id</code> of an existing record in the payment_instruments table.'
-                  example: architecto
+                  description: 'Vault token from a previous transaction. When provided, card number, expiry month and expiry year are not required — only CVV is still needed.'
+                  example: vtok_a1b2c3d4e5f6
                   nullable: true
                 card:
                   type: object
@@ -218,12 +218,12 @@ paths:
                       example: '12'
                     exp_year:
                       type: string
-                      description: 'Card expire year.'
-                      example: '29'
+                      description: 'Card expiry year (4 digits).'
+                      example: '2030'
                     cvv:
                       type: string
-                      description: 'Card CVV number.'
-                      example: '111'
+                      description: 'Card CVV number (3-4 digits).'
+                      example: '123'
                     name:
                       type: string
                       description: 'Cardholder name.'
@@ -246,13 +246,13 @@ paths:
                   nullable: true
                 success_url:
                   type: string
-                  description: ''
-                  example: 'http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html'
+                  description: 'URL to redirect to on successful payment (reserved for future use).'
+                  example: 'https://yoursite.com/checkout/success'
                   nullable: true
                 error_url:
                   type: string
-                  description: ''
-                  example: 'http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html'
+                  description: 'URL to redirect to on failed payment (reserved for future use).'
+                  example: 'https://yoursite.com/checkout/error'
                   nullable: true
                 customer:
                   type: object
@@ -262,38 +262,38 @@ paths:
                     merchant_customer_id:
                       type: string
                       description: "Merchant's ID of the customer."
-                      example: architecto
+                      example: cust-001
                     first_name:
                       type: string
                       description: "Customer's first name."
-                      example: architecto
+                      example: John
                     last_name:
                       type: string
                       description: "Customer's last name."
-                      example: architecto
+                      example: Doe
                     email:
                       type: string
                       description: "Customer's email address."
-                      example: gbailey@example.net
+                      example: john.doe@example.com
                     phone:
                       type: string
                       description: "Customer's phone number."
-                      example: architecto
+                      example: '+441234567890'
                       nullable: true
                     address:
                       type: string
                       description: "Customer's address."
-                      example: architecto
+                      example: '1 High Street'
                       nullable: true
                     city:
                       type: string
                       description: "Customer's city."
-                      example: architecto
+                      example: London
                       nullable: true
                     postal_code:
                       type: string
                       description: "Customer's postal code."
-                      example: architecto
+                      example: SW1A 1AA
                       nullable: true
                     country_code:
                       type: string
@@ -313,52 +313,21 @@ paths:
                   nullable: true
                 card_verification_data:
                   type: object
-                  description: '3DS verification data object.'
-                  example: []
+                  description: 'Links a completed 3DS verification to this transaction. Pass the `id` returned from `POST /api/v1/3ds/verify` (or the `card_verification_id` query parameter from the redirect). The API retrieves stored CAVV, ECI, and DS Transaction ID automatically — you do not need to send them.'
+                  example:
+                    id: 43
                   properties:
                     id:
                       type: integer
-                      description: 'ID of existing 3DS verification.'
-                      example: 16
-                      nullable: true
-                    status:
-                      type: string
-                      description: '3DS verification status.'
-                      example: full_auth
-                      nullable: true
-                    cavv:
-                      type: string
-                      description: 'CAVV response code.'
-                      example: jI3JBkkaQ1p8CBAAABy0CHUAAAA=
-                      nullable: true
-                    xid:
-                      type: string
-                      description: XID.
-                      example: A1B2C3D4E5F6G7H8I9J0
-                      nullable: true
-                    ds_trans_id:
-                      type: string
-                      description: '3DS transaction id.'
-                      example: 8e187327-492c-446b-9b45-62debe6456c5
-                      nullable: true
-                    three_ds_version:
-                      type: string
-                      description: '3DS version number.'
-                      example: '2.1'
-                      nullable: true
-                    eci:
-                      type: string
-                      description: 'Electronic Commerce Indicator.'
-                      example: '05'
-                      nullable: true
+                      description: 'ID of the 3DS verification record returned by `POST /api/v1/3ds/verify`.'
+                      example: 43
                   required:
-                    - status
-                    - cavv
-                    - ds_trans_id
+                    - id
                   nullable: true
               required:
                 - amount
                 - currency
+                - transaction_type
                 - card
   '/api/v1/transactions/{transaction_id}/capture':
     post:
@@ -702,7 +671,7 @@ paths:
                 reason:
                   type: string
                   description: 'Reason for refund.'
-                  example: architecto
+                  example: 'Customer returned item'
                   nullable: true
     parameters:
       -
@@ -1006,8 +975,8 @@ paths:
                   nullable: true
                 reason:
                   type: string
-                  description: 'Reason for refund.'
-                  example: architecto
+                  description: 'Reason for void.'
+                  example: 'Customer requested cancellation'
                   nullable: true
     parameters:
       -
@@ -1022,7 +991,7 @@ paths:
     post:
       summary: 'Initiate Card Verification'
       operationId: initiateCardVerification
-      description: "Initiate a 3D Secure card verification process.\n\nThis endpoint is intended for merchant API keys before a payment request."
+      description: "Initiate a 3D Secure card verification process before a payment request.\n\n**Frictionless flow:** If the issuer does not require a challenge, the response returns immediately with `status: full_auth`. Use the returned `id` in `card_verification_data.id` when initiating the transaction.\n\n**Challenge flow:** The response includes a `challenge_url`. Redirect the cardholder there. After they complete the bank challenge, they are redirected to your `auth_url` with `?card_verification_id={id}&status=full_auth` (or `status=failed`). Use the `card_verification_id` value in `card_verification_data.id` when initiating the transaction."
       parameters: []
       responses:
         200:
@@ -1037,16 +1006,16 @@ paths:
                   code: ''
                   data:
                     id: 166
-                    amount: 12
+                    amount: 1250
                     currency: EUR
-                    version: null
+                    version: '2.2.0'
                     eci: '05'
                     cavv: AAABA0UREQAAAAAAAAAAAAAAAAA=
                     xid: null
                     ds_trans_id: 6b66be83-f692-405c-9079-92f7182af5e5
                     status: full_auth
                     auth_type: frictionless
-                    challenge_url: 'https://softlemon.com/api/3ds/callback'
+                    challenge_url: 'https://yoursite.com/checkout/3ds-complete'
                     post_url: null
                     html: null
                     created_at: '2025-06-12 09:47:15'
@@ -1096,7 +1065,7 @@ paths:
                         example: frictionless
                       challenge_url:
                         type: string
-                        example: 'https://softlemon.com/api/3ds/callback'
+                        example: 'https://yoursite.com/checkout/3ds-complete'
                       post_url:
                         type: string
                         example: null
@@ -1204,13 +1173,13 @@ paths:
                       description: 'Card expire month.'
                       example: '12'
                     exp_year:
-                      type: string
-                      description: 'Card expire year.'
-                      example: '29'
+                      type: integer
+                      description: 'Card expiry year (4 digits).'
+                      example: 2030
                     cvv:
                       type: string
-                      description: 'Must be at least 3 characters. Must not be greater than 4 characters.'
-                      example: iyvd
+                      description: 'Card CVV (3-4 digits). Optional for 3DS verification.'
+                      example: '123'
                       nullable: true
                   required:
                     - name
@@ -1219,8 +1188,8 @@ paths:
                     - exp_year
                 auth_url:
                   type: string
-                  description: 'Authorization callback url.'
-                  example: 'http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html'
+                  description: 'Your return URL. After the cardholder completes the 3DS challenge, they are redirected here with `?card_verification_id={id}&status={full_auth|failed}` query parameters. Use the `card_verification_id` value in `card_verification_data.id` when initiating the transaction.'
+                  example: 'https://yoursite.com/checkout/3ds-complete'
               required:
                 - amount
                 - currency

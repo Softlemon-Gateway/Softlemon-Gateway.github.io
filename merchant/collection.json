@@ -41,9 +41,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"amount\":12.5,\"currency\":\"GBP\",\"transaction_type\":\"sale\",\"vault_token\":\"architecto\",\"card\":{\"number\":\"4111111111111111\",\"exp_month\":\"12\",\"exp_year\":\"29\",\"cvv\":\"111\",\"name\":\"John Doe\"},\"reference\":\"order-10001\",\"merchant_id\":123,\"success_url\":\"http:\\\/\\\/www.bailey.biz\\\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html\",\"error_url\":\"http:\\\/\\\/www.bailey.biz\\\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html\",\"customer\":{\"merchant_customer_id\":\"architecto\",\"first_name\":\"architecto\",\"last_name\":\"architecto\",\"email\":\"gbailey@example.net\",\"phone\":\"architecto\",\"address\":\"architecto\",\"city\":\"architecto\",\"postal_code\":\"architecto\",\"country_code\":\"GB\",\"ip_address\":\"198.51.100.5\"},\"card_verification_data\":{\"id\":16,\"status\":\"full_auth\",\"cavv\":\"jI3JBkkaQ1p8CBAAABy0CHUAAAA=\",\"xid\":\"A1B2C3D4E5F6G7H8I9J0\",\"ds_trans_id\":\"8e187327-492c-446b-9b45-62debe6456c5\",\"three_ds_version\":\"2.1\",\"eci\":\"05\"}}"
+                            "raw": "{\"amount\":12.5,\"currency\":\"EUR\",\"transaction_type\":\"sale\",\"card\":{\"number\":\"4111111111111111\",\"exp_month\":\"12\",\"exp_year\":\"2030\",\"cvv\":\"123\",\"name\":\"John Doe\"},\"reference\":\"order-10001\",\"customer\":{\"merchant_customer_id\":\"cust-001\",\"first_name\":\"John\",\"last_name\":\"Doe\",\"email\":\"john.doe@example.com\",\"phone\":\"+441234567890\",\"address\":\"1 High Street\",\"city\":\"London\",\"postal_code\":\"SW1A 1AA\",\"country_code\":\"GB\",\"ip_address\":\"198.51.100.5\"},\"card_verification_data\":{\"id\":43}}"
                         },
-                        "description": "Initiate a new transaction (sale or auth).\n\nMerchant API keys can call this endpoint for their own account.\nPartner API keys can also call this endpoint, but they must include `merchant_id`\nfor a merchant linked to that partner.\nCapture, refund, and void operations remain merchant-only."
+                        "description": "Initiate a new transaction (sale or auth).\n\nMerchant API keys can call this endpoint for their own account.\nPartner API keys can also call this endpoint, but they must include `merchant_id`\nfor a merchant linked to that partner.\nCapture, refund, and void operations remain merchant-only.\n\nIf 3DS verification was performed via `POST /api/v1/3ds/verify`, pass `card_verification_data.id` to link the stored 3DS authentication data. You do not need to resend CAVV, ECI, or other 3DS fields."
                     },
                     "response": [
                         {
@@ -151,7 +151,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"amount\":12.5,\"reason\":\"architecto\"}"
+                            "raw": "{\"amount\":12.5,\"reason\":\"Customer returned item\"}"
                         },
                         "description": "Refund a previously captured transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions."
                     },
@@ -252,7 +252,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"amount\":12.5,\"reason\":\"architecto\"}"
+                            "raw": "{\"amount\":12.5,\"reason\":\"Customer requested cancellation\"}"
                         },
                         "description": "Void a previously initiated auth transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions."
                     },
@@ -305,15 +305,15 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"amount\":12.5,\"currency\":\"GBP\",\"card\":{\"name\":\"John Doe\",\"number\":\"4111111111111111\",\"exp_month\":\"12\",\"exp_year\":\"29\",\"cvv\":\"iyvd\"},\"auth_url\":\"http:\\\/\\\/www.bailey.biz\\\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html\"}"
+                            "raw": "{\"amount\":12.5,\"currency\":\"EUR\",\"card\":{\"name\":\"John Doe\",\"number\":\"4200000000000091\",\"exp_month\":12,\"exp_year\":2030},\"auth_url\":\"https:\/\/yoursite.com\/checkout\/3ds-complete\"}"
                         },
-                        "description": "Initiate a 3D Secure card verification process.\n\nThis endpoint is intended for merchant API keys before a payment request."
+                        "description": "Initiate a 3D Secure card verification process before a payment request.\n\nFrictionless flow: If the issuer does not require a challenge, the response returns immediately with status: full_auth. Use the returned id in card_verification_data.id when initiating the transaction.\n\nChallenge flow: The response includes a challenge_url. Redirect the cardholder there. After they complete the bank challenge, they are redirected to your auth_url with ?card_verification_id={id}&status=full_auth (or status=failed)."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n    \"success\": true,\n    \"message\": \"3DS authentication completed (frictionless)\",\n    \"code\": \"\",\n    \"data\": {\n        \"id\": 166,\n        \"amount\": 12,\n        \"currency\": \"EUR\",\n        \"version\": null,\n        \"eci\": \"05\",\n        \"cavv\": \"AAABA0UREQAAAAAAAAAAAAAAAAA=\",\n        \"xid\": null,\n        \"ds_trans_id\": \"6b66be83-f692-405c-9079-92f7182af5e5\",\n        \"status\": \"full_auth\",\n        \"auth_type\": \"frictionless\",\n        \"challenge_url\": \"https:\/\/softlemon.com\/api\/3ds\/callback\",\n        \"post_url\": null,\n        \"html\": null,\n        \"created_at\": \"2025-06-12 09:47:15\",\n        \"updated_at\": \"2025-06-12 09:47:15\"\n    }\n}\n",
+                            "body": "{\n    \"success\": true,\n    \"message\": \"3DS authentication completed (frictionless)\",\n    \"code\": \"\",\n    \"data\": {\n        \"id\": 166,\n        \"amount\": 1250,\n        \"currency\": \"EUR\",\n        \"version\": \"2.2.0\",\n        \"eci\": \"05\",\n        \"cavv\": \"AAABA0UREQAAAAAAAAAAAAAAAAA=\",\n        \"xid\": null,\n        \"ds_trans_id\": \"6b66be83-f692-405c-9079-92f7182af5e5\",\n        \"status\": \"full_auth\",\n        \"auth_type\": \"frictionless\",\n        \"challenge_url\": \"https:\/\/yoursite.com\/checkout\/3ds-complete\",\n        \"post_url\": null,\n        \"html\": null,\n        \"created_at\": \"2025-06-12 09:47:15\",\n        \"updated_at\": \"2025-06-12 09:47:15\"\n    }\n}\n",
                             "name": ""
                         },
                         {

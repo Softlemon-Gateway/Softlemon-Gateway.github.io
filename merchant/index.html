@@ -513,6 +513,22 @@
 <p>This documentation covers the merchant integration surface for admin-provisioned API keys.</p>
 <p>Use these endpoints when a merchant is processing payments for its own account.</p>
 <p>API keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.</p>
+<h2 id="3d-secure-integration-flow">3D Secure Integration Flow</h2>
+<p>SoftLemon uses a server-managed 3DS flow. You do <strong>not</strong> need to handle CAVV, ECI, or DS Transaction IDs yourself.</p>
+<h3>Step 1 — Initiate 3DS Verification</h3>
+<p><code>POST /api/v1/3ds/verify</code> with card details, amount, currency, and <code>auth_url</code> (your frontend return URL).</p>
+<h3>Step 2 — Handle the response</h3>
+<ul>
+<li><strong>Frictionless:</strong> The response returns immediately with <code>status: full_auth</code>. Use the returned <code>id</code> in Step 4.</li>
+<li><strong>Challenge:</strong> The response includes a <code>challenge_url</code>. Redirect the cardholder to this URL to complete the bank challenge.</li>
+</ul>
+<h3>Step 3 — Cardholder completes challenge (if applicable)</h3>
+<p>After the cardholder completes the challenge, they are redirected to your <code>auth_url</code> with query parameters:</p>
+<p><code>?card_verification_id={id}&amp;status=full_auth</code> (or <code>status=failed</code>)</p>
+<h3>Step 4 — Initiate the transaction</h3>
+<p><code>POST /api/v1/transactions</code> with <code>card_verification_data.id</code> set to the verification ID from Step 1 or the redirect.</p>
+<pre><code>"card_verification_data": { "id": 43 }</code></pre>
+<p>The API automatically retrieves the stored 3DS authentication data (CAVV, ECI, etc.) and passes it to the payment gateway.</p>
 <h2 id="3d-secure-test-cards">3D Secure test cards</h2>
 <p>Use these sandbox cards when testing <code>POST /api/v1/3ds/verify</code>.</p>
 <table>
@@ -736,6 +752,7 @@
 Partner API keys can also call this endpoint, but they must include <code>merchant_id</code>
 for a merchant linked to that partner.
 Capture, refund, and void operations remain merchant-only.</p>
+<p>If 3DS verification was performed via <code>POST /api/v1/3ds/verify</code>, pass <code>card_verification_data.id</code> to link the stored 3DS authentication data. You do not need to resend CAVV, ECI, or other 3DS fields.</p>
     </div>
     <div class="sl-flex">
         <div data-testid="two-column-left" class="sl-flex-1 sl-w-0">
@@ -875,8 +892,12 @@ Capture, refund, and void operations remain merchant-only.</p>
         <div class="sl-flex sl-items-center sl-max-w-full">
                                         <div class="sl-flex sl-items-baseline sl-text-base">
                     <div class="sl-font-mono sl-font-semibold sl-mr-2">transaction_type</div>
-                                            <span class="sl-truncate sl-text-muted">required</span>
+                                            <span class="sl-truncate sl-text-muted">string</span>
                                     </div>
+                                            <div class="sl-flex-1 sl-h-px sl-mx-3"></div>
+                        <div class="sl-flex sl-items-center">
+                                                            <span class="sl-ml-2 sl-text-warning">required</span>
+                                                                                </div>
                                         </div>
                 <div class="sl-prose sl-markdown-viewer" style="font-size: 12px;">
             <p>Transaction type.</p>
@@ -912,7 +933,7 @@ Capture, refund, and void operations remain merchant-only.</p>
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        architecto
+                        vtok_a1b2c3d4e5f6
                     </div>
                 </div>
             </div>
@@ -1028,7 +1049,7 @@ Capture, refund, and void operations remain merchant-only.</p>
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        29
+                        2030
                     </div>
                 </div>
             </div>
@@ -1156,7 +1177,7 @@ Capture, refund, and void operations remain merchant-only.</p>
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html
+                        https://yoursite.com/checkout/success
                     </div>
                 </div>
             </div>
@@ -1178,7 +1199,7 @@ Capture, refund, and void operations remain merchant-only.</p>
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html
+                        https://yoursite.com/checkout/error
                     </div>
                 </div>
             </div>
@@ -1232,7 +1253,7 @@ Capture, refund, and void operations remain merchant-only.</p>
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        architecto
+                        cust-001
                     </div>
                 </div>
             </div>
@@ -1261,7 +1282,7 @@ Capture, refund, and void operations remain merchant-only.</p>
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        architecto
+                        John
                     </div>
                 </div>
             </div>
@@ -1290,7 +1311,7 @@ Capture, refund, and void operations remain merchant-only.</p>
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        architecto
+                        Doe
                     </div>
                 </div>
             </div>
@@ -1344,7 +1365,7 @@ Capture, refund, and void operations remain merchant-only.</p>
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        architecto
+                        +441234567890
                     </div>
                 </div>
             </div>
@@ -1369,7 +1390,7 @@ Capture, refund, and void operations remain merchant-only.</p>
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        architecto
+                        1 High Street
                     </div>
                 </div>
             </div>
@@ -1394,7 +1415,7 @@ Capture, refund, and void operations remain merchant-only.</p>
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        architecto
+                        London
                     </div>
                 </div>
             </div>
@@ -1419,7 +1440,7 @@ Capture, refund, and void operations remain merchant-only.</p>
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        architecto
+                        SW1A 1AA
                     </div>
                 </div>
             </div>
@@ -1498,7 +1519,7 @@ Capture, refund, and void operations remain merchant-only.</p>
                                     </div>
                                         </div>
                 <div class="sl-prose sl-markdown-viewer" style="font-size: 12px;">
-            <p>3DS verification data object.</p>
+            <p>Links a completed 3DS verification to this transaction. Pass the <code>id</code> returned from <code>POST /api/v1/3ds/verify</code>. The API retrieves stored CAVV, ECI, and DS Transaction ID automatically — you do not need to send them.</p>
         </div>
                                     </div>
 </div>
@@ -1818,38 +1839,32 @@ Capture, refund, and void operations remain merchant-only.</p>
     "amount": 12.5,
     "currency": "GBP",
     "transaction_type": "sale",
-    "vault_token": "architecto",
+    "vault_token": "vtok_a1b2c3d4e5f6",
     "card": {
         "number": "4111111111111111",
         "exp_month": "12",
-        "exp_year": "29",
+        "exp_year": "2030",
         "cvv": "111",
         "name": "John Doe"
     },
     "reference": "order-10001",
     "merchant_id": 123,
-    "success_url": "http:\/\/www.bailey.biz\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html",
-    "error_url": "http:\/\/www.bailey.biz\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html",
+    "success_url": "https:\/\/yoursite.com\/checkout\/success",
+    "error_url": "https:\/\/yoursite.com\/checkout\/error",
     "customer": {
-        "merchant_customer_id": "architecto",
-        "first_name": "architecto",
-        "last_name": "architecto",
+        "merchant_customer_id": "cust-001",
+        "first_name": "John",
+        "last_name": "Doe",
         "email": "gbailey@example.net",
-        "phone": "architecto",
-        "address": "architecto",
-        "city": "architecto",
-        "postal_code": "architecto",
+        "phone": "+441234567890",
+        "address": "1 High Street",
+        "city": "London",
+        "postal_code": "SW1A 1AA",
         "country_code": "GB",
         "ip_address": "198.51.100.5"
     },
     "card_verification_data": {
-        "id": 16,
-        "status": "full_auth",
-        "cavv": "jI3JBkkaQ1p8CBAAABy0CHUAAAA=",
-        "xid": "A1B2C3D4E5F6G7H8I9J0",
-        "ds_trans_id": "8e187327-492c-446b-9b45-62debe6456c5",
-        "three_ds_version": "2.1",
-        "eci": "05"
+        "id": 43
     }
 }</div>
                             </div>
@@ -1951,38 +1966,32 @@ You can check the Dev Tools console for debugging information.</p>
     \"amount\": 12.5,
     \"currency\": \"GBP\",
     \"transaction_type\": \"sale\",
-    \"vault_token\": \"architecto\",
+    \"vault_token\": \"vtok_a1b2c3d4e5f6\",
     \"card\": {
         \"number\": \"4111111111111111\",
         \"exp_month\": \"12\",
-        \"exp_year\": \"29\",
+        \"exp_year\": \"2030\",
         \"cvv\": \"111\",
         \"name\": \"John Doe\"
     },
     \"reference\": \"order-10001\",
     \"merchant_id\": 123,
-    \"success_url\": \"http:\\/\\/www.bailey.biz\\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html\",
-    \"error_url\": \"http:\\/\\/www.bailey.biz\\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html\",
+    \"success_url\": \"https:\\/\\/yoursite.com\\/checkout\\/success\",
+    \"error_url\": \"https:\\/\\/yoursite.com\\/checkout\\/error\",
     \"customer\": {
-        \"merchant_customer_id\": \"architecto\",
-        \"first_name\": \"architecto\",
-        \"last_name\": \"architecto\",
+        \"merchant_customer_id\": \"cust-001\",
+        \"first_name\": \"John\",
+        \"last_name\": \"Doe\",
         \"email\": \"gbailey@example.net\",
-        \"phone\": \"architecto\",
-        \"address\": \"architecto\",
-        \"city\": \"architecto\",
-        \"postal_code\": \"architecto\",
+        \"phone\": \"+441234567890\",
+        \"address\": \"1 High Street\",
+        \"city\": \"London\",
+        \"postal_code\": \"SW1A 1AA\",
         \"country_code\": \"GB\",
         \"ip_address\": \"198.51.100.5\"
     },
     \"card_verification_data\": {
-        \"id\": 16,
-        \"status\": \"full_auth\",
-        \"cavv\": \"jI3JBkkaQ1p8CBAAABy0CHUAAAA=\",
-        \"xid\": \"A1B2C3D4E5F6G7H8I9J0\",
-        \"ds_trans_id\": \"8e187327-492c-446b-9b45-62debe6456c5\",
-        \"three_ds_version\": \"2.1\",
-        \"eci\": \"05\"
+        \"id\": 43
     }
 }"
 </code></pre>                                        </div>
@@ -2006,38 +2015,32 @@ let body = {
     "amount": 12.5,
     "currency": "GBP",
     "transaction_type": "sale",
-    "vault_token": "architecto",
+    "vault_token": "vtok_a1b2c3d4e5f6",
     "card": {
         "number": "4111111111111111",
         "exp_month": "12",
-        "exp_year": "29",
+        "exp_year": "2030",
         "cvv": "111",
         "name": "John Doe"
     },
     "reference": "order-10001",
     "merchant_id": 123,
-    "success_url": "http:\/\/www.bailey.biz\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html",
-    "error_url": "http:\/\/www.bailey.biz\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html",
+    "success_url": "https:\/\/yoursite.com\/checkout\/success",
+    "error_url": "https:\/\/yoursite.com\/checkout\/error",
     "customer": {
-        "merchant_customer_id": "architecto",
-        "first_name": "architecto",
-        "last_name": "architecto",
+        "merchant_customer_id": "cust-001",
+        "first_name": "John",
+        "last_name": "Doe",
         "email": "gbailey@example.net",
-        "phone": "architecto",
-        "address": "architecto",
-        "city": "architecto",
-        "postal_code": "architecto",
+        "phone": "+441234567890",
+        "address": "1 High Street",
+        "city": "London",
+        "postal_code": "SW1A 1AA",
         "country_code": "GB",
         "ip_address": "198.51.100.5"
     },
     "card_verification_data": {
-        "id": 16,
-        "status": "full_auth",
-        "cavv": "jI3JBkkaQ1p8CBAAABy0CHUAAAA=",
-        "xid": "A1B2C3D4E5F6G7H8I9J0",
-        "ds_trans_id": "8e187327-492c-446b-9b45-62debe6456c5",
-        "three_ds_version": "2.1",
-        "eci": "05"
+        "id": 43
     }
 };
 
@@ -2066,38 +2069,32 @@ $response = $client-&gt;post(
             'amount' =&gt; 12.5,
             'currency' =&gt; 'GBP',
             'transaction_type' =&gt; 'sale',
-            'vault_token' =&gt; 'architecto',
+            'vault_token' =&gt; 'vtok_a1b2c3d4e5f6',
             'card' =&gt; [
                 'number' =&gt; '4111111111111111',
                 'exp_month' =&gt; '12',
-                'exp_year' =&gt; '29',
+                'exp_year' =&gt; '2030',
                 'cvv' =&gt; '111',
                 'name' =&gt; 'John Doe',
             ],
             'reference' =&gt; 'order-10001',
             'merchant_id' =&gt; 123,
-            'success_url' =&gt; 'http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html',
-            'error_url' =&gt; 'http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html',
+            'success_url' =&gt; 'https://yoursite.com/checkout/success',
+            'error_url' =&gt; 'https://yoursite.com/checkout/error',
             'customer' =&gt; [
-                'merchant_customer_id' =&gt; 'architecto',
-                'first_name' =&gt; 'architecto',
-                'last_name' =&gt; 'architecto',
+                'merchant_customer_id' =&gt; 'cust-001',
+                'first_name' =&gt; 'John',
+                'last_name' =&gt; 'Doe',
                 'email' =&gt; 'gbailey@example.net',
-                'phone' =&gt; 'architecto',
-                'address' =&gt; 'architecto',
-                'city' =&gt; 'architecto',
-                'postal_code' =&gt; 'architecto',
+                'phone' =&gt; '+441234567890',
+                'address' =&gt; '1 High Street',
+                'city' =&gt; 'London',
+                'postal_code' =&gt; 'SW1A 1AA',
                 'country_code' =&gt; 'GB',
                 'ip_address' =&gt; '198.51.100.5',
             ],
             'card_verification_data' =&gt; [
-                'id' =&gt; 16,
-                'status' =&gt; 'full_auth',
-                'cavv' =&gt; 'jI3JBkkaQ1p8CBAAABy0CHUAAAA=',
-                'xid' =&gt; 'A1B2C3D4E5F6G7H8I9J0',
-                'ds_trans_id' =&gt; '8e187327-492c-446b-9b45-62debe6456c5',
-                'three_ds_version' =&gt; '2.1',
-                'eci' =&gt; '05',
+                'id' =&gt; 43,
             ],
         ],
     ]
@@ -2955,7 +2952,7 @@ print_r(json_decode((string) $body));</code></pre>                              
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        architecto
+                        Customer returned item
                     </div>
                 </div>
             </div>
@@ -3119,7 +3116,7 @@ print_r(json_decode((string) $body));</code></pre>                              
                                      style="font-family: var(--font-code); font-size: 12px; line-height: var(--lh-code);"
                                 >{
     "amount": 12.5,
-    "reason": "architecto"
+    "reason": "Customer returned item"
 }</div>
                             </div>
                                             </div>
@@ -3218,7 +3215,7 @@ You can check the Dev Tools console for debugging information.</p>
     --header "Accept: application/json" \
     --data "{
     \"amount\": 12.5,
-    \"reason\": \"architecto\"
+    \"reason\": \"Customer returned item\"
 }"
 </code></pre>                                        </div>
                                     </div>
@@ -3239,7 +3236,7 @@ const headers = {
 
 let body = {
     "amount": 12.5,
-    "reason": "architecto"
+    "reason": "Customer returned item"
 };
 
 fetch(url, {
@@ -3265,7 +3262,7 @@ $response = $client-&gt;post(
         ],
         'json' =&gt; [
             'amount' =&gt; 12.5,
-            'reason' =&gt; 'architecto',
+            'reason' =&gt; 'Customer returned item',
         ],
     ]
 );
@@ -4029,13 +4026,13 @@ print_r(json_decode((string) $body));</code></pre>                              
                                     </div>
                                         </div>
                 <div class="sl-prose sl-markdown-viewer" style="font-size: 12px;">
-            <p>Reason for refund.</p>
+            <p>Reason for void.</p>
         </div>
                                             <div class="sl-stack sl-stack--horizontal sl-stack--2 sl-flex sl-flex-row sl-items-baseline sl-text-muted">
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        architecto
+                        Customer requested cancellation
                     </div>
                 </div>
             </div>
@@ -4199,7 +4196,7 @@ print_r(json_decode((string) $body));</code></pre>                              
                                      style="font-family: var(--font-code); font-size: 12px; line-height: var(--lh-code);"
                                 >{
     "amount": 12.5,
-    "reason": "architecto"
+    "reason": "Customer requested cancellation"
 }</div>
                             </div>
                                             </div>
@@ -4298,7 +4295,7 @@ You can check the Dev Tools console for debugging information.</p>
     --header "Accept: application/json" \
     --data "{
     \"amount\": 12.5,
-    \"reason\": \"architecto\"
+    \"reason\": \"Customer requested cancellation\"
 }"
 </code></pre>                                        </div>
                                     </div>
@@ -4319,7 +4316,7 @@ const headers = {
 
 let body = {
     "amount": 12.5,
-    "reason": "architecto"
+    "reason": "Customer requested cancellation"
 };
 
 fetch(url, {
@@ -4345,7 +4342,7 @@ $response = $client-&gt;post(
         ],
         'json' =&gt; [
             'amount' =&gt; 12.5,
-            'reason' =&gt; 'architecto',
+            'reason' =&gt; 'Customer requested cancellation',
         ],
     ]
 );
@@ -4491,7 +4488,7 @@ print_r(json_decode((string) $body));</code></pre>                              
                                                                                     </div>
         </div>
 
-        <p>Initiate a 3D Secure card verification process.</p>
+        <p>Initiate a 3D Secure card verification process. Returns either a frictionless <code>full_auth</code> response (proceed to transaction) or a <code>challenge_url</code> to redirect the cardholder for bank verification. After challenge completion, the cardholder is returned to your <code>auth_url</code> with the result.</p>
 <p>This endpoint is intended for merchant API keys before a payment request.</p>
     </div>
     <div class="sl-flex">
@@ -4762,7 +4759,7 @@ print_r(json_decode((string) $body));</code></pre>                              
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        29
+                        2030
                     </div>
                 </div>
             </div>
@@ -4787,7 +4784,7 @@ print_r(json_decode((string) $body));</code></pre>                              
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        iyvd
+                        123
                     </div>
                 </div>
             </div>
@@ -4812,13 +4809,13 @@ print_r(json_decode((string) $body));</code></pre>                              
                                                                                 </div>
                                         </div>
                 <div class="sl-prose sl-markdown-viewer" style="font-size: 12px;">
-            <p>Authorization callback url.</p>
+            <p>Your return URL. After the cardholder completes the 3DS challenge, they are redirected here with <code>?card_verification_id={id}&amp;status={full_auth|failed}</code> query parameters.</p>
         </div>
                                             <div class="sl-stack sl-stack--horizontal sl-stack--2 sl-flex sl-flex-row sl-items-baseline sl-text-muted">
                 <span>Example:</span> <!-- <span> important for spacing -->
                 <div class="sl-flex sl-flex-1 sl-flex-wrap" style="gap: 4px;">
                     <div class="sl-max-w-full sl-break-all sl-px-1 sl-bg-canvas-tint sl-text-muted sl-rounded sl-border">
-                        http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html
+                        https://yoursite.com/checkout/3ds-complete
                     </div>
                 </div>
             </div>
@@ -4954,10 +4951,10 @@ print_r(json_decode((string) $body));</code></pre>                              
         "name": "John Doe",
         "number": "4111111111111111",
         "exp_month": "12",
-        "exp_year": "29",
-        "cvv": "iyvd"
+        "exp_year": "2030",
+        "cvv": "123"
     },
-    "auth_url": "http:\/\/www.bailey.biz\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html"
+    "auth_url": "https:\/\/yoursite.com\/checkout\/3ds-complete"
 }</div>
                             </div>
                                             </div>
@@ -5061,10 +5058,10 @@ You can check the Dev Tools console for debugging information.</p>
         \"name\": \"John Doe\",
         \"number\": \"4111111111111111\",
         \"exp_month\": \"12\",
-        \"exp_year\": \"29\",
-        \"cvv\": \"iyvd\"
+        \"exp_year\": \"2030\",
+        \"cvv\": \"123\"
     },
-    \"auth_url\": \"http:\\/\\/www.bailey.biz\\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html\"
+    \"auth_url\": \"https:\\/\\/yoursite.com\\/checkout\\/3ds-complete\"
 }"
 </code></pre>                                        </div>
                                     </div>
@@ -5090,10 +5087,10 @@ let body = {
         "name": "John Doe",
         "number": "4111111111111111",
         "exp_month": "12",
-        "exp_year": "29",
-        "cvv": "iyvd"
+        "exp_year": "2030",
+        "cvv": "123"
     },
-    "auth_url": "http:\/\/www.bailey.biz\/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html"
+    "auth_url": "https:\/\/yoursite.com\/checkout\/3ds-complete"
 };
 
 fetch(url, {
@@ -5124,10 +5121,10 @@ $response = $client-&gt;post(
                 'name' =&gt; 'John Doe',
                 'number' =&gt; '4111111111111111',
                 'exp_month' =&gt; '12',
-                'exp_year' =&gt; '29',
-                'cvv' =&gt; 'iyvd',
+                'exp_year' =&gt; '2030',
+                'cvv' =&gt; '123',
             ],
-            'auth_url' =&gt; 'http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html',
+            'auth_url' =&gt; 'https://yoursite.com/checkout/3ds-complete',
         ],
     ]
 );
@@ -5187,7 +5184,7 @@ print_r(json_decode((string) $body));</code></pre>                              
         &quot;ds_trans_id&quot;: &quot;6b66be83-f692-405c-9079-92f7182af5e5&quot;,
         &quot;status&quot;: &quot;full_auth&quot;,
         &quot;auth_type&quot;: &quot;frictionless&quot;,
-        &quot;challenge_url&quot;: &quot;https://softlemon.com/api/3ds/callback&quot;,
+        &quot;challenge_url&quot;: &quot;https://yoursite.com/checkout/3ds-complete&quot;,
         &quot;post_url&quot;: null,
         &quot;html&quot;: null,
         &quot;created_at&quot;: &quot;2025-06-12 09:47:15&quot;,
