@@ -27,7 +27,7 @@ paths:
     post:
       summary: 'Initiate Transaction'
       operationId: initiateTransaction
-      description: "Initiate a new transaction.\n\nUse `transaction_type: sale` for an immediate, complete charge — the funds are captured automatically and no further action is needed. Use `transaction_type: auth` to place a hold on the cardholder's funds; you must then call the **Capture** endpoint to settle the payment.\n\nMerchant API keys can call this endpoint for their own account.\nPartner API keys can also call this endpoint, but they must include `merchant_id`\nfor a merchant linked to that partner.\nCapture, refund, and void operations remain merchant-only.\n\nIf 3DS verification was performed via `POST /api/v1/3ds/verify`, pass `card_verification_data.id` to link the stored 3DS authentication data. You do not need to resend CAVV, ECI, or other 3DS fields — they are retrieved automatically from the verification record."
+      description: "Initiate a new transaction (sale or auth).\n\nMerchant API keys can call this endpoint for their own account.\nPartner API keys can also call this endpoint, but they must include `merchant_id`\nfor a merchant linked to that partner.\nCapture, refund, and void operations remain merchant-only.\n\nIf 3DS verification was performed via `POST /api/v1/3ds/verify`, pass `card_verification_data.id` to link the stored 3DS authentication data. You do not need to resend CAVV, ECI, or other 3DS fields — they are retrieved automatically from the verification record."
       parameters: []
       responses:
         200:
@@ -193,7 +193,7 @@ paths:
                   example: GBP
                 transaction_type:
                   type: string
-                  description: "The type of transaction you want to initiate. Use **`sale`** for an immediate, complete charge — no separate capture step required. Use **`auth`** to reserve (hold) the funds on the cardholder's card; you must then call the capture endpoint to settle the payment."
+                  description: "Transaction type. `sale` charges the card immediately — no capture step required. `auth` places a hold on the funds; you must call the capture endpoint to settle."
                   example: sale
                   enum:
                     - sale
