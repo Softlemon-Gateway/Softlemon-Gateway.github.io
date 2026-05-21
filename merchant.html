@@ -402,10 +402,10 @@
                                                                     <div class="expandable">
                                         <div class="sl-flex sl-items-center sl-h-md sl-pr-4 sl-pl-8 sl-bg-canvas-100 hover:sl-bg-canvas-200 sl-cursor-pointer sl-select-none"
                                              id="toc-item-transactions-POSTapi-v1-transactions--transaction_id--capture">
-                                            <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5 sl-p-0" title="Capture Transaction">
+                                            <div class="sl-flex-1 sl-items-center sl-truncate sl-mr-1.5 sl-p-0" title="Capture Transaction (only applies when transaction_type is auth)">
                                                 <a class="ElementsTableOfContentsItem sl-block sl-no-underline"
                                                    href="#transactions-POSTapi-v1-transactions--transaction_id--capture">
-                                                    Capture Transaction
+                                                    Capture Transaction (only applies when transaction_type is auth)
                                                 </a>
                                             </div>
                                                                                     </div>
@@ -894,9 +894,13 @@ Capture, refund, and void operations remain merchant-only.</p>
                     <div class="sl-font-mono sl-font-semibold sl-mr-2">transaction_type</div>
                                             <span class="sl-truncate sl-text-muted">string</span>
                                     </div>
+                                            <div class="sl-flex-1 sl-h-px sl-mx-3"></div>
+                        <div class="sl-flex sl-items-center">
+                                                            <span class="sl-ml-2 sl-text-warning">required</span>
+                                                                                </div>
                                         </div>
                 <div class="sl-prose sl-markdown-viewer" style="font-size: 12px;">
-            <p>Transaction type.</p>
+            <p>Transaction type. <code>sale</code> charges the card immediately — no capture step required. <code>auth</code> places a hold on the funds; you must call the capture endpoint to settle.</p>
         </div>
                             Must be one of:
             <ul style="list-style-position: inside; list-style-type: square;"><li><code>sale</code></li> <li><code>auth</code></li></ul>
@@ -2044,7 +2048,7 @@ print_r(json_decode((string) $body));</code></pre>                              
             <div class="sl-stack sl-stack--horizontal sl-stack--5 sl-flex sl-flex-row sl-items-center">
                 <h2 class="sl-text-3xl sl-leading-tight sl-font-prose sl-text-heading sl-mt-5 sl-mb-1"
                     id="transactions-POSTapi-v1-transactions--transaction_id--capture">
-                    Capture Transaction
+                    Capture Transaction <span style="font-size: 1rem; font-weight: 400; color: #6b7280;">(only applies when transaction_type is auth)</span>
                 </h2>
             </div>
         </div>
