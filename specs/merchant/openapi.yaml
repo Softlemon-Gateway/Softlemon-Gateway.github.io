@@ -1,0 +1,2296 @@
+openapi: 3.1.0
+info:
+  title: 'Softlemon Merchant API'
+  description: "Production-ready merchant integration endpoints for admin-provisioned API keys.\n\nThe gateway also sends signed outbound webhooks on transaction state changes — see the Webhooks section below and the [webhook integration guide](guides/webhooks.html) for signature verification examples and retry semantics."
+  version: 0.9.0
+servers:
+  -
+    url: 'https://api.sandbox.softlemons.com'
+tags:
+  -
+    name: Transactions
+    description: ''
+  -
+    name: 'Card Verification'
+    description: ''
+  -
+    name: 'API Operations'
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'Use the API key provisioned by your SoftLemon admin team. Self-service onboarding and API key generation are not currently available.'
+  parameters:
+    XSoftlemonEventId:
+      name: X-Softlemon-Event-Id
+      in: header
+      required: true
+      schema:
+        type: string
+        pattern: '^evt_[0-9a-z]{26}$'
+      description: 'Event id, identical to the payload `id`. Stable across retries and replays — deduplicate on this value.'
+    XSoftlemonDeliveryId:
+      name: X-Softlemon-Delivery-Id
+      in: header
+      required: true
+      schema:
+        type: string
+        pattern: '^whd_[0-9a-z]{26}$'
+      description: 'Delivery attempt id. Unique per attempt.'
+    XSoftlemonEventType:
+      name: X-Softlemon-Event-Type
+      in: header
+      required: true
+      schema:
+        type: string
+      description: 'The event type, e.g. `transaction.captured`.'
+    XSoftlemonTimestamp:
+      name: X-Softlemon-Timestamp
+      in: header
+      required: true
+      schema:
+        type: string
+      description: 'Unix seconds at signing time; equals the `t=` value inside the signature header. Reject deliveries where |now − t| exceeds 300 seconds.'
+    XSoftlemonSignature:
+      name: X-Softlemon-Signature
+      in: header
+      required: true
+      schema:
+        type: string
+        pattern: '^t=\d+,v1=[0-9a-f]{64}$'
+      description: '`t={timestamp},v1={hex}` where `hex` is HMAC-SHA256("{timestamp}.{raw_body}", endpoint secret). Verify against the raw request body with a constant-time comparison — see the webhooks guide for reference implementations.'
+    XSoftlemonWebhookVersion:
+      name: X-Softlemon-Webhook-Version
+      in: header
+      required: true
+      schema:
+        type: string
+      description: 'Payload schema version, e.g. `2026-08-01`.'
+    XSoftlemonReplay:
+      name: X-Softlemon-Replay
+      in: header
+      required: false
+      schema:
+        type: string
+        const: 'true'
+      description: 'Present (with value `true`) only when the delivery is a manual replay. Absence means the delivery is not a replay; the header is never sent with the value `false`.'
+  schemas:
+    WebhookTransactionEvent:
+      type: object
+      description: 'Envelope for every transaction webhook. The contract is additive-by-default — new fields may appear at any time without a version bump, and receivers must ignore unknown fields. Payloads never contain cardholder data. Amounts are integers in minor units.'
+      required:
+        - id
+        - type
+        - created_at
+        - api_version
+        - data
+      properties:
+        id:
+          type: string
+          pattern: '^evt_[0-9a-z]{26}$'
+          description: 'Event id — the idempotency key across retries and replays.'
+        type:
+          type: string
+          enum:
+            - transaction.authorized
+            - transaction.captured
+            - transaction.succeeded
+            - transaction.settled
+            - transaction.partially_settled
+            - transaction.paid
+            - transaction.voided
+            - transaction.refunded
+            - transaction.partially_refunded
+            - transaction.failed
+            - transaction.cancelled
+            - transaction.chargeback
+            - transaction.pending
+        created_at:
+          type: string
+          format: date-time
+          description: 'Event creation time (ISO 8601 UTC).'
+        api_version:
+          type: string
+          description: 'Payload schema version.'
+        data:
+          type: object
+          required:
+            - transaction
+          properties:
+            transaction:
+              $ref: '#/components/schemas/WebhookTransactionSnapshot'
+            parent_transaction:
+              $ref: '#/components/schemas/WebhookParentTransactionSummary'
+    WebhookTransactionSnapshot:
+      type: object
+      description: 'Snapshot of the transaction row that triggered the event.'
+      required:
+        - id
+        - transaction_type
+        - status
+        - amount
+        - currency
+      properties:
+        id:
+          type: integer
+          description: 'Gateway transaction id — the unique identifier to reconcile on.'
+        merchant_trans_id:
+          type:
+            - string
+            - 'null'
+          description: "The merchant's own reference. Captures, refunds and voids share the parent's value — not unique on its own."
+        related_trans_id:
+          type:
+            - integer
+            - 'null'
+          description: 'Parent transaction id on child rows (captures, refunds, voids).'
+        transaction_type:
+          type: string
+          enum:
+            - sale
+            - auth
+            - capture
+            - void
+            - refund
+        status:
+          type: string
+          description: 'Transaction status — see the transaction statuses guide.'
+        amount:
+          type: integer
+          description: 'Amount in minor units.'
+        currency:
+          type: string
+          description: 'ISO 4217 currency code.'
+        captured_amount:
+          type: integer
+          description: 'Present only on authorization rows (`transaction_type` = `auth`).'
+        refunded_amount:
+          type: integer
+          description: 'Present only on `sale` and `capture` rows.'
+        acquirer_provider:
+          type:
+            - string
+            - 'null'
+        acquirer_trans_id:
+          type:
+            - string
+            - 'null'
+        acquirer_auth_code:
+          type:
+            - string
+            - 'null'
+        description:
+          type:
+            - string
+            - 'null'
+        created_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+        updated_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+    WebhookParentTransactionSummary:
+      type: object
+      description: "Present only on child-row events (captures, refunds, voids) — the parent's updated totals."
+      required:
+        - id
+        - status
+        - amount
+        - captured_amount
+        - refunded_amount
+      properties:
+        id:
+          type: integer
+        status:
+          type: string
+        amount:
+          type: integer
+        captured_amount:
+          type: integer
+        refunded_amount:
+          type: integer
+    WebhookPingEvent:
+      type: object
+      description: 'Test ping payload — signed like a real event, never persisted.'
+      required:
+        - id
+        - type
+        - created_at
+        - api_version
+        - data
+      properties:
+        id:
+          type: string
+          pattern: '^evt_[0-9a-z]{26}$'
+        type:
+          type: string
+          const: ping
+        created_at:
+          type: string
+          format: date-time
+        api_version:
+          type: string
+        data:
+          type: object
+          required:
+            - merchant_id
+          properties:
+            merchant_id:
+              type: integer
+security:
+  -
+    default: []
+webhooks:
+  transaction.authorized:
+    post:
+      summary: 'Transaction authorized'
+      description: 'An authorization was approved (status `auth`). Acquirer auto-capture flows emit this first and `transaction.succeeded` afterwards on the same transaction id.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery. Anything else — including redirects — triggers the retry schedule.'
+  transaction.captured:
+    post:
+      summary: 'Transaction captured'
+      description: "A transaction reached `captured`. Fires on the capture child row and, on a full capture, on the parent authorization's roll-up (distinguish via `transaction_type` and `related_trans_id`)."
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+            example:
+              id: evt_01k20b9v6ye2ttfvghw2hcaa8p
+              type: transaction.captured
+              created_at: '2026-08-05T12:00:00Z'
+              api_version: '2026-08-01'
+              data:
+                transaction:
+                  id: 123457
+                  merchant_trans_id: ORDER-100045
+                  related_trans_id: 123456
+                  transaction_type: capture
+                  status: captured
+                  amount: 5000
+                  currency: EUR
+                  refunded_amount: 0
+                  acquirer_provider: qashpay
+                  acquirer_trans_id: 8ac7a4a29852f6f101985300a1b41c2f
+                  acquirer_auth_code: '012345'
+                  description: null
+                  created_at: '2026-08-05T11:59:48Z'
+                  updated_at: '2026-08-05T12:00:00Z'
+                parent_transaction:
+                  id: 123456
+                  status: captured
+                  amount: 5000
+                  captured_amount: 5000
+                  refunded_amount: 0
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.succeeded:
+    post:
+      summary: 'Transaction succeeded'
+      description: 'A sale completed (status `success`).'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+            example:
+              id: evt_01k20bhq3rw9mk4t8vczs0e6xj
+              type: transaction.succeeded
+              created_at: '2026-08-05T12:00:00Z'
+              api_version: '2026-08-01'
+              data:
+                transaction:
+                  id: 123456
+                  merchant_trans_id: ORDER-100045
+                  related_trans_id: null
+                  transaction_type: sale
+                  status: success
+                  amount: 5000
+                  currency: EUR
+                  refunded_amount: 0
+                  acquirer_provider: qashpay
+                  acquirer_trans_id: 8ac7a4a29852f6f101985300a1b41c2f
+                  acquirer_auth_code: '012345'
+                  description: null
+                  created_at: '2026-08-05T11:59:48Z'
+                  updated_at: '2026-08-05T12:00:00Z'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.settled:
+    post:
+      summary: 'Transaction settled'
+      description: 'A transaction reached `settled`, including the parent roll-up when a partially captured authorization is closed by a void.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.partially_settled:
+    post:
+      summary: 'Transaction partially settled'
+      description: 'A parent authorization was partially captured (roll-up status `partially_settled`).'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.paid:
+    post:
+      summary: 'Transaction paid'
+      description: 'A transaction reached `paid`.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.voided:
+    post:
+      summary: 'Transaction voided'
+      description: 'An authorization or payment was voided.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.refunded:
+    post:
+      summary: 'Transaction refunded (fully)'
+      description: "A refund completed and the parent's cumulative refunds now cover the captured amount. `data.transaction` is the refund child row; `data.parent_transaction` summarises the parent's updated totals. Each refund is its own child transaction and produces its own event."
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.partially_refunded:
+    post:
+      summary: 'Transaction partially refunded'
+      description: "A refund completed but part of the captured amount remains unrefunded. `data.transaction` is the refund child row; `data.parent_transaction` summarises the parent's updated totals."
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+            example:
+              id: evt_01k20bt64k2c14n5xw8ahb62pd
+              type: transaction.partially_refunded
+              created_at: '2026-08-05T14:30:00Z'
+              api_version: '2026-08-01'
+              data:
+                transaction:
+                  id: 123460
+                  merchant_trans_id: ORDER-100045
+                  related_trans_id: 123456
+                  transaction_type: refund
+                  status: refunded
+                  amount: 2000
+                  currency: EUR
+                  acquirer_provider: qashpay
+                  acquirer_trans_id: 8ac7a4a29853f1a801985391c4dd3d61
+                  acquirer_auth_code: null
+                  description: 'Partial refund'
+                  created_at: '2026-08-05T14:29:55Z'
+                  updated_at: '2026-08-05T14:30:00Z'
+                parent_transaction:
+                  id: 123456
+                  status: success
+                  amount: 5000
+                  captured_amount: 5000
+                  refunded_amount: 2000
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.failed:
+    post:
+      summary: 'Transaction failed'
+      description: 'A transaction failed.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.cancelled:
+    post:
+      summary: 'Transaction cancelled'
+      description: 'A transaction was cancelled, including risk rejections and decline-cooldown blocks. Duplicate paper-trail rows (already rejected synchronously with HTTP 409) never emit events.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.chargeback:
+    post:
+      summary: 'Transaction chargeback'
+      description: 'A chargeback was recorded.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.pending:
+    post:
+      summary: 'Transaction pending (opt-in)'
+      description: 'A transaction entered `pending`. Delivered only to endpoints whose `events` subscription explicitly lists `transaction.pending` — it is not part of the default event set.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  ping:
+    post:
+      summary: 'Test ping'
+      description: 'Test delivery triggered by an administrator. Signed and structured like a real event but never persisted; `data` contains only `merchant_id`.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookPingEvent'
+            example:
+              id: evt_01k20c4x9y5r08qwj6dfhm3bzt
+              type: ping
+              created_at: '2026-08-05T12:00:00Z'
+              api_version: '2026-08-01'
+              data:
+                merchant_id: 42
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+paths:
+  /api/v1/transactions:
+    post:
+      summary: 'Initiate Transaction'
+      operationId: initiateTransaction
+      description: "Initiate a new transaction (sale or auth).\n\nMerchant API keys can call this endpoint for their own account.\nPartner API keys can also call this endpoint, but they must include `merchant_id`\nfor a merchant linked to that partner.\nCapture, refund, and void operations remain merchant-only."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Transaction initiated'
+                  code: ''
+                  data:
+                    id: 2
+                    related_trans_id: null
+                    merchant_id: 1
+                    cardholder_id: 2
+                    amount: 1250
+                    currency: EUR
+                    status: auth
+                    transaction_type: auth
+                    merchant_trans_id: ORDER-912346
+                    acquirer_trans_id: '514009741995'
+                    acquirer_auth_code: '400066'
+                    acquirer_ref_num: '741995'
+                    ip_address: 172.19.0.7
+                    updated_at: '2025-05-20T09:18:48.000000Z'
+                    created_at: '2025-05-20T09:18:47.000000Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Transaction initiated'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      related_trans_id:
+                        type: string
+                        example: null
+                      merchant_id:
+                        type: integer
+                        example: 1
+                      cardholder_id:
+                        type: integer
+                        example: 2
+                      amount:
+                        type: integer
+                        example: 1250
+                      currency:
+                        type: string
+                        example: EUR
+                      status:
+                        type: string
+                        example: auth
+                      transaction_type:
+                        type: string
+                        example: auth
+                      merchant_trans_id:
+                        type: string
+                        example: ORDER-912346
+                      acquirer_trans_id:
+                        type: string
+                        example: '514009741995'
+                      acquirer_auth_code:
+                        type: string
+                        example: '400066'
+                      acquirer_ref_num:
+                        type: string
+                        example: '741995'
+                      ip_address:
+                        type: string
+                        example: 172.19.0.7
+                      updated_at:
+                        type: string
+                        example: '2025-05-20T09:18:48.000000Z'
+                      created_at:
+                        type: string
+                        example: '2025-05-20T09:18:47.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'A transaction with this reference already exists'
+                  code: ERR_DUPLICATE
+                  data:
+                    transaction_id: 123
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'A transaction with this reference already exists'
+                  code:
+                    type: string
+                    example: ERR_DUPLICATE
+                  data:
+                    type: object
+                    properties:
+                      transaction_id:
+                        type: integer
+                        example: 123
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Validation errors'
+                  code: ERR_VALIDATION_FAILED
+                  data: null
+                  errors:
+                    amount:
+                      - 'The transaction amount must be a number.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  code:
+                    type: string
+                    example: ERR_VALIDATION_FAILED
+                  data:
+                    type: string
+                    example: null
+                  errors:
+                    type: object
+                    properties:
+                      amount:
+                        type: array
+                        example:
+                          - 'The transaction amount must be a number.'
+                        items:
+                          type: string
+      tags:
+        - Transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: 'Transaction amount.'
+                  example: 12.5
+                currency:
+                  type: string
+                  description: 'Transaction currency (3-letter ISO code).'
+                  example: EUR
+                transaction_type:
+                  type: string
+                  description: 'Transaction type.'
+                  example: sale
+                  enum:
+                    - sale
+                    - auth
+                wallet:
+                  type:
+                    - object
+                    - 'null'
+                  description: 'Digital wallet payment. Mutually exclusive with card and vault_token.'
+                  example: []
+                  properties:
+                    type:
+                      type: string
+                      description: 'required_with:wallet Wallet provider.'
+                      example: apple_pay
+                      enum:
+                        - apple_pay
+                        - google_pay
+                    token:
+                      type: string
+                      description: 'required_with:wallet Encrypted payment token from Apple Pay or Google Pay.'
+                      example: '{"version":"EC_v1","data":"..."}'
+                vault_token:
+                  type:
+                    - string
+                    - 'null'
+                  description: 'Vault token from a previous transaction. When provided, card number/expiry are not required — only CVV is still needed.'
+                  example: vtok_a1b2c3d4e5f6
+                card:
+                  type: object
+                  description: 'Card details object. Required unless vault_token or wallet is provided.'
+                  example: []
+                  properties:
+                    number:
+                      type: string
+                      description: 'Card number. Required if no vault_token or wallet.'
+                      example: '4111111111111111'
+                    exp_month:
+                      type: string
+                      description: 'Card expiry month (2 digits). Required if no vault_token or wallet.'
+                      example: '12'
+                    exp_year:
+                      type: string
+                      description: 'Card expiry year (4 digits). Required if no vault_token or wallet.'
+                      example: '2030'
+                    cvv:
+                      type: string
+                      description: 'Card CVV number (3-4 digits). Required if no wallet.'
+                      example: '123'
+                    name:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Cardholder name.'
+                      example: 'John Doe'
+                reference:
+                  type:
+                    - string
+                    - 'null'
+                  description: 'Merchant reference for this transaction.'
+                  example: order-10001
+                merchant_id:
+                  type:
+                    - integer
+                    - 'null'
+                  description: 'Required for partner API keys. Omit for merchant API keys.'
+                  example: 123
+                success_url:
+                  type:
+                    - string
+                    - 'null'
+                  description: 'URL to redirect to on successful payment (reserved for future use).'
+                  example: 'https://yoursite.com/checkout/success'
+                error_url:
+                  type:
+                    - string
+                    - 'null'
+                  description: 'URL to redirect to on failed payment (reserved for future use).'
+                  example: 'https://yoursite.com/checkout/error'
+                customer:
+                  type:
+                    - object
+                    - 'null'
+                  description: 'Customer details object.'
+                  example: []
+                  properties:
+                    merchant_customer_id:
+                      type: string
+                      description: "Merchant's ID of the customer."
+                      example: cust-001
+                    first_name:
+                      type: string
+                      description: "Customer's first name."
+                      example: John
+                    last_name:
+                      type: string
+                      description: "Customer's last name."
+                      example: Doe
+                    email:
+                      type: string
+                      description: "Customer's email address."
+                      example: john.doe@example.com
+                    phone:
+                      type:
+                        - string
+                        - 'null'
+                      description: "Customer's phone number."
+                      example: '+441234567890'
+                    address:
+                      type:
+                        - string
+                        - 'null'
+                      description: "Customer's address."
+                      example: '1 High Street'
+                    city:
+                      type:
+                        - string
+                        - 'null'
+                      description: "Customer's city."
+                      example: London
+                    postal_code:
+                      type:
+                        - string
+                        - 'null'
+                      description: "Customer's postal code."
+                      example: 'SW1A 1AA'
+                    country_code:
+                      type:
+                        - string
+                        - 'null'
+                      description: "Customer's country code."
+                      example: GB
+                    ip_address:
+                      type:
+                        - string
+                        - 'null'
+                      description: "Customer's IP address."
+                      example: 198.51.100.5
+                  required:
+                    - merchant_customer_id
+                    - first_name
+                    - last_name
+                    - email
+                card_verification_data:
+                  type:
+                    - object
+                    - 'null'
+                  description: 'Links a completed 3DS verification to this transaction. Pass the id returned from POST /api/v1/3ds/verify. The API retrieves stored CAVV, ECI, and DS Transaction ID automatically.'
+                  example: []
+                  properties:
+                    id:
+                      type:
+                        - integer
+                        - 'null'
+                      description: 'ID of the 3DS verification record returned by POST /api/v1/3ds/verify.'
+                      example: 43
+                    status:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'This field is required when <code>card_verification_data.id</code> is not present.'
+                      example: architecto
+                      enum:
+                        - init
+                        - challenge_pending
+                        - attempt
+                        - partial_auth
+                        - full_auth
+                        - failed
+                        - unavailable
+                        - error
+                    cavv:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'This field is required when <code>card_verification_data.id</code> is not present.'
+                      example: architecto
+                    xid:
+                      type:
+                        - string
+                        - 'null'
+                      description: ''
+                      example: architecto
+                    ds_trans_id:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'This field is required when <code>card_verification_data.id</code> is not present.'
+                      example: architecto
+                    three_ds_version:
+                      type:
+                        - string
+                        - 'null'
+                      description: ''
+                      example: architecto
+                    eci:
+                      type:
+                        - string
+                        - 'null'
+                      description: ''
+                      example: architecto
+                  required:
+                    - id
+              required:
+                - amount
+                - currency
+                - transaction_type
+  '/api/v1/transactions/{transaction_id}/capture':
+    post:
+      summary: 'Capture Transaction'
+      operationId: captureTransaction
+      description: "Capture a previously authorized transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Transaction captured'
+                  code: ''
+                  data:
+                    id: 3
+                    related_trans_id: 2
+                    merchant_id: 1
+                    cardholder_id: 2
+                    amount: 1250
+                    currency: EUR
+                    status: captured
+                    transaction_type: capture
+                    merchant_trans_id: ORDER-912346
+                    acquirer_trans_id: '995140741995'
+                    acquirer_auth_code: '400066'
+                    acquirer_ref_num: '741995'
+                    ip_address: 172.19.0.7
+                    updated_at: '2025-05-20T09:18:48.000000Z'
+                    created_at: '2025-05-20T09:18:47.000000Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Transaction captured'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 3
+                      related_trans_id:
+                        type: integer
+                        example: 2
+                      merchant_id:
+                        type: integer
+                        example: 1
+                      cardholder_id:
+                        type: integer
+                        example: 2
+                      amount:
+                        type: integer
+                        example: 1250
+                      currency:
+                        type: string
+                        example: EUR
+                      status:
+                        type: string
+                        example: captured
+                      transaction_type:
+                        type: string
+                        example: capture
+                      merchant_trans_id:
+                        type: string
+                        example: ORDER-912346
+                      acquirer_trans_id:
+                        type: string
+                        example: '995140741995'
+                      acquirer_auth_code:
+                        type: string
+                        example: '400066'
+                      acquirer_ref_num:
+                        type: string
+                        example: '741995'
+                      ip_address:
+                        type: string
+                        example: 172.19.0.7
+                      updated_at:
+                        type: string
+                        example: '2025-05-20T09:18:48.000000Z'
+                      created_at:
+                        type: string
+                        example: '2025-05-20T09:18:47.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Validation errors'
+                  code: ERR_VALIDATION_FAILED
+                  data: null
+                  errors:
+                    amount:
+                      - 'The capture amount must be a number.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  code:
+                    type: string
+                    example: ERR_VALIDATION_FAILED
+                  data:
+                    type: string
+                    example: null
+                  errors:
+                    type: object
+                    properties:
+                      amount:
+                        type: array
+                        example:
+                          - 'The capture amount must be a number.'
+                        items:
+                          type: string
+      tags:
+        - Transactions
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type:
+                    - number
+                    - 'null'
+                  description: 'Transaction amount.'
+                  example: 12.5
+    parameters:
+      -
+        in: path
+        name: transaction_id
+        description: 'The ID of the transaction.'
+        example: 21
+        required: true
+        schema:
+          type: integer
+  '/api/v1/transactions/{transaction_id}/refund':
+    post:
+      summary: 'Refund Transaction'
+      operationId: refundTransaction
+      description: "Refund a previously captured transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Transaction refunded'
+                  code: ''
+                  data:
+                    id: 4
+                    related_trans_id: 3
+                    merchant_id: 1
+                    cardholder_id: 2
+                    amount: 1250
+                    currency: EUR
+                    status: refunded
+                    transaction_type: refund
+                    merchant_trans_id: ORDER-912346
+                    acquirer_trans_id: '514009741995'
+                    acquirer_auth_code: '400066'
+                    acquirer_ref_num: '741995'
+                    ip_address: 172.19.0.7
+                    updated_at: '2025-05-20T09:18:48.000000Z'
+                    created_at: '2025-05-20T09:18:47.000000Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Transaction refunded'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 4
+                      related_trans_id:
+                        type: integer
+                        example: 3
+                      merchant_id:
+                        type: integer
+                        example: 1
+                      cardholder_id:
+                        type: integer
+                        example: 2
+                      amount:
+                        type: integer
+                        example: 1250
+                      currency:
+                        type: string
+                        example: EUR
+                      status:
+                        type: string
+                        example: refunded
+                      transaction_type:
+                        type: string
+                        example: refund
+                      merchant_trans_id:
+                        type: string
+                        example: ORDER-912346
+                      acquirer_trans_id:
+                        type: string
+                        example: '514009741995'
+                      acquirer_auth_code:
+                        type: string
+                        example: '400066'
+                      acquirer_ref_num:
+                        type: string
+                        example: '741995'
+                      ip_address:
+                        type: string
+                        example: 172.19.0.7
+                      updated_at:
+                        type: string
+                        example: '2025-05-20T09:18:48.000000Z'
+                      created_at:
+                        type: string
+                        example: '2025-05-20T09:18:47.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Validation errors'
+                  code: ERR_VALIDATION_FAILED
+                  data: null
+                  errors:
+                    amount:
+                      - 'The refund amount must be a number.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  code:
+                    type: string
+                    example: ERR_VALIDATION_FAILED
+                  data:
+                    type: string
+                    example: null
+                  errors:
+                    type: object
+                    properties:
+                      amount:
+                        type: array
+                        example:
+                          - 'The refund amount must be a number.'
+                        items:
+                          type: string
+      tags:
+        - Transactions
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type:
+                    - number
+                    - 'null'
+                  description: 'Transaction amount.'
+                  example: 12.5
+                reason:
+                  type:
+                    - string
+                    - 'null'
+                  description: 'Reason for refund.'
+                  example: architecto
+    parameters:
+      -
+        in: path
+        name: transaction_id
+        description: 'The ID of the transaction.'
+        example: 21
+        required: true
+        schema:
+          type: integer
+  '/api/v1/transactions/{transaction_id}/status':
+    get:
+      summary: 'Transaction Status'
+      operationId: transactionStatus
+      description: "Get the status of a transaction.\n\nMerchant API keys can check their own transactions. Partner API keys can\ncheck, capture, refund, and void transactions belonging to linked merchants\nthey are allowed to access. Ownership is enforced by the request layer."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Transaction status'
+                  code: ''
+                  data:
+                    id: 2
+                    related_trans_id: null
+                    merchant_id: 1
+                    cardholder_id: 2
+                    amount: 1250
+                    currency: EUR
+                    status: auth
+                    transaction_type: auth
+                    merchant_trans_id: ORDER-912346
+                    acquirer_trans_id: '514009741995'
+                    acquirer_auth_code: '400066'
+                    acquirer_ref_num: '741995'
+                    ip_address: 172.19.0.7
+                    updated_at: '2025-05-20T09:18:48.000000Z'
+                    created_at: '2025-05-20T09:18:47.000000Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Transaction status'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      related_trans_id:
+                        type: string
+                        example: null
+                      merchant_id:
+                        type: integer
+                        example: 1
+                      cardholder_id:
+                        type: integer
+                        example: 2
+                      amount:
+                        type: integer
+                        example: 1250
+                      currency:
+                        type: string
+                        example: EUR
+                      status:
+                        type: string
+                        example: auth
+                      transaction_type:
+                        type: string
+                        example: auth
+                      merchant_trans_id:
+                        type: string
+                        example: ORDER-912346
+                      acquirer_trans_id:
+                        type: string
+                        example: '514009741995'
+                      acquirer_auth_code:
+                        type: string
+                        example: '400066'
+                      acquirer_ref_num:
+                        type: string
+                        example: '741995'
+                      ip_address:
+                        type: string
+                        example: 172.19.0.7
+                      updated_at:
+                        type: string
+                        example: '2025-05-20T09:18:48.000000Z'
+                      created_at:
+                        type: string
+                        example: '2025-05-20T09:18:47.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - Transactions
+    parameters:
+      -
+        in: path
+        name: transaction_id
+        description: 'The ID of the transaction.'
+        example: 21
+        required: true
+        schema:
+          type: integer
+  '/api/v1/transactions/{transaction_id}/void':
+    post:
+      summary: 'Void Transaction'
+      operationId: voidTransaction
+      description: "Void a previously initiated auth transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Transaction voided'
+                  code: ''
+                  data:
+                    id: 4
+                    related_trans_id: 3
+                    merchant_id: 1
+                    cardholder_id: 2
+                    amount: 1250
+                    currency: EUR
+                    status: voided
+                    transaction_type: void
+                    merchant_trans_id: ORDER-912346
+                    acquirer_trans_id: '514009741995'
+                    acquirer_auth_code: '400066'
+                    acquirer_ref_num: '741995'
+                    ip_address: 172.19.0.7
+                    updated_at: '2025-05-20T09:18:48.000000Z'
+                    created_at: '2025-05-20T09:18:47.000000Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Transaction voided'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 4
+                      related_trans_id:
+                        type: integer
+                        example: 3
+                      merchant_id:
+                        type: integer
+                        example: 1
+                      cardholder_id:
+                        type: integer
+                        example: 2
+                      amount:
+                        type: integer
+                        example: 1250
+                      currency:
+                        type: string
+                        example: EUR
+                      status:
+                        type: string
+                        example: voided
+                      transaction_type:
+                        type: string
+                        example: void
+                      merchant_trans_id:
+                        type: string
+                        example: ORDER-912346
+                      acquirer_trans_id:
+                        type: string
+                        example: '514009741995'
+                      acquirer_auth_code:
+                        type: string
+                        example: '400066'
+                      acquirer_ref_num:
+                        type: string
+                        example: '741995'
+                      ip_address:
+                        type: string
+                        example: 172.19.0.7
+                      updated_at:
+                        type: string
+                        example: '2025-05-20T09:18:48.000000Z'
+                      created_at:
+                        type: string
+                        example: '2025-05-20T09:18:47.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Validation errors'
+                  code: ERR_VALIDATION_FAILED
+                  data: null
+                  errors:
+                    amount:
+                      - 'The void amount must be a number.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  code:
+                    type: string
+                    example: ERR_VALIDATION_FAILED
+                  data:
+                    type: string
+                    example: null
+                  errors:
+                    type: object
+                    properties:
+                      amount:
+                        type: array
+                        example:
+                          - 'The void amount must be a number.'
+                        items:
+                          type: string
+      tags:
+        - Transactions
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type:
+                    - number
+                    - 'null'
+                  description: 'Transaction amount.'
+                  example: 12.5
+                reason:
+                  type:
+                    - string
+                    - 'null'
+                  description: 'Reason for refund.'
+                  example: architecto
+    parameters:
+      -
+        in: path
+        name: transaction_id
+        description: 'The ID of the transaction.'
+        example: 21
+        required: true
+        schema:
+          type: integer
+  /api/v1/3ds/verify:
+    post:
+      summary: 'Initiate Card Verification'
+      operationId: initiateCardVerification
+      description: "Initiate a 3D Secure card verification process before a payment request.\n\n**Frictionless flow:** If the issuer does not require a challenge, the response returns immediately\nwith `status: full_auth`. Use the returned `id` in `card_verification_data.id` when initiating the transaction.\n\n**Challenge flow:** The response includes a `challenge_url`. Redirect the cardholder there. After they\ncomplete the bank challenge, they are redirected to your `auth_url` with\n`?card_verification_id={id}&status={full_auth|failed}` query parameters. Use the `card_verification_id`\nvalue in `card_verification_data.id` when initiating the transaction.\n\nAuthenticate with a merchant API key, or a partner API key plus `merchant_id`\nfor the merchant being acted on behalf of (same rules as the transaction endpoint)."
+      parameters:
+        -
+          in: query
+          name: amount
+          description: 'Must be at least 1.'
+          example: 16
+          required: true
+          schema:
+            type: integer
+            description: 'Must be at least 1.'
+            example: 16
+        -
+          in: query
+          name: currency
+          description: 'The <code>code</code> of an existing record in the currencies table. Must be 3 characters.'
+          example: ngz
+          required: true
+          schema:
+            type: string
+            description: 'The <code>code</code> of an existing record in the currencies table. Must be 3 characters.'
+            example: ngz
+        -
+          in: query
+          name: card
+          description: ''
+          example: []
+          required: true
+          schema:
+            type: object
+            description: ''
+            example: []
+            properties: {  }
+        -
+          in: query
+          name: card.name
+          description: 'Must not be greater than 255 characters.'
+          example: b
+          required: true
+          schema:
+            type: string
+            description: 'Must not be greater than 255 characters.'
+            example: b
+        -
+          in: query
+          name: card.number
+          description: 'Must be at least 13 characters. Must not be greater than 19 characters.'
+          example: ng
+          required: true
+          schema:
+            type: string
+            description: 'Must be at least 13 characters. Must not be greater than 19 characters.'
+            example: ng
+        -
+          in: query
+          name: card.exp_month
+          description: 'Must be at least 1. Must not be greater than 12.'
+          example: 6
+          required: true
+          schema:
+            type: integer
+            description: 'Must be at least 1. Must not be greater than 12.'
+            example: 6
+        -
+          in: query
+          name: card.exp_year
+          description: 'Must be at least 2026. Must not be greater than 2046.'
+          example: 17
+          required: true
+          schema:
+            type: integer
+            description: 'Must be at least 2026. Must not be greater than 2046.'
+            example: 17
+        -
+          in: query
+          name: card.cvv
+          description: 'Must be at least 3 characters. Must not be greater than 4 characters.'
+          example: iyvd
+          required: false
+          schema:
+            type:
+              - string
+              - 'null'
+            description: 'Must be at least 3 characters. Must not be greater than 4 characters.'
+            example: iyvd
+        -
+          in: query
+          name: auth_url
+          description: 'Must be a valid URL.'
+          example: 'https://gaylord.com/modi-deserunt-aut-ab-provident-perspiciatis.html'
+          required: true
+          schema:
+            type: string
+            description: 'Must be a valid URL.'
+            example: 'https://gaylord.com/modi-deserunt-aut-ab-provident-perspiciatis.html'
+        -
+          in: query
+          name: merchant_id
+          description: 'The <code>id</code> of an existing record in the merchants table.'
+          example: 16
+          required: false
+          schema:
+            type:
+              - integer
+              - 'null'
+            description: 'The <code>id</code> of an existing record in the merchants table.'
+            example: 16
+        -
+          in: query
+          name: browser_data
+          description: ''
+          example: null
+          required: false
+          schema:
+            type:
+              - object
+              - 'null'
+            description: ''
+            example: null
+            properties: {  }
+        -
+          in: query
+          name: browser_data.accept_header
+          description: 'This field is required when <code>browser_data</code> is present. Must not be greater than 2048 characters.'
+          example: 'n'
+          required: false
+          schema:
+            type: string
+            description: 'This field is required when <code>browser_data</code> is present. Must not be greater than 2048 characters.'
+            example: 'n'
+        -
+          in: query
+          name: browser_data.color_depth
+          description: 'This field is required when <code>browser_data</code> is present. Must be at least 1. Must not be greater than 48.'
+          example: 7
+          required: false
+          schema:
+            type: integer
+            description: 'This field is required when <code>browser_data</code> is present. Must be at least 1. Must not be greater than 48.'
+            example: 7
+        -
+          in: query
+          name: browser_data.java_enabled
+          description: 'This field is required when <code>browser_data</code> is present.'
+          example: true
+          required: false
+          schema:
+            type: boolean
+            description: 'This field is required when <code>browser_data</code> is present.'
+            example: true
+        -
+          in: query
+          name: browser_data.java_script_enabled
+          description: 'This field is required when <code>browser_data</code> is present.'
+          example: false
+          required: false
+          schema:
+            type: boolean
+            description: 'This field is required when <code>browser_data</code> is present.'
+            example: false
+        -
+          in: query
+          name: browser_data.language
+          description: 'This field is required when <code>browser_data</code> is present. Must not be greater than 8 characters.'
+          example: zmiyvdlj
+          required: false
+          schema:
+            type: string
+            description: 'This field is required when <code>browser_data</code> is present. Must not be greater than 8 characters.'
+            example: zmiyvdlj
+        -
+          in: query
+          name: browser_data.screen_height
+          description: 'This field is required when <code>browser_data</code> is present. Must be at least 1.'
+          example: 2
+          required: false
+          schema:
+            type: integer
+            description: 'This field is required when <code>browser_data</code> is present. Must be at least 1.'
+            example: 2
+        -
+          in: query
+          name: browser_data.screen_width
+          description: 'This field is required when <code>browser_data</code> is present. Must be at least 1.'
+          example: 35
+          required: false
+          schema:
+            type: integer
+            description: 'This field is required when <code>browser_data</code> is present. Must be at least 1.'
+            example: 35
+        -
+          in: query
+          name: browser_data.time_zone_offset_in_minutes
+          description: 'This field is required when <code>browser_data</code> is present. Must be between -720 and 840.'
+          example: -720
+          required: false
+          schema:
+            type: integer
+            description: 'This field is required when <code>browser_data</code> is present. Must be between -720 and 840.'
+            example: -720
+        -
+          in: query
+          name: browser_data.user_agent
+          description: 'This field is required when <code>browser_data</code> is present. Must not be greater than 2048 characters.'
+          example: h
+          required: false
+          schema:
+            type: string
+            description: 'This field is required when <code>browser_data</code> is present. Must not be greater than 2048 characters.'
+            example: h
+        -
+          in: query
+          name: browser_data.ip_address
+          description: 'Must not be greater than 45 characters.'
+          example: w
+          required: false
+          schema:
+            type:
+              - string
+              - 'null'
+            description: 'Must not be greater than 45 characters.'
+            example: w
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: '3DS authentication completed (frictionless)'
+                  code: ''
+                  data:
+                    id: 166
+                    amount: 1250
+                    currency: EUR
+                    version: 2.2.0
+                    eci: '05'
+                    cavv: AAABA0UREQAAAAAAAAAAAAAAAAA=
+                    xid: null
+                    ds_trans_id: 6b66be83-f692-405c-9079-92f7182af5e5
+                    status: full_auth
+                    auth_type: frictionless
+                    challenge_url: 'https://yoursite.com/checkout/3ds-complete'
+                    post_url: null
+                    html: null
+                    created_at: '2025-06-12 09:47:15'
+                    updated_at: '2025-06-12 09:47:15'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: '3DS authentication completed (frictionless)'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 166
+                      amount:
+                        type: integer
+                        example: 1250
+                      currency:
+                        type: string
+                        example: EUR
+                      version:
+                        type: string
+                        example: 2.2.0
+                      eci:
+                        type: string
+                        example: '05'
+                      cavv:
+                        type: string
+                        example: AAABA0UREQAAAAAAAAAAAAAAAAA=
+                      xid:
+                        type: string
+                        example: null
+                      ds_trans_id:
+                        type: string
+                        example: 6b66be83-f692-405c-9079-92f7182af5e5
+                      status:
+                        type: string
+                        example: full_auth
+                      auth_type:
+                        type: string
+                        example: frictionless
+                      challenge_url:
+                        type: string
+                        example: 'https://yoursite.com/checkout/3ds-complete'
+                      post_url:
+                        type: string
+                        example: null
+                      html:
+                        type: string
+                        example: null
+                      created_at:
+                        type: string
+                        example: '2025-06-12 09:47:15'
+                      updated_at:
+                        type: string
+                        example: '2025-06-12 09:47:15'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Validation errors'
+                  code: ERR_VALIDATION_FAILED
+                  data: null
+                  errors:
+                    amount:
+                      - 'The amount is required.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  code:
+                    type: string
+                    example: ERR_VALIDATION_FAILED
+                  data:
+                    type: string
+                    example: null
+                  errors:
+                    type: object
+                    properties:
+                      amount:
+                        type: array
+                        example:
+                          - 'The amount is required.'
+                        items:
+                          type: string
+      tags:
+        - 'Card Verification'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: 'Transaction amount.'
+                  example: 12.5
+                currency:
+                  type: string
+                  description: 'Transaction currency (3-letter ISO code).'
+                  example: EUR
+                card:
+                  type: object
+                  description: 'Card details object.'
+                  example: []
+                  properties:
+                    number:
+                      type: string
+                      description: 'Card number.'
+                      example: '4200000000000091'
+                    exp_month:
+                      type: integer
+                      description: 'Card expiry month (1-12).'
+                      example: 12
+                    exp_year:
+                      type: integer
+                      description: 'Card expiry year (4 digits).'
+                      example: 2030
+                    name:
+                      type: string
+                      description: 'Cardholder name.'
+                      example: 'John Doe'
+                    cvv:
+                      type: string
+                      description: 'Card CVV (3-4 digits). Optional for 3DS verification.'
+                      example: '123'
+                  required:
+                    - number
+                    - exp_month
+                    - exp_year
+                    - name
+                auth_url:
+                  type: string
+                  description: 'Your return URL. After the cardholder completes the 3DS challenge, they are redirected here with ?card_verification_id={id}&status={full_auth|failed} query parameters.'
+                  example: 'https://yoursite.com/checkout/3ds-complete'
+                browser_data:
+                  type: object
+                  description: 'Browser data for 3DS 2.0 when the merchant uses the PXP acquirer; optional for other acquirers.'
+                  example: []
+                  properties:
+                    accept_header:
+                      type: string
+                      description: ''
+                      example: 'text/html,application/xhtml+xml'
+                    color_depth:
+                      type: integer
+                      description: ''
+                      example: 24
+                    java_enabled:
+                      type: boolean
+                      description: ''
+                      example: false
+                    java_script_enabled:
+                      type: boolean
+                      description: ''
+                      example: true
+                    language:
+                      type: string
+                      description: ''
+                      example: en-US
+                    screen_height:
+                      type: integer
+                      description: ''
+                      example: 1080
+                    screen_width:
+                      type: integer
+                      description: ''
+                      example: 1920
+                    time_zone_offset_in_minutes:
+                      type: integer
+                      description: ''
+                      example: -60
+                    user_agent:
+                      type: string
+                      description: ''
+                      example: Mozilla/5.0...
+                    ip_address:
+                      type: string
+                      description: optional
+                      example: 203.0.113.1
+              required:
+                - amount
+                - currency
+                - card
+                - auth_url
+                - browser_data
+  /api/v1/key-info:
+    get:
+      summary: 'Get API Key Information'
+      operationId: getAPIKeyInformation
+      description: "Returns information about the API key being used to authenticate the request.\nAPI keys are provisioned by SoftLemon admins for merchants and partners.\nSelf-service onboarding and API key generation are not currently available."
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'API Operations'

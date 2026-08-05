@@ -1,0 +1,908 @@
+openapi: 3.1.0
+info:
+  title: 'Softlemon Partner API'
+  description: "Production-ready partner integration endpoints for admin-provisioned API keys.\n\nThe gateway also sends signed outbound webhooks on transaction state changes — see the Webhooks section below and the [webhook integration guide](guides/webhooks.html) for signature verification examples and retry semantics."
+  version: 0.9.0
+servers:
+  -
+    url: 'https://api.sandbox.softlemons.com'
+tags:
+  -
+    name: 'Partner API'
+    description: ''
+  -
+    name: 'API Operations'
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'Use the API key provisioned by your SoftLemon admin team. Self-service onboarding and API key generation are not currently available.'
+  parameters:
+    XSoftlemonEventId:
+      name: X-Softlemon-Event-Id
+      in: header
+      required: true
+      schema:
+        type: string
+        pattern: '^evt_[0-9a-z]{26}$'
+      description: 'Event id, identical to the payload `id`. Stable across retries and replays — deduplicate on this value.'
+    XSoftlemonDeliveryId:
+      name: X-Softlemon-Delivery-Id
+      in: header
+      required: true
+      schema:
+        type: string
+        pattern: '^whd_[0-9a-z]{26}$'
+      description: 'Delivery attempt id. Unique per attempt.'
+    XSoftlemonEventType:
+      name: X-Softlemon-Event-Type
+      in: header
+      required: true
+      schema:
+        type: string
+      description: 'The event type, e.g. `transaction.captured`.'
+    XSoftlemonTimestamp:
+      name: X-Softlemon-Timestamp
+      in: header
+      required: true
+      schema:
+        type: string
+      description: 'Unix seconds at signing time; equals the `t=` value inside the signature header. Reject deliveries where |now − t| exceeds 300 seconds.'
+    XSoftlemonSignature:
+      name: X-Softlemon-Signature
+      in: header
+      required: true
+      schema:
+        type: string
+        pattern: '^t=\d+,v1=[0-9a-f]{64}$'
+      description: '`t={timestamp},v1={hex}` where `hex` is HMAC-SHA256("{timestamp}.{raw_body}", endpoint secret). Verify against the raw request body with a constant-time comparison — see the webhooks guide for reference implementations.'
+    XSoftlemonWebhookVersion:
+      name: X-Softlemon-Webhook-Version
+      in: header
+      required: true
+      schema:
+        type: string
+      description: 'Payload schema version, e.g. `2026-08-01`.'
+    XSoftlemonReplay:
+      name: X-Softlemon-Replay
+      in: header
+      required: false
+      schema:
+        type: string
+        const: 'true'
+      description: 'Present (with value `true`) only when the delivery is a manual replay. Absence means the delivery is not a replay; the header is never sent with the value `false`.'
+  schemas:
+    WebhookTransactionEvent:
+      type: object
+      description: 'Envelope for every transaction webhook. The contract is additive-by-default — new fields may appear at any time without a version bump, and receivers must ignore unknown fields. Payloads never contain cardholder data. Amounts are integers in minor units.'
+      required:
+        - id
+        - type
+        - created_at
+        - api_version
+        - data
+      properties:
+        id:
+          type: string
+          pattern: '^evt_[0-9a-z]{26}$'
+          description: 'Event id — the idempotency key across retries and replays.'
+        type:
+          type: string
+          enum:
+            - transaction.authorized
+            - transaction.captured
+            - transaction.succeeded
+            - transaction.settled
+            - transaction.partially_settled
+            - transaction.paid
+            - transaction.voided
+            - transaction.refunded
+            - transaction.partially_refunded
+            - transaction.failed
+            - transaction.cancelled
+            - transaction.chargeback
+            - transaction.pending
+        created_at:
+          type: string
+          format: date-time
+          description: 'Event creation time (ISO 8601 UTC).'
+        api_version:
+          type: string
+          description: 'Payload schema version.'
+        data:
+          type: object
+          required:
+            - transaction
+          properties:
+            transaction:
+              $ref: '#/components/schemas/WebhookTransactionSnapshot'
+            parent_transaction:
+              $ref: '#/components/schemas/WebhookParentTransactionSummary'
+    WebhookTransactionSnapshot:
+      type: object
+      description: 'Snapshot of the transaction row that triggered the event.'
+      required:
+        - id
+        - transaction_type
+        - status
+        - amount
+        - currency
+      properties:
+        id:
+          type: integer
+          description: 'Gateway transaction id — the unique identifier to reconcile on.'
+        merchant_trans_id:
+          type:
+            - string
+            - 'null'
+          description: "The merchant's own reference. Captures, refunds and voids share the parent's value — not unique on its own."
+        related_trans_id:
+          type:
+            - integer
+            - 'null'
+          description: 'Parent transaction id on child rows (captures, refunds, voids).'
+        transaction_type:
+          type: string
+          enum:
+            - sale
+            - auth
+            - capture
+            - void
+            - refund
+        status:
+          type: string
+          description: 'Transaction status — see the transaction statuses guide.'
+        amount:
+          type: integer
+          description: 'Amount in minor units.'
+        currency:
+          type: string
+          description: 'ISO 4217 currency code.'
+        captured_amount:
+          type: integer
+          description: 'Present only on authorization rows (`transaction_type` = `auth`).'
+        refunded_amount:
+          type: integer
+          description: 'Present only on `sale` and `capture` rows.'
+        acquirer_provider:
+          type:
+            - string
+            - 'null'
+        acquirer_trans_id:
+          type:
+            - string
+            - 'null'
+        acquirer_auth_code:
+          type:
+            - string
+            - 'null'
+        description:
+          type:
+            - string
+            - 'null'
+        created_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+        updated_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+    WebhookParentTransactionSummary:
+      type: object
+      description: "Present only on child-row events (captures, refunds, voids) — the parent's updated totals."
+      required:
+        - id
+        - status
+        - amount
+        - captured_amount
+        - refunded_amount
+      properties:
+        id:
+          type: integer
+        status:
+          type: string
+        amount:
+          type: integer
+        captured_amount:
+          type: integer
+        refunded_amount:
+          type: integer
+    WebhookPingEvent:
+      type: object
+      description: 'Test ping payload — signed like a real event, never persisted.'
+      required:
+        - id
+        - type
+        - created_at
+        - api_version
+        - data
+      properties:
+        id:
+          type: string
+          pattern: '^evt_[0-9a-z]{26}$'
+        type:
+          type: string
+          const: ping
+        created_at:
+          type: string
+          format: date-time
+        api_version:
+          type: string
+        data:
+          type: object
+          required:
+            - merchant_id
+          properties:
+            merchant_id:
+              type: integer
+security:
+  -
+    default: []
+webhooks:
+  transaction.authorized:
+    post:
+      summary: 'Transaction authorized'
+      description: 'An authorization was approved (status `auth`). Acquirer auto-capture flows emit this first and `transaction.succeeded` afterwards on the same transaction id.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery. Anything else — including redirects — triggers the retry schedule.'
+  transaction.captured:
+    post:
+      summary: 'Transaction captured'
+      description: "A transaction reached `captured`. Fires on the capture child row and, on a full capture, on the parent authorization's roll-up (distinguish via `transaction_type` and `related_trans_id`)."
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+            example:
+              id: evt_01k20b9v6ye2ttfvghw2hcaa8p
+              type: transaction.captured
+              created_at: '2026-08-05T12:00:00Z'
+              api_version: '2026-08-01'
+              data:
+                transaction:
+                  id: 123457
+                  merchant_trans_id: ORDER-100045
+                  related_trans_id: 123456
+                  transaction_type: capture
+                  status: captured
+                  amount: 5000
+                  currency: EUR
+                  refunded_amount: 0
+                  acquirer_provider: qashpay
+                  acquirer_trans_id: 8ac7a4a29852f6f101985300a1b41c2f
+                  acquirer_auth_code: '012345'
+                  description: null
+                  created_at: '2026-08-05T11:59:48Z'
+                  updated_at: '2026-08-05T12:00:00Z'
+                parent_transaction:
+                  id: 123456
+                  status: captured
+                  amount: 5000
+                  captured_amount: 5000
+                  refunded_amount: 0
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.succeeded:
+    post:
+      summary: 'Transaction succeeded'
+      description: 'A sale completed (status `success`).'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+            example:
+              id: evt_01k20bhq3rw9mk4t8vczs0e6xj
+              type: transaction.succeeded
+              created_at: '2026-08-05T12:00:00Z'
+              api_version: '2026-08-01'
+              data:
+                transaction:
+                  id: 123456
+                  merchant_trans_id: ORDER-100045
+                  related_trans_id: null
+                  transaction_type: sale
+                  status: success
+                  amount: 5000
+                  currency: EUR
+                  refunded_amount: 0
+                  acquirer_provider: qashpay
+                  acquirer_trans_id: 8ac7a4a29852f6f101985300a1b41c2f
+                  acquirer_auth_code: '012345'
+                  description: null
+                  created_at: '2026-08-05T11:59:48Z'
+                  updated_at: '2026-08-05T12:00:00Z'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.settled:
+    post:
+      summary: 'Transaction settled'
+      description: 'A transaction reached `settled`, including the parent roll-up when a partially captured authorization is closed by a void.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.partially_settled:
+    post:
+      summary: 'Transaction partially settled'
+      description: 'A parent authorization was partially captured (roll-up status `partially_settled`).'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.paid:
+    post:
+      summary: 'Transaction paid'
+      description: 'A transaction reached `paid`.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.voided:
+    post:
+      summary: 'Transaction voided'
+      description: 'An authorization or payment was voided.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.refunded:
+    post:
+      summary: 'Transaction refunded (fully)'
+      description: "A refund completed and the parent's cumulative refunds now cover the captured amount. `data.transaction` is the refund child row; `data.parent_transaction` summarises the parent's updated totals. Each refund is its own child transaction and produces its own event."
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.partially_refunded:
+    post:
+      summary: 'Transaction partially refunded'
+      description: "A refund completed but part of the captured amount remains unrefunded. `data.transaction` is the refund child row; `data.parent_transaction` summarises the parent's updated totals."
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+            example:
+              id: evt_01k20bt64k2c14n5xw8ahb62pd
+              type: transaction.partially_refunded
+              created_at: '2026-08-05T14:30:00Z'
+              api_version: '2026-08-01'
+              data:
+                transaction:
+                  id: 123460
+                  merchant_trans_id: ORDER-100045
+                  related_trans_id: 123456
+                  transaction_type: refund
+                  status: refunded
+                  amount: 2000
+                  currency: EUR
+                  acquirer_provider: qashpay
+                  acquirer_trans_id: 8ac7a4a29853f1a801985391c4dd3d61
+                  acquirer_auth_code: null
+                  description: 'Partial refund'
+                  created_at: '2026-08-05T14:29:55Z'
+                  updated_at: '2026-08-05T14:30:00Z'
+                parent_transaction:
+                  id: 123456
+                  status: success
+                  amount: 5000
+                  captured_amount: 5000
+                  refunded_amount: 2000
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.failed:
+    post:
+      summary: 'Transaction failed'
+      description: 'A transaction failed.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.cancelled:
+    post:
+      summary: 'Transaction cancelled'
+      description: 'A transaction was cancelled, including risk rejections and decline-cooldown blocks. Duplicate paper-trail rows (already rejected synchronously with HTTP 409) never emit events.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.chargeback:
+    post:
+      summary: 'Transaction chargeback'
+      description: 'A chargeback was recorded.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  transaction.pending:
+    post:
+      summary: 'Transaction pending (opt-in)'
+      description: 'A transaction entered `pending`. Delivered only to endpoints whose `events` subscription explicitly lists `transaction.pending` — it is not part of the default event set.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  ping:
+    post:
+      summary: 'Test ping'
+      description: 'Test delivery triggered by an administrator. Signed and structured like a real event but never persisted; `data` contains only `merchant_id`.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookPingEvent'
+            example:
+              id: evt_01k20c4x9y5r08qwj6dfhm3bzt
+              type: ping
+              created_at: '2026-08-05T12:00:00Z'
+              api_version: '2026-08-01'
+              data:
+                merchant_id: 42
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+paths:
+  /api/v1/merchants:
+    get:
+      summary: 'List merchants linked to the authenticated partner.'
+      operationId: listMerchantsLinkedToTheAuthenticatedPartner
+      description: 'Partner API keys only.'
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'Partner API'
+  '/api/v1/merchants/{merchant_id}':
+    get:
+      summary: 'Get a specific merchant linked to the authenticated partner.'
+      operationId: getASpecificMerchantLinkedToTheAuthenticatedPartner
+      description: 'Partner API keys only.'
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'Partner API'
+    parameters:
+      -
+        in: path
+        name: merchant_id
+        description: 'The ID of the merchant.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/v1/merchants/{merchant_id}/transactions':
+    get:
+      summary: 'Get transactions for a merchant linked to the authenticated partner.'
+      operationId: getTransactionsForAMerchantLinkedToTheAuthenticatedPartner
+      description: 'Partner API keys only.'
+      parameters:
+        -
+          in: query
+          name: status
+          description: 'Filter transactions by status.'
+          example: success
+          required: false
+          schema:
+            type: string
+            description: 'Filter transactions by status.'
+            example: success
+        -
+          in: query
+          name: from
+          description: 'Filter transactions created on or after this date.'
+          example: '2024-01-01'
+          required: false
+          schema:
+            type: string
+            description: 'Filter transactions created on or after this date.'
+            example: '2024-01-01'
+        -
+          in: query
+          name: to
+          description: 'Filter transactions created on or before this date.'
+          example: '2024-12-31'
+          required: false
+          schema:
+            type: string
+            description: 'Filter transactions created on or before this date.'
+            example: '2024-12-31'
+        -
+          in: query
+          name: per_page
+          description: 'Number of transactions per page. Maximum 100.'
+          example: 25
+          required: false
+          schema:
+            type: integer
+            description: 'Number of transactions per page. Maximum 100.'
+            example: 25
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'Partner API'
+    parameters:
+      -
+        in: path
+        name: merchant_id
+        description: 'The ID of the merchant.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/v1/key-info:
+    get:
+      summary: 'Get API Key Information'
+      operationId: getAPIKeyInformation
+      description: "Returns information about the API key being used to authenticate the request.\nAPI keys are provisioned by SoftLemon admins for merchants and partners.\nSelf-service onboarding and API key generation are not currently available."
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'API Operations'
