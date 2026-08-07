@@ -1,7 +1,26 @@
 openapi: 3.1.0
 info:
   title: 'Softlemon Partner API'
-  description: "Production-ready partner integration endpoints for admin-provisioned API keys.\n\nThe gateway also sends signed outbound webhooks on transaction state changes — see the Webhooks section below and the [webhook integration guide](guides/webhooks.html) for signature verification examples and retry semantics."
+  description: |
+    Production-ready partner integration endpoints for admin-provisioned API keys.
+
+    **Base URL:** `https://api.sandbox.softlemons.com/`
+
+    This documentation covers the partner integration surface for admin-provisioned API keys.
+
+    Use these endpoints when a partner is managing linked merchants and accessing partner-facing operational resources.
+
+    API keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.
+
+    The gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.
+
+    ## Authenticating requests
+
+    To authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.
+
+    ## Integration guides
+
+    The [partner integration guide](/guides/partner-integration) walks through the full flow step by step: confirming your key's scope, listing linked merchants, reviewing their transactions and processing payments on a merchant's behalf with `merchant_id`. The [webhook integration guide](/guides/webhooks) covers event delivery and signature verification.
   version: 0.9.0
 servers:
   -
@@ -27,7 +46,7 @@ components:
       schema:
         type: string
         pattern: '^evt_[0-9a-z]{26}$'
-      description: 'Event id, identical to the payload `id`. Stable across retries and replays — deduplicate on this value.'
+      description: 'Event id, identical to the payload `id`. Stable across retries and replays. Deduplicate on this value.'
     XSoftlemonDeliveryId:
       name: X-Softlemon-Delivery-Id
       in: header
@@ -49,7 +68,7 @@ components:
       required: true
       schema:
         type: string
-      description: 'Unix seconds at signing time; equals the `t=` value inside the signature header. Reject deliveries where |now − t| exceeds 300 seconds.'
+      description: 'Unix seconds at signing time. Equals the `t=` value inside the signature header. Reject deliveries where the difference between now and `t` exceeds 300 seconds.'
     XSoftlemonSignature:
       name: X-Softlemon-Signature
       in: header
@@ -57,7 +76,7 @@ components:
       schema:
         type: string
         pattern: '^t=\d+,v1=[0-9a-f]{64}$'
-      description: '`t={timestamp},v1={hex}` where `hex` is HMAC-SHA256("{timestamp}.{raw_body}", endpoint secret). Verify against the raw request body with a constant-time comparison — see the webhooks guide for reference implementations.'
+      description: '`t={timestamp},v1={hex}` where `hex` is HMAC-SHA256("{timestamp}.{raw_body}", endpoint secret). Verify against the raw request body with a constant-time comparison. See the webhooks guide for reference implementations.'
     XSoftlemonWebhookVersion:
       name: X-Softlemon-Webhook-Version
       in: header
@@ -72,11 +91,11 @@ components:
       schema:
         type: string
         const: 'true'
-      description: 'Present (with value `true`) only when the delivery is a manual replay. Absence means the delivery is not a replay; the header is never sent with the value `false`.'
+      description: 'Present (with value `true`) only when the delivery is a manual replay. Absence means the delivery is not a replay. The header is never sent with the value `false`.'
   schemas:
     WebhookTransactionEvent:
       type: object
-      description: 'Envelope for every transaction webhook. The contract is additive-by-default — new fields may appear at any time without a version bump, and receivers must ignore unknown fields. Payloads never contain cardholder data. Amounts are integers in minor units.'
+      description: 'Envelope for every transaction webhook. The contract is additive by default. New fields may appear at any time without a version bump and receivers must ignore unknown fields. Payloads never contain cardholder data. Amounts are integers in minor units.'
       required:
         - id
         - type
@@ -87,7 +106,7 @@ components:
         id:
           type: string
           pattern: '^evt_[0-9a-z]{26}$'
-          description: 'Event id — the idempotency key across retries and replays.'
+          description: 'Event id, the idempotency key across retries and replays.'
         type:
           type: string
           enum:
@@ -132,12 +151,12 @@ components:
       properties:
         id:
           type: integer
-          description: 'Gateway transaction id — the unique identifier to reconcile on.'
+          description: 'Gateway transaction id, the unique identifier to reconcile on.'
         merchant_trans_id:
           type:
             - string
             - 'null'
-          description: "The merchant's own reference. Captures, refunds and voids share the parent's value — not unique on its own."
+          description: "The merchant's own reference. Captures, refunds and voids share the parent's value. It is not unique on its own."
         related_trans_id:
           type:
             - integer
@@ -153,7 +172,7 @@ components:
             - refund
         status:
           type: string
-          description: 'Transaction status — see the transaction statuses guide.'
+          description: 'Transaction status. See the [transaction statuses guide](/guides/transaction-statuses).'
         amount:
           type: integer
           description: 'Amount in minor units.'
@@ -194,7 +213,7 @@ components:
           format: date-time
     WebhookParentTransactionSummary:
       type: object
-      description: "Present only on child-row events (captures, refunds, voids) — the parent's updated totals."
+      description: "Present only on child-row events (captures, refunds and voids). Contains the parent's updated totals."
       required:
         - id
         - status
@@ -214,7 +233,7 @@ components:
           type: integer
     WebhookPingEvent:
       type: object
-      description: 'Test ping payload — signed like a real event, never persisted.'
+      description: 'Test ping payload. Signed like a real event and never persisted.'
       required:
         - id
         - type
@@ -271,7 +290,7 @@ webhooks:
               $ref: '#/components/schemas/WebhookTransactionEvent'
       responses:
         200:
-          description: 'Any 2xx status acknowledges the delivery. Anything else — including redirects — triggers the retry schedule.'
+          description: 'Any 2xx status acknowledges the delivery. Anything else, including redirects, triggers the retry schedule.'
   transaction.captured:
     post:
       summary: 'Transaction captured'
@@ -491,7 +510,7 @@ webhooks:
   transaction.refunded:
     post:
       summary: 'Transaction refunded (fully)'
-      description: "A refund completed and the parent's cumulative refunds now cover the captured amount. `data.transaction` is the refund child row; `data.parent_transaction` summarises the parent's updated totals. Each refund is its own child transaction and produces its own event."
+      description: "A refund completed and the parent's cumulative refunds now cover the captured amount. `data.transaction` is the refund child row and `data.parent_transaction` summarises the parent's updated totals. Each refund is its own child transaction and produces its own event."
       parameters:
         -
           $ref: '#/components/parameters/XSoftlemonEventId'
@@ -519,7 +538,7 @@ webhooks:
   transaction.partially_refunded:
     post:
       summary: 'Transaction partially refunded'
-      description: "A refund completed but part of the captured amount remains unrefunded. `data.transaction` is the refund child row; `data.parent_transaction` summarises the parent's updated totals."
+      description: "A refund completed but part of the captured amount remains unrefunded. `data.transaction` is the refund child row and `data.parent_transaction` summarises the parent's updated totals."
       parameters:
         -
           $ref: '#/components/parameters/XSoftlemonEventId'
@@ -657,7 +676,7 @@ webhooks:
   transaction.pending:
     post:
       summary: 'Transaction pending (opt-in)'
-      description: 'A transaction entered `pending`. Delivered only to endpoints whose `events` subscription explicitly lists `transaction.pending` — it is not part of the default event set.'
+      description: 'A transaction entered `pending`. Delivered only to endpoints whose `events` subscription explicitly lists `transaction.pending`. It is not part of the default event set.'
       parameters:
         -
           $ref: '#/components/parameters/XSoftlemonEventId'
@@ -685,7 +704,7 @@ webhooks:
   ping:
     post:
       summary: 'Test ping'
-      description: 'Test delivery triggered by an administrator. Signed and structured like a real event but never persisted; `data` contains only `merchant_id`.'
+      description: 'Test delivery triggered by an administrator. Signed and structured like a real event but never persisted. `data` contains only `merchant_id`.'
       parameters:
         -
           $ref: '#/components/parameters/XSoftlemonEventId'
@@ -718,11 +737,69 @@ webhooks:
 paths:
   /api/v1/merchants:
     get:
-      summary: 'List merchants linked to the authenticated partner.'
+      summary: 'List Merchants'
       operationId: listMerchantsLinkedToTheAuthenticatedPartner
-      description: 'Partner API keys only.'
+      description: 'List merchants linked to the authenticated partner. Partner API keys only.'
       parameters: []
       responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Merchants retrieved successfully'
+                  code: ''
+                  data:
+                    -
+                      id: 1
+                      name: 'Demo Store Ltd'
+                      mcc: '5734'
+                      status: active
+                      address: '1 High Street'
+                      city: London
+                      country_code: GB
+                      email: merchant@example.com
+                      phone: '+441234567890'
+                      website: 'https://demo-store.example.com'
+                      acquirer_id: 1
+                      acquirer:
+                        id: 1
+                        code: qashpay
+                        name: QashPay
+                        bank_name: 'Example Bank'
+                        bank_country_code: GB
+                        settlement_currency_code: EUR
+                        status: active
+                        created_at: '2025-01-15T09:00:00.000000Z'
+                        updated_at: '2025-01-15T09:00:00.000000Z'
+                      transactions_count: 128
+                      transaction_stats:
+                        total_count: 128
+                        total_volume: 645000
+                      partnership:
+                        status: active
+                        notes: null
+                        approved_at: '2025-02-01T12:00:00.000000Z'
+                      created_at: '2025-01-20T09:00:00.000000Z'
+                      updated_at: '2025-05-20T09:18:47.000000Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Merchants retrieved successfully'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: array
+                    description: 'Merchants linked to the authenticated partner. Each entry includes the acquirer, transaction stats and the partnership status.'
+                    items:
+                      type: object
         401:
           description: ''
           content:
@@ -751,11 +828,64 @@ paths:
         - 'Partner API'
   '/api/v1/merchants/{merchant_id}':
     get:
-      summary: 'Get a specific merchant linked to the authenticated partner.'
+      summary: 'Get Merchant'
       operationId: getASpecificMerchantLinkedToTheAuthenticatedPartner
-      description: 'Partner API keys only.'
+      description: 'Get a specific merchant linked to the authenticated partner. Partner API keys only.'
       parameters: []
       responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Merchant retrieved successfully'
+                  code: ''
+                  data:
+                    id: 1
+                    name: 'Demo Store Ltd'
+                    mcc: '5734'
+                    status: active
+                    address: '1 High Street'
+                    city: London
+                    country_code: GB
+                    email: merchant@example.com
+                    phone: '+441234567890'
+                    website: 'https://demo-store.example.com'
+                    acquirer_id: 1
+                    acquirer:
+                      id: 1
+                      code: qashpay
+                      name: QashPay
+                      bank_name: 'Example Bank'
+                      bank_country_code: GB
+                      settlement_currency_code: EUR
+                      status: active
+                      created_at: '2025-01-15T09:00:00.000000Z'
+                      updated_at: '2025-01-15T09:00:00.000000Z'
+                    transactions_count: 128
+                    transaction_stats:
+                      total_count: 128
+                      total_volume: 645000
+                      successful_count: 117
+                      failed_count: 11
+                    created_at: '2025-01-20T09:00:00.000000Z'
+                    updated_at: '2025-05-20T09:18:47.000000Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Merchant retrieved successfully'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    description: 'The merchant profile with acquirer details and transaction stats.'
         401:
           description: ''
           content:
@@ -793,9 +923,9 @@ paths:
           type: integer
   '/api/v1/merchants/{merchant_id}/transactions':
     get:
-      summary: 'Get transactions for a merchant linked to the authenticated partner.'
+      summary: 'Get Merchant Transactions'
       operationId: getTransactionsForAMerchantLinkedToTheAuthenticatedPartner
-      description: 'Partner API keys only.'
+      description: 'Get transactions for a merchant linked to the authenticated partner. Partner API keys only.'
       parameters:
         -
           in: query
@@ -805,8 +935,6 @@ paths:
           required: false
           schema:
             type: string
-            description: 'Filter transactions by status.'
-            example: success
         -
           in: query
           name: from
@@ -815,8 +943,6 @@ paths:
           required: false
           schema:
             type: string
-            description: 'Filter transactions created on or after this date.'
-            example: '2024-01-01'
         -
           in: query
           name: to
@@ -825,8 +951,6 @@ paths:
           required: false
           schema:
             type: string
-            description: 'Filter transactions created on or before this date.'
-            example: '2024-12-31'
         -
           in: query
           name: per_page
@@ -835,9 +959,58 @@ paths:
           required: false
           schema:
             type: integer
-            description: 'Number of transactions per page. Maximum 100.'
-            example: 25
       responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Transactions retrieved successfully'
+                  code: ''
+                  data:
+                    transactions:
+                      -
+                        id: 123456
+                        merchant_id: 1
+                        merchant_trans_id: ORDER-100045
+                        amount: 5000
+                        amount_formatted: '50.00 EUR'
+                        currency: EUR
+                        status: success
+                        transaction_type: sale
+                        description: null
+                        acquirer_provider: qashpay
+                        acquirer_trans_id: 8ac7a4a29852f6f101985300a1b41c2f
+                        acquirer_auth_code: '012345'
+                        related_trans_id: null
+                        refunded_amount: 0
+                        customer: null
+                        cardholder: null
+                        payment_instrument: null
+                        ip_address: 172.19.0.7
+                        created_at: '2025-05-20T09:18:47.000000Z'
+                        updated_at: '2025-05-20T09:18:48.000000Z'
+                    pagination:
+                      current_page: 1
+                      last_page: 1
+                      per_page: 25
+                      total: 1
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Transactions retrieved successfully'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    description: 'The transaction list ordered newest first, plus pagination info.'
         401:
           description: ''
           content:
@@ -880,6 +1053,66 @@ paths:
       description: "Returns information about the API key being used to authenticate the request.\nAPI keys are provisioned by SoftLemon admins for merchants and partners.\nSelf-service onboarding and API key generation are not currently available."
       parameters: []
       responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'API key information retrieved successfully'
+                  code: ''
+                  data:
+                    key_identifier: sl_20250411105714_TTwbAVtw
+                    name: 'Partner production key'
+                    status: active
+                    entity_type: partner
+                    entity_id: 7
+                    entity_name: 'Acme Payments Partner'
+                    created_at: '2025-04-11T10:57:14.000000Z'
+                    last_used_at: '2025-05-20T09:18:47.000000Z'
+                    expires_at: null
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'API key information retrieved successfully'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      key_identifier:
+                        type: string
+                        example: sl_20250411105714_TTwbAVtw
+                      name:
+                        type: string
+                        example: 'Partner production key'
+                      status:
+                        type: string
+                        example: active
+                      entity_type:
+                        type: string
+                        example: partner
+                      entity_id:
+                        type: integer
+                        example: 7
+                      entity_name:
+                        type: string
+                        example: 'Acme Payments Partner'
+                      created_at:
+                        type: string
+                        example: '2025-04-11T10:57:14.000000Z'
+                      last_used_at:
+                        type: string
+                        example: '2025-05-20T09:18:47.000000Z'
+                      expires_at:
+                        type: string
+                        example: null
         401:
           description: ''
           content:

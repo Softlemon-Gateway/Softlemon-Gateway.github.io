@@ -1,0 +1,21 @@
+{
+  "name": "softlemon-api-docs",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "zudoku dev",
+    "prebuild": "rm -rf public/specs && cp -R specs public/specs",
+    "build": "zudoku build",
+    "postbuild": "node scripts/strip-preconnect.mjs",
+    "preview": "zudoku preview"
+  },
+  "dependencies": {
+    "react": ">=19.2.0",
+    "react-dom": ">=19.2.0",
+    "zudoku": "0.83.0"
+  }
+}
