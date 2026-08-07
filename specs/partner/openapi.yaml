@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: 'Softlemon Partner API'
-  description: "Production-ready partner integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the partner integration surface for admin-provisioned API keys.\n\nUse these endpoints when a partner is managing linked merchants and accessing partner-facing operational resources.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## Integration guides\n\nThe [partner integration guide](/guides/partner-integration) walks through the full flow step by step: confirming your key's scope, listing linked merchants, reviewing their transactions and processing payments on a merchant's behalf with `merchant_id`. The [webhook integration guide](/guides/webhooks) covers event delivery and signature verification.\n\nPrefer exploring in Postman? Download the [Partner API Postman collection](/collections/softlemon-partner-api.postman_collection.json) and set your API key as the Bearer token on the collection."
+  description: "Production-ready partner integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the partner integration surface for admin-provisioned API keys.\n\nUse these endpoints when a partner is managing linked merchants and accessing partner-facing operational resources.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## Integration guides\n\nThe [partner integration guide](/guides/partner-integration) walks through the full flow step by step: confirming your key's scope, listing linked merchants, reviewing their transactions and processing payments on a merchant's behalf with `merchant_id`. The same `merchant_id` rules apply to [alternative payments](/guides/accept-an-alternative-payment) through payment sessions. The [webhook integration guide](/guides/webhooks) covers event delivery and signature verification.\n\nPrefer exploring in Postman? Download the [Partner API Postman collection](/collections/softlemon-partner-api.postman_collection.json) and set your API key as the Bearer token on the collection."
   version: 0.9.0
 servers:
   -
@@ -9,6 +9,9 @@ servers:
 tags:
   -
     name: 'Partner API'
+    description: ''
+  -
+    name: 'Payment Sessions'
     description: ''
   -
     name: 'API Operations'
@@ -1537,6 +1540,598 @@ paths:
         required: true
         schema:
           type: integer
+  /api/v1/payment-sessions:
+    post:
+      summary: 'Create a payment session'
+      operationId: createAPaymentSession
+      description: "Create a redirect payment session and return the provider `checkout_url` to send\nthe customer to. The session expires 15 minutes after creation if the customer\ndoes not complete the hosted payment page.\n\nMerchant API keys act on their own account. Partner API keys must include\n`merchant_id` for a linked merchant.\n\nSessions never accept card data. Requests carrying card, token, CVV or voucher\nfields are rejected with HTTP 422. Duplicate requests reusing an active\n`reference` are rejected with HTTP 409. See the [duplicate protection guide](/guides/duplicate-protection).\n\nFollow the [alternative payment guide](/guides/accept-an-alternative-payment) for the full flow."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Payment session created'
+                  code: ''
+                  data:
+                    payment_session:
+                      payment_session_id: ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE
+                      transaction_id: 4512
+                      merchant_id: 123
+                      merchant_reference: DEP-2048
+                      provider: skrill
+                      payment_method: psc
+                      status: pending_redirect
+                      amount: 2500
+                      amount_formatted: '25.00'
+                      currency: EUR
+                      checkout_url: 'https://pay.skrill.com/app/?sid=a1b2c3d4e5'
+                      return_url: 'https://merchant.example.com/deposit/complete'
+                      cancel_url: 'https://merchant.example.com/deposit/cancelled'
+                      provider_session_id: a1b2c3d4e5
+                      provider_transaction_id: null
+                      customer_reference: player-981
+                      expires_at: '2026-08-08T10:30:00.000000Z'
+                      finalised_at: null
+                      created_at: '2026-08-08T10:15:00.000000Z'
+                      updated_at: '2026-08-08T10:15:00.000000Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Payment session created'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      payment_session:
+                        type: object
+                        properties:
+                          payment_session_id:
+                            type: string
+                            example: ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE
+                          transaction_id:
+                            type: integer
+                            example: 4512
+                          merchant_id:
+                            type: integer
+                            example: 123
+                          merchant_reference:
+                            type: string
+                            example: DEP-2048
+                          provider:
+                            type: string
+                            example: skrill
+                          payment_method:
+                            type: string
+                            example: psc
+                          status:
+                            type: string
+                            example: pending_redirect
+                          amount:
+                            type: integer
+                            example: 2500
+                          amount_formatted:
+                            type: string
+                            example: '25.00'
+                          currency:
+                            type: string
+                            example: EUR
+                          checkout_url:
+                            type: string
+                            example: 'https://pay.skrill.com/app/?sid=a1b2c3d4e5'
+                          return_url:
+                            type: string
+                            example: 'https://merchant.example.com/deposit/complete'
+                          cancel_url:
+                            type: string
+                            example: 'https://merchant.example.com/deposit/cancelled'
+                          provider_session_id:
+                            type: string
+                            example: a1b2c3d4e5
+                          provider_transaction_id:
+                            type: string
+                            example: null
+                          customer_reference:
+                            type: string
+                            example: player-981
+                          expires_at:
+                            type: string
+                            example: '2026-08-08T10:30:00.000000Z'
+                          finalised_at:
+                            type: string
+                            example: null
+                          created_at:
+                            type: string
+                            example: '2026-08-08T10:15:00.000000Z'
+                          updated_at:
+                            type: string
+                            example: '2026-08-08T10:15:00.000000Z'
+        400:
+          description: 'Session rejected. The `code` field identifies the reason, for example ERR_PAYMENT_METHOD_NOT_ENABLED when the method, currency or country is not enabled for the merchant. See the [error catalogue](/api-basics/errors).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'This payment method is not enabled for the merchant.'
+                  code: ERR_PAYMENT_METHOD_NOT_ENABLED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'This payment method is not enabled for the merchant.'
+                  code:
+                    type: string
+                    example: ERR_PAYMENT_METHOD_NOT_ENABLED
+                  data:
+                    type: string
+                    example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        409:
+          description: 'A session or transaction with this `reference` already exists. See the [duplicate protection guide](/guides/duplicate-protection).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'A payment session with this reference already exists.'
+                  code: ERR_DUPLICATE
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'A payment session with this reference already exists.'
+                  code:
+                    type: string
+                    example: ERR_DUPLICATE
+                  data:
+                    type: string
+                    example: null
+        422:
+          description: 'Validation failed. This includes any request carrying card, token, CVV or voucher data.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Validation errors'
+                  code: ERR_VALIDATION_FAILED
+                  data: null
+                  errors:
+                    card:
+                      - 'Card, token, CVV and voucher data are not accepted on redirect payment sessions.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  code:
+                    type: string
+                    example: ERR_VALIDATION_FAILED
+                  data:
+                    type: string
+                    example: null
+                  errors:
+                    type: object
+                    properties:
+                      card:
+                        type: array
+                        example:
+                          - 'Card, token, CVV and voucher data are not accepted on redirect payment sessions.'
+                        items:
+                          type: string
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
+        502:
+          description: 'The provider could not prepare the hosted session. The session and its transaction are marked failed. Create a new session to retry.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Failed to create the payment session with the provider.'
+                  code: ERR_GATEWAY_ERROR
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Failed to create the payment session with the provider.'
+                  code:
+                    type: string
+                    example: ERR_GATEWAY_ERROR
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'Payment Sessions'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: 'Payment amount in major units. The minimum is 1.00. Amounts are returned in minor units.'
+                  example: 25.0
+                currency:
+                  type: string
+                  description: 'Payment currency as a 3-letter ISO code.'
+                  example: EUR
+                reference:
+                  type: string
+                  description: 'Your unique payment reference.'
+                  example: DEP-2048
+                payment_method:
+                  type: string
+                  description: 'Redirect payment method.'
+                  example: psc
+                  enum:
+                    - psc
+                customer:
+                  type: object
+                  description: 'Customer details.'
+                  properties:
+                    first_name:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Customer first name.'
+                      example: Jane
+                    last_name:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Customer last name.'
+                      example: Doe
+                    country_code:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Customer country as a 2-letter ISO code.'
+                      example: GB
+                    merchant_customer_id:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Your id for this customer.'
+                      example: player-981
+                customer_reference:
+                  type:
+                    - string
+                    - 'null'
+                  description: 'Your customer or session reference, returned on the session.'
+                  example: player-981
+                success_url:
+                  type: string
+                  description: 'Browser return URL after the customer finishes at the provider. Informational only, never proof of payment. Returned on the session as `return_url`.'
+                  example: 'https://merchant.example.com/deposit/complete'
+                cancel_url:
+                  type: string
+                  description: 'Browser return URL if the customer cancels at the provider. Returned on the session as `cancel_url`.'
+                  example: 'https://merchant.example.com/deposit/cancelled'
+                metadata:
+                  type:
+                    - object
+                    - 'null'
+                  description: 'Arbitrary key/value pairs stored with the session.'
+                  example:
+                    campaign: welcome
+                  properties: []
+                merchant_id:
+                  type:
+                    - integer
+                    - 'null'
+                  description: 'Required for partner API keys. Must be a merchant linked to the authenticated partner.'
+                  example: 123
+              required:
+                - amount
+                - currency
+                - reference
+                - payment_method
+                - customer
+                - success_url
+                - cancel_url
+  '/api/v1/payment-sessions/{paymentSession_public_id}':
+    get:
+      summary: 'Get a payment session'
+      operationId: getAPaymentSession
+      description: "Retrieve the current state of a payment session. Poll this endpoint after the\ncustomer returns to your success URL or rely on [webhooks](/guides/webhooks)\nfor the final outcome. A session is only complete when its status is `paid`.\n\nMerchant API keys can read their own sessions. Partner API keys can read\nsessions belonging to linked merchants."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Payment session retrieved'
+                  code: ''
+                  data:
+                    payment_session:
+                      payment_session_id: ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE
+                      transaction_id: 4512
+                      merchant_id: 123
+                      merchant_reference: DEP-2048
+                      provider: skrill
+                      payment_method: psc
+                      status: paid
+                      amount: 2500
+                      amount_formatted: '25.00'
+                      currency: EUR
+                      checkout_url: 'https://pay.skrill.com/app/?sid=a1b2c3d4e5'
+                      return_url: 'https://merchant.example.com/deposit/complete'
+                      cancel_url: 'https://merchant.example.com/deposit/cancelled'
+                      provider_session_id: a1b2c3d4e5
+                      provider_transaction_id: '2649912345'
+                      customer_reference: player-981
+                      expires_at: '2026-08-08T10:30:00.000000Z'
+                      finalised_at: '2026-08-08T10:18:42.000000Z'
+                      created_at: '2026-08-08T10:15:00.000000Z'
+                      updated_at: '2026-08-08T10:18:42.000000Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Payment session retrieved'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      payment_session:
+                        type: object
+                        properties:
+                          payment_session_id:
+                            type: string
+                            example: ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE
+                          transaction_id:
+                            type: integer
+                            example: 4512
+                          merchant_id:
+                            type: integer
+                            example: 123
+                          merchant_reference:
+                            type: string
+                            example: DEP-2048
+                          provider:
+                            type: string
+                            example: skrill
+                          payment_method:
+                            type: string
+                            example: psc
+                          status:
+                            type: string
+                            example: paid
+                          amount:
+                            type: integer
+                            example: 2500
+                          amount_formatted:
+                            type: string
+                            example: '25.00'
+                          currency:
+                            type: string
+                            example: EUR
+                          checkout_url:
+                            type: string
+                            example: 'https://pay.skrill.com/app/?sid=a1b2c3d4e5'
+                          return_url:
+                            type: string
+                            example: 'https://merchant.example.com/deposit/complete'
+                          cancel_url:
+                            type: string
+                            example: 'https://merchant.example.com/deposit/cancelled'
+                          provider_session_id:
+                            type: string
+                            example: a1b2c3d4e5
+                          provider_transaction_id:
+                            type: string
+                            example: '2649912345'
+                          customer_reference:
+                            type: string
+                            example: player-981
+                          expires_at:
+                            type: string
+                            example: '2026-08-08T10:30:00.000000Z'
+                          finalised_at:
+                            type: string
+                            example: '2026-08-08T10:18:42.000000Z'
+                          created_at:
+                            type: string
+                            example: '2026-08-08T10:15:00.000000Z'
+                          updated_at:
+                            type: string
+                            example: '2026-08-08T10:18:42.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        403:
+          description: 'The session belongs to a merchant this API key cannot access.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Access denied: Resource not accessible'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Access denied: Resource not accessible'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        404:
+          description: 'No payment session with this id exists. See the [error catalogue](/api-basics/errors).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'PaymentSession not found'
+                  code: ERR_NOT_FOUND
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'PaymentSession not found'
+                  code:
+                    type: string
+                    example: ERR_NOT_FOUND
+                  data:
+                    type: string
+                    example: null
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'Payment Sessions'
+    parameters:
+      -
+        in: path
+        name: paymentSession_public_id
+        description: 'The ID of the paymentSession public.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: paymentSession
+        description: 'The payment session id.'
+        example: ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE
+        required: true
+        schema:
+          type: string
   /api/v1/key-info:
     get:
       summary: 'Get API Key Information'

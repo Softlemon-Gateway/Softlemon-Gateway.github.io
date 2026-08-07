@@ -36,3 +36,20 @@ Use `captured` as the canonical revenue state. `success` indicates a completed s
 ## Statuses and webhooks
 
 A webhook fires when a transaction transitions into a status with an event in the table above. `init`, `pending_3ds` and `authenticated_3ds` never emit events. `transaction.pending` is delivered only to endpoints whose event subscription lists it explicitly. Captures, refunds and voids are recorded as their own child transaction rows with their own lifecycles, so a single operation can produce events on both the child row and the parent's roll-up. See the [webhook integration guide](/guides/webhooks) for payload shapes, signatures and delivery semantics.
+
+## Payment session statuses
+
+Hosted redirect payments create a [payment session](/guides/accept-an-alternative-payment) linked 1:1 to a transaction. The session carries its own `status` field with its own lifecycle:
+
+| Status | Meaning | Terminal | Transaction status |
+|---|---|---|---|
+| `created` | Session created but the provider has not returned a checkout URL yet. | No | `init` |
+| `pending_redirect` | The hosted page is ready. Send the customer to the `checkout_url`. | No | `init` |
+| `pending_provider` | The customer is completing the payment on the provider's hosted page. | No | `pending` |
+| `paid` | The provider confirmed the payment. The only successful terminal status. | Yes | `captured` |
+| `failed` | The payment failed at the provider. | Yes | `failed` |
+| `cancelled` | The customer cancelled at the provider. | Yes | `cancelled` |
+| `chargeback` | The provider reported a chargeback on the payment. | Yes | `chargeback` |
+| `expired` | The customer did not finish the hosted page before the session's `expires_at`. | Yes | `cancelled` |
+
+Webhooks fire on the linked transaction, never on the session itself. The transaction status column shows the state the linked transaction takes for each session state, so a `paid` session delivers `transaction.captured` and an expired session delivers `transaction.cancelled`.

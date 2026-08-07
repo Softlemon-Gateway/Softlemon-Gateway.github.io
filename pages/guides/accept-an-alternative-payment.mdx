@@ -1,0 +1,599 @@
+# Accept an Alternative Payment
+
+This guide covers hosted redirect payments through payment sessions, using Paysafecard (`psc`) as the payment method. The customer completes the payment on the provider's hosted page instead of entering details on your site, so no card or voucher data ever touches your integration.
+
+Creating a session also creates a linked transaction. The transaction follows the standard [transaction lifecycle](/guides/transaction-statuses) and emits the standard [webhook events](/guides/webhooks), so payment sessions plug into the same confirmation machinery as card payments.
+
+## Before you start
+
+- You need an API key. Send it on every request as `Authorization: Bearer {YOUR_API_KEY}`.
+- All examples use the sandbox base URL `https://api.sandbox.softlemons.com`.
+- Redirect payments and the specific payment method must be enabled for your account. Requests for a method that is not enabled fail with `ERR_PAYMENT_METHOD_NOT_ENABLED`. Contact [support](/api-basics/support) to get a method enabled.
+- You need two browser URLs on your site: a success URL and a cancel URL for the customer's return.
+- Amounts are major units in requests (`25.00`) and minor units in responses (`2500`). See [conventions](/api-basics/conventions).
+- Never send card fields. A session request carrying card, token, CVV or voucher data is rejected with HTTP 422 regardless of where the field appears in the payload.
+
+## Step 1: Create a payment session
+
+Call `POST /api/v1/payment-sessions` with the amount, a unique `reference`, the payment method and your return URLs:
+
+{/* snippet:accept-an-alternative-payment:create-session */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/payment-sessions \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --data '{
+  "amount": 25,
+  "currency": "EUR",
+  "reference": "DEP-2048",
+  "payment_method": "psc",
+  "customer": {
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "country_code": "GB",
+    "merchant_customer_id": "player-981"
+  },
+  "customer_reference": "player-981",
+  "success_url": "https://merchant.example.com/deposit/complete",
+  "cancel_url": "https://merchant.example.com/deposit/cancelled"
+}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/payment-sessions', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  },
+  body: JSON.stringify({
+    amount: 25,
+    currency: 'EUR',
+    reference: 'DEP-2048',
+    payment_method: 'psc',
+    customer: {
+      first_name: 'Jane',
+      last_name: 'Doe',
+      country_code: 'GB',
+      merchant_customer_id: 'player-981'
+    },
+    customer_reference: 'player-981',
+    success_url: 'https://merchant.example.com/deposit/complete',
+    cancel_url: 'https://merchant.example.com/deposit/cancelled'
+  })
+})
+```
+
+```python title="Python"
+requests.post(
+    "https://api.sandbox.softlemons.com/api/v1/payment-sessions",
+    headers={
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    },
+    json={
+      "amount": 25,
+      "currency": "EUR",
+      "reference": "DEP-2048",
+      "payment_method": "psc",
+      "customer": {
+        "first_name": "Jane",
+        "last_name": "Doe",
+        "country_code": "GB",
+        "merchant_customer_id": "player-981"
+      },
+      "customer_reference": "player-981",
+      "success_url": "https://merchant.example.com/deposit/complete",
+      "cancel_url": "https://merchant.example.com/deposit/cancelled"
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"customer_reference\": \"player-981\",\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\"\n}");
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/payment-sessions")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/payment-sessions"
+
+	payload := strings.NewReader(`{
+  "amount": 25,
+  "currency": "EUR",
+  "reference": "DEP-2048",
+  "payment_method": "psc",
+  "customer": {
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "country_code": "GB",
+    "merchant_customer_id": "player-981"
+  },
+  "customer_reference": "player-981",
+  "success_url": "https://merchant.example.com/deposit/complete",
+  "cancel_url": "https://merchant.example.com/deposit/cancelled"
+}`)
+
+	req, _ := http.NewRequest("POST", requestUrl, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/payment-sessions");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Content = new StringContent(
+"""
+{
+  "amount": 25,
+  "currency": "EUR",
+  "reference": "DEP-2048",
+  "payment_method": "psc",
+  "customer": {
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "country_code": "GB",
+    "merchant_customer_id": "player-981"
+  },
+  "customer_reference": "player-981",
+  "success_url": "https://merchant.example.com/deposit/complete",
+  "cancel_url": "https://merchant.example.com/deposit/cancelled"
+}
+""",
+System.Text.Encoding.UTF8, "application/json");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val mediaType = MediaType.parse("application/json")
+val body = RequestBody.create(mediaType, "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"customer_reference\": \"player-981\",\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\"\n}")
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/payment-sessions")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Content-Type": @"application/json",
+                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSDictionary *parameters = @{ @"amount": @25,
+                              @"currency": @"EUR",
+                              @"reference": @"DEP-2048",
+                              @"payment_method": @"psc",
+                              @"customer": @{ @"first_name": @"Jane", @"last_name": @"Doe", @"country_code": @"GB", @"merchant_customer_id": @"player-981" },
+                              @"customer_reference": @"player-981",
+                              @"success_url": @"https://merchant.example.com/deposit/complete",
+                              @"cancel_url": @"https://merchant.example.com/deposit/cancelled" };
+
+NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/payment-sessions"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"POST"];
+[request setAllHTTPHeaderFields:headers];
+[request setHTTPBody:postData];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/payment-sessions");
+
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'amount' => 25,
+  'currency' => 'EUR',
+  'reference' => 'DEP-2048',
+  'payment_method' => 'psc',
+  'customer' => [
+    'first_name' => 'Jane',
+    'last_name' => 'Doe',
+    'country_code' => 'GB',
+    'merchant_customer_id' => 'player-981'
+  ],
+  'customer_reference' => 'player-981',
+  'success_url' => 'https://merchant.example.com/deposit/complete',
+  'cancel_url' => 'https://merchant.example.com/deposit/cancelled'
+]));
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/payment-sessions")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(url)
+request["Content-Type"] = 'application/json'
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request.body = <<~JSON
+{
+  "amount": 25,
+  "currency": "EUR",
+  "reference": "DEP-2048",
+  "payment_method": "psc",
+  "customer": {
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "country_code": "GB",
+    "merchant_customer_id": "player-981"
+  },
+  "customer_reference": "player-981",
+  "success_url": "https://merchant.example.com/deposit/complete",
+  "cancel_url": "https://merchant.example.com/deposit/cancelled"
+}
+JSON
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/payment-sessions")!)
+request.httpMethod = "POST"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+let jsonBody = #"""
+{
+  "amount": 25,
+  "currency": "EUR",
+  "reference": "DEP-2048",
+  "payment_method": "psc",
+  "customer": {
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "country_code": "GB",
+    "merchant_customer_id": "player-981"
+  },
+  "customer_reference": "player-981",
+  "success_url": "https://merchant.example.com/deposit/complete",
+  "cancel_url": "https://merchant.example.com/deposit/cancelled"
+}
+"""#
+request.httpBody = jsonBody.data(using: .utf8)
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+```json
+{
+  "success": true,
+  "message": "Payment session created",
+  "code": "",
+  "data": {
+    "payment_session": {
+      "payment_session_id": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+      "transaction_id": 4512,
+      "merchant_id": 123,
+      "merchant_reference": "DEP-2048",
+      "provider": "skrill",
+      "payment_method": "psc",
+      "status": "pending_redirect",
+      "amount": 2500,
+      "amount_formatted": "25.00",
+      "currency": "EUR",
+      "checkout_url": "https://pay.skrill.com/app/?sid=a1b2c3d4e5",
+      "return_url": "https://merchant.example.com/deposit/complete",
+      "cancel_url": "https://merchant.example.com/deposit/cancelled",
+      "provider_session_id": "a1b2c3d4e5",
+      "provider_transaction_id": null,
+      "customer_reference": "player-981",
+      "expires_at": "2026-08-08T10:30:00.000000Z",
+      "finalised_at": null,
+      "created_at": "2026-08-08T10:15:00.000000Z",
+      "updated_at": "2026-08-08T10:15:00.000000Z"
+    }
+  }
+}
+```
+
+The response gives you everything the flow needs:
+
+- `payment_session_id` identifies the session in later status calls.
+- `checkout_url` is the provider's hosted page for this payment. Send the customer there in Step 2.
+- `transaction_id` is the linked transaction. Webhook events reference it.
+- `expires_at` is 15 minutes after creation. An unfinished session expires at that point.
+- The request field `success_url` comes back as `return_url` on the session.
+
+The `reference` must be unique and [duplicate protection](/guides/duplicate-protection) applies. Reusing a reference that has an active session or transaction returns HTTP 409.
+
+Partner API keys create sessions on behalf of a linked merchant by adding `merchant_id` to the body, with the same rules as [partner card payments](/guides/partner-integration).
+
+## Step 2: Redirect the customer
+
+Send the customer's browser to `checkout_url`. This is a full page redirect, not an iframe. The customer confirms the payment on the provider's page, for Paysafecard by entering their voucher PIN there.
+
+While the customer is on the hosted page the session status moves from `pending_redirect` to `pending_provider`. If the customer does not finish within 15 minutes the session becomes `expired` and you need to create a new one.
+
+## Step 3: Handle the browser return
+
+After the hosted page the provider sends the customer back through the gateway, which immediately redirects the browser to your `success_url` or `cancel_url` with three query parameters appended:
+
+```
+https://merchant.example.com/deposit/complete?payment_session_id=ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE&reference=DEP-2048&status=pending_provider
+```
+
+Treat this landing as navigation only. It tells you which session the customer came back from, never whether money moved. Confirmation of the provider's outcome can arrive before or after the browser does, so render a waiting state and resolve it in Step 4. Customers who close the tab never hit your return URL at all and the outcome still arrives by webhook.
+
+## Step 4: Confirm the outcome
+
+The reliable signal is the webhook on the linked transaction. When the provider confirms the payment the session becomes `paid` and its transaction becomes `captured`, which delivers `transaction.captured` to your [webhook endpoint](/guides/webhooks). A failed payment delivers `transaction.failed` and an abandoned or expired session delivers `transaction.cancelled`.
+
+To resolve a waiting page or reconcile on demand, poll the session:
+
+{/* snippet:accept-an-alternative-payment:poll-session */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/payment-sessions/ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE \
+  --header 'Authorization: Bearer {YOUR_API_KEY}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/payment-sessions/ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE', {
+  headers: {
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  }
+})
+```
+
+```python title="Python"
+requests.get(
+    "https://api.sandbox.softlemons.com/api/v1/payment-sessions/ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+    headers={
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/payment-sessions/ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/payment-sessions/ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE"
+
+	req, _ := http.NewRequest("GET", requestUrl, nil)
+
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Get, "https://api.sandbox.softlemons.com/api/v1/payment-sessions/ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/payment-sessions/ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/payment-sessions/ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"GET"];
+[request setAllHTTPHeaderFields:headers];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/payment-sessions/ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE");
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer {YOUR_API_KEY}']);
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/payment-sessions/ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Get.new(url)
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/payment-sessions/ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE")!)
+request.httpMethod = "GET"
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+```json
+{
+  "success": true,
+  "message": "Payment session retrieved",
+  "code": "",
+  "data": {
+    "payment_session": {
+      "payment_session_id": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+      "transaction_id": 4512,
+      "merchant_id": 123,
+      "merchant_reference": "DEP-2048",
+      "provider": "skrill",
+      "payment_method": "psc",
+      "status": "paid",
+      "amount": 2500,
+      "amount_formatted": "25.00",
+      "currency": "EUR",
+      "checkout_url": "https://pay.skrill.com/app/?sid=a1b2c3d4e5",
+      "return_url": "https://merchant.example.com/deposit/complete",
+      "cancel_url": "https://merchant.example.com/deposit/cancelled",
+      "provider_session_id": "a1b2c3d4e5",
+      "provider_transaction_id": "2649912345",
+      "customer_reference": "player-981",
+      "expires_at": "2026-08-08T10:30:00.000000Z",
+      "finalised_at": "2026-08-08T10:18:42.000000Z",
+      "created_at": "2026-08-08T10:15:00.000000Z",
+      "updated_at": "2026-08-08T10:18:42.000000Z"
+    }
+  }
+}
+```
+
+Credit the customer only when the session is `paid` or the `transaction.captured` webhook arrives. The full session lifecycle (`created`, `pending_redirect`, `pending_provider`, `paid`, `failed`, `cancelled`, `chargeback`, `expired`) is documented in the [statuses reference](/guides/transaction-statuses).
+
+## Errors you should handle
+
+| Response | Meaning | What to do |
+|---|---|---|
+| 400 `ERR_PAYMENT_METHOD_NOT_ENABLED` | The method, currency or customer country is not enabled for the merchant. | Offer a different payment method or contact [support](/api-basics/support) about enablement. |
+| 409 `ERR_DUPLICATE` | A session or transaction with this `reference` already exists. | Fetch the existing session instead of retrying. See [duplicate protection](/guides/duplicate-protection). |
+| 422 `ERR_VALIDATION_FAILED` | A field failed validation. This includes any request carrying card, token, CVV or voucher data. | Fix the request. Card data never belongs in a redirect session. |
+| 429 `ERR_RATE_LIMITED` | Too many requests. | Back off and retry. See [rate limits](/api-basics/rate-limits). |
+| 502 `ERR_GATEWAY_ERROR` | The provider could not prepare the hosted session. The session and its transaction are marked failed. | Create a new session to retry. |
+
+Full details for every code are in the [error catalogue](/api-basics/errors).

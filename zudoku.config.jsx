@@ -89,6 +89,7 @@ const config = {
             "/guides/authorize-and-capture",
             "/guides/refunds",
             "/guides/returning-customers",
+            "/guides/accept-an-alternative-payment",
             "/guides/partner-integration",
           ],
         },

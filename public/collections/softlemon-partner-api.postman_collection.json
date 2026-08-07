@@ -1,7 +1,7 @@
 {
   "item": [
     {
-      "id": "8288014e-bea5-4c11-9b04-c0aefe99e908",
+      "id": "34f6b022-d259-44bc-b63e-8aec1a555591",
       "name": "Partner API",
       "description": {
         "content": "",
@@ -9,7 +9,7 @@
       },
       "item": [
         {
-          "id": "2b168961-d5e0-4b57-99db-5f6e90ddcc81",
+          "id": "920b6106-b0fe-4908-b729-f1c2f1bc4a9b",
           "name": "List Merchants",
           "request": {
             "name": "List Merchants",
@@ -40,7 +40,7 @@
           },
           "response": [
             {
-              "id": "52839776-15c1-40b7-8ef7-c18107aacc68",
+              "id": "483e2955-e7b6-4437-8d0e-cb29110943ec",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -84,7 +84,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "decacb6c-0d7d-4f88-95ab-7f502a657c18",
+              "id": "9db9cdfb-0986-41a5-9e5e-c8e845970dda",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -128,7 +128,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "b390a002-403b-4f6a-bb99-a160927af2cf",
+              "id": "13dadc55-e366-4fd5-a25e-6f66a58d5b40",
               "name": "The API key is not a partner key or the partner account is not active. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -173,7 +173,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "1de69d28-4198-4e68-aa3d-471aabe155a2",
+              "id": "9d2bd090-77e2-4e7a-8b9b-dfa2e924f876",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -224,7 +224,7 @@
           }
         },
         {
-          "id": "d338a5fc-4171-42af-9fd1-ebb7e0c88605",
+          "id": "dcdcfc05-e5d6-4eff-861e-3266026aaf30",
           "name": "Get Merchant",
           "request": {
             "name": "Get Merchant",
@@ -264,7 +264,7 @@
           },
           "response": [
             {
-              "id": "bba0010f-5b24-43f1-bb91-15cbdd77b1a9",
+              "id": "02ce3b4e-42aa-4f59-beca-bdceb1471f4d",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -317,7 +317,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "d49b1219-9aa1-4018-b454-877ac1498c73",
+              "id": "f2bd8da8-2fe7-4155-a021-1580f1b51994",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -370,7 +370,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "116874ac-3837-4229-9c6d-39f8f682b28d",
+              "id": "fbdbe0ac-47bb-436a-9a73-27528120bd30",
               "name": "The API key is not a partner key or the partner account is not active. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -424,7 +424,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "bf7e0404-752f-4222-b5d7-72fb6bba7932",
+              "id": "3c160b87-730c-495a-9707-c8ca3e9bd526",
               "name": "The merchant does not exist or is not linked to your partner account. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -478,7 +478,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "a92c8fb4-2d5d-47f4-909f-befe0984dfbe",
+              "id": "adafb6cb-0961-4d38-89cf-8a8a147b384f",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -538,7 +538,7 @@
           }
         },
         {
-          "id": "869b76b1-44f3-4b64-abad-2161b3793cdf",
+          "id": "b9d3b96b-fce8-4929-a3dd-fb22f6c331cd",
           "name": "Get Merchant Transactions",
           "request": {
             "name": "Get Merchant Transactions",
@@ -604,7 +604,7 @@
           },
           "response": [
             {
-              "id": "2a902982-ad7c-429f-b50a-62dab02172f5",
+              "id": "d81a0e1d-2f04-429f-adda-f432c4e5b9fa",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -675,7 +675,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "bccc1a30-aa50-4b33-bf4f-ef1eba331a98",
+              "id": "ed1a8b98-54d2-424c-bbe5-03f0c5f5152c",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -746,7 +746,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "f1577172-4cbb-4933-b6d6-672d3da62b54",
+              "id": "3b66cb0c-b43b-4f9e-8995-f6e09036bbca",
               "name": "The API key is not a partner key or the partner account is not active. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -818,7 +818,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "b8c2e8a0-8b91-4d8d-b432-ddc6e8fee805",
+              "id": "94f988a1-b8a3-4dce-a8b4-1da28dc83738",
               "name": "The merchant does not exist or is not linked to your partner account. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -890,7 +890,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "39118f8c-bc0b-424f-9aaa-be8338cd9f42",
+              "id": "9cfe5488-03b6-4aea-b5e6-9b526c0076d4",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -971,7 +971,793 @@
       "event": []
     },
     {
-      "id": "1a2a7c57-1c2e-4edd-ba36-189321656401",
+      "id": "6a6c44aa-a42e-4e99-9658-57b310a23e2d",
+      "name": "Payment Sessions",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "21ebab29-dc3f-4365-b7b9-bf1f000a2f27",
+          "name": "Create a payment session",
+          "request": {
+            "name": "Create a payment session",
+            "description": {
+              "content": "Create a redirect payment session and return the provider `checkout_url` to send\nthe customer to. The session expires 15 minutes after creation if the customer\ndoes not complete the hosted payment page.\n\nMerchant API keys act on their own account. Partner API keys must include\n`merchant_id` for a linked merchant.\n\nSessions never accept card data. Requests carrying card, token, CVV or voucher\nfields are rejected with HTTP 422. Duplicate requests reusing an active\n`reference` are rejected with HTTP 409. See the [duplicate protection guide](/guides/duplicate-protection).\n\nFollow the [alternative payment guide](/guides/accept-an-alternative-payment) for the full flow.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "payment-sessions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e58829b8-fc85-4dff-b8bf-8777648236ce",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Payment session created\",\n  \"code\": \"\",\n  \"data\": {\n    \"payment_session\": {\n      \"payment_session_id\": \"ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE\",\n      \"transaction_id\": 4512,\n      \"merchant_id\": 123,\n      \"merchant_reference\": \"DEP-2048\",\n      \"provider\": \"skrill\",\n      \"payment_method\": \"psc\",\n      \"status\": \"pending_redirect\",\n      \"amount\": 2500,\n      \"amount_formatted\": \"25.00\",\n      \"currency\": \"EUR\",\n      \"checkout_url\": \"https://pay.skrill.com/app/?sid=a1b2c3d4e5\",\n      \"return_url\": \"https://merchant.example.com/deposit/complete\",\n      \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n      \"provider_session_id\": \"a1b2c3d4e5\",\n      \"provider_transaction_id\": \"string\",\n      \"customer_reference\": \"player-981\",\n      \"expires_at\": \"2026-08-08T10:30:00.000000Z\",\n      \"finalised_at\": \"string\",\n      \"created_at\": \"2026-08-08T10:15:00.000000Z\",\n      \"updated_at\": \"2026-08-08T10:15:00.000000Z\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "de0d2e3f-852a-41a5-8ea8-65ebb11f145c",
+              "name": "Session rejected. The `code` field identifies the reason, for example ERR_PAYMENT_METHOD_NOT_ENABLED when the method, currency or country is not enabled for the merchant. See the [error catalogue](/api-basics/errors).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"This payment method is not enabled for the merchant.\",\n  \"code\": \"ERR_PAYMENT_METHOD_NOT_ENABLED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "02abb737-6471-4431-9165-bc1b503c1249",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Authentication failed\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f4dc87c1-6db6-4fba-9688-a787b991371f",
+              "name": "A session or transaction with this `reference` already exists. See the [duplicate protection guide](/guides/duplicate-protection).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"A payment session with this reference already exists.\",\n  \"code\": \"ERR_DUPLICATE\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "62cf4766-77ba-461c-a6fe-86052a433b38",
+              "name": "Validation failed. This includes any request carrying card, token, CVV or voucher data.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation errors\",\n  \"code\": \"ERR_VALIDATION_FAILED\",\n  \"data\": \"string\",\n  \"errors\": {\n    \"card\": [\n      \"Card, token, CVV and voucher data are not accepted on redirect payment sessions.\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6a3f35a0-831d-4f43-bc7a-465ab955ad88",
+              "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Too many requests\",\n  \"code\": \"ERR_RATE_LIMITED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "199245b2-a3f6-4be0-9af6-c1e5db5cac02",
+              "name": "The provider could not prepare the hosted session. The session and its transaction are marked failed. Create a new session to retry.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Gateway",
+              "code": 502,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Failed to create the payment session with the provider.\",\n  \"code\": \"ERR_GATEWAY_ERROR\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "543a004d-dded-4e02-aaa2-7901521152d7",
+          "name": "Get a payment session",
+          "request": {
+            "name": "Get a payment session",
+            "description": {
+              "content": "Retrieve the current state of a payment session. Poll this endpoint after the\ncustomer returns to your success URL or rely on [webhooks](/guides/webhooks)\nfor the final outcome. A session is only complete when its status is `paid`.\n\nMerchant API keys can read their own sessions. Partner API keys can read\nsessions belonging to linked merchants.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "payment-sessions",
+                ":paymentSession_public_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "architecto",
+                  "key": "paymentSession_public_id",
+                  "description": "(Required) The ID of the paymentSession public."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+                  "key": "paymentSession",
+                  "description": "(Required) The payment session id."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "525c9204-3afa-4982-91ec-ed5cffbc41d1",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions",
+                    ":paymentSession_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "architecto",
+                      "key": "paymentSession_public_id",
+                      "description": "(Required) The ID of the paymentSession public."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+                      "key": "paymentSession",
+                      "description": "(Required) The payment session id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Payment session retrieved\",\n  \"code\": \"\",\n  \"data\": {\n    \"payment_session\": {\n      \"payment_session_id\": \"ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE\",\n      \"transaction_id\": 4512,\n      \"merchant_id\": 123,\n      \"merchant_reference\": \"DEP-2048\",\n      \"provider\": \"skrill\",\n      \"payment_method\": \"psc\",\n      \"status\": \"paid\",\n      \"amount\": 2500,\n      \"amount_formatted\": \"25.00\",\n      \"currency\": \"EUR\",\n      \"checkout_url\": \"https://pay.skrill.com/app/?sid=a1b2c3d4e5\",\n      \"return_url\": \"https://merchant.example.com/deposit/complete\",\n      \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n      \"provider_session_id\": \"a1b2c3d4e5\",\n      \"provider_transaction_id\": \"2649912345\",\n      \"customer_reference\": \"player-981\",\n      \"expires_at\": \"2026-08-08T10:30:00.000000Z\",\n      \"finalised_at\": \"2026-08-08T10:18:42.000000Z\",\n      \"created_at\": \"2026-08-08T10:15:00.000000Z\",\n      \"updated_at\": \"2026-08-08T10:18:42.000000Z\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0fef96c7-10f8-491f-bd02-74bb7ee19b67",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions",
+                    ":paymentSession_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "architecto",
+                      "key": "paymentSession_public_id",
+                      "description": "(Required) The ID of the paymentSession public."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+                      "key": "paymentSession",
+                      "description": "(Required) The payment session id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Authentication failed\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d3c30ab3-2443-4836-b196-7ce4a61d04e4",
+              "name": "The session belongs to a merchant this API key cannot access.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions",
+                    ":paymentSession_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "architecto",
+                      "key": "paymentSession_public_id",
+                      "description": "(Required) The ID of the paymentSession public."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+                      "key": "paymentSession",
+                      "description": "(Required) The payment session id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Access denied: Resource not accessible\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4bb9ef28-22f9-4d93-a711-14a8e5f515ba",
+              "name": "No payment session with this id exists. See the [error catalogue](/api-basics/errors).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions",
+                    ":paymentSession_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "architecto",
+                      "key": "paymentSession_public_id",
+                      "description": "(Required) The ID of the paymentSession public."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+                      "key": "paymentSession",
+                      "description": "(Required) The payment session id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"PaymentSession not found\",\n  \"code\": \"ERR_NOT_FOUND\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "406bdde6-4774-47d0-88c8-97a4e784b23f",
+              "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions",
+                    ":paymentSession_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "architecto",
+                      "key": "paymentSession_public_id",
+                      "description": "(Required) The ID of the paymentSession public."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+                      "key": "paymentSession",
+                      "description": "(Required) The payment session id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Too many requests\",\n  \"code\": \"ERR_RATE_LIMITED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "25f84a80-182e-41ac-9d5b-0c9c9482a0bb",
       "name": "API Operations",
       "description": {
         "content": "",
@@ -979,7 +1765,7 @@
       },
       "item": [
         {
-          "id": "d7bad0cc-1f7e-4621-82be-8be4be0fd955",
+          "id": "c5467d63-8837-4c2d-b9f1-1536be467772",
           "name": "Get API Key Information",
           "request": {
             "name": "Get API Key Information",
@@ -1010,7 +1796,7 @@
           },
           "response": [
             {
-              "id": "1891bfc9-0339-4eaf-a57e-28cdc9bd0c73",
+              "id": "8fe98de5-e111-4e74-9193-5726f897e1c8",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1054,7 +1840,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "7c2e8697-7fd9-4c82-b8f6-21f867fc4d23",
+              "id": "a69feb52-4089-4637-a6df-8a7bab4f75db",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1098,7 +1884,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "4b2d6abb-84a8-4bc9-a639-ed74f21530d9",
+              "id": "3db6ab6b-bc09-4803-8c2c-55206a2fb364",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -1170,11 +1956,11 @@
     ]
   },
   "info": {
-    "_postman_id": "41b2ea7b-53bb-4caa-8490-a165eea6286e",
+    "_postman_id": "ead4278d-737a-40f7-ba45-6eb093e6e267",
     "name": "Softlemon Partner API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "description": {
-      "content": "Production-ready partner integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the partner integration surface for admin-provisioned API keys.\n\nUse these endpoints when a partner is managing linked merchants and accessing partner-facing operational resources.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## Integration guides\n\nThe [partner integration guide](/guides/partner-integration) walks through the full flow step by step: confirming your key's scope, listing linked merchants, reviewing their transactions and processing payments on a merchant's behalf with `merchant_id`. The [webhook integration guide](/guides/webhooks) covers event delivery and signature verification.\n\nPrefer exploring in Postman? Download the [Partner API Postman collection](/collections/softlemon-partner-api.postman_collection.json) and set your API key as the Bearer token on the collection.",
+      "content": "Production-ready partner integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the partner integration surface for admin-provisioned API keys.\n\nUse these endpoints when a partner is managing linked merchants and accessing partner-facing operational resources.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## Integration guides\n\nThe [partner integration guide](/guides/partner-integration) walks through the full flow step by step: confirming your key's scope, listing linked merchants, reviewing their transactions and processing payments on a merchant's behalf with `merchant_id`. The same `merchant_id` rules apply to [alternative payments](/guides/accept-an-alternative-payment) through payment sessions. The [webhook integration guide](/guides/webhooks) covers event delivery and signature verification.\n\nPrefer exploring in Postman? Download the [Partner API Postman collection](/collections/softlemon-partner-api.postman_collection.json) and set your API key as the Bearer token on the collection.",
       "type": "text/plain"
     }
   }

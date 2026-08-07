@@ -1,7 +1,7 @@
 {
   "item": [
     {
-      "id": "e2b06f1a-4f52-4135-8626-c434ced60fda",
+      "id": "f08563b5-d2cc-4d6a-bc8b-1bc29ec5402a",
       "name": "Transactions",
       "description": {
         "content": "",
@@ -9,7 +9,7 @@
       },
       "item": [
         {
-          "id": "edcf8999-2cd7-479c-b587-54fccad28a81",
+          "id": "fbd11710-235b-4c5e-bdfd-2fcc5b61f064",
           "name": "Initiate Transaction",
           "request": {
             "name": "Initiate Transaction",
@@ -43,7 +43,7 @@
             "auth": null,
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"init\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+              "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"failed\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -53,7 +53,7 @@
           },
           "response": [
             {
-              "id": "6367007e-648e-4368-a69a-9b74629fc116",
+              "id": "ed6d6841-d559-4b81-bea7-62630ceb051d",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -84,7 +84,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"init\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"failed\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -105,7 +105,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "9d37cdf0-1f14-432e-bd6f-53d31b299e79",
+              "id": "a121bb51-6d00-4d30-b5d6-9604a28b5788",
               "name": "Transaction rejected. The `code` field identifies the reason. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -137,7 +137,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"init\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"failed\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -158,7 +158,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "f19d950a-949a-4497-8036-f22364bfea90",
+              "id": "75974cbd-2c98-4224-ab84-31bd514774f4",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -189,7 +189,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"init\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"failed\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -210,7 +210,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "0314c556-65fb-4466-a4ed-e0a5ebc376dd",
+              "id": "66e058a6-4784-43b3-8d3f-ffa8aba1070a",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -241,7 +241,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"init\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"failed\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -262,7 +262,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "ca4ef9e3-3e93-41ce-ab2c-dfc117d4cee0",
+              "id": "7fbbb9ef-25cf-45fd-bdec-01208b572eb7",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -293,7 +293,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"init\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"failed\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -314,7 +314,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "22eab460-9923-43b1-a456-381fbdc0a2cd",
+              "id": "d0ba4c9d-7f71-4dfd-b4cf-b3b5b2707d1f",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -346,7 +346,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"init\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"failed\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -373,7 +373,7 @@
           }
         },
         {
-          "id": "872d2cda-6610-468d-ab95-b97173e4fc8e",
+          "id": "355c65ff-cc52-4176-b8fe-da0ab5ef7b1f",
           "name": "Capture Transaction",
           "request": {
             "name": "Capture Transaction",
@@ -427,7 +427,7 @@
           },
           "response": [
             {
-              "id": "9b40a92b-8c61-414a-8632-9e8cc4b8a6ad",
+              "id": "0c8c36a5-9295-48b8-83b3-c6401f8ee61c",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -489,7 +489,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "f27e83d6-4839-40eb-a321-4bfae8da06ad",
+              "id": "3f19e18e-3f64-4c10-b8ce-ef1ffca3d035",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -551,7 +551,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "2a9488f9-d374-419d-a2b1-e675861a197d",
+              "id": "c6c336df-bf24-47f2-8eac-bf2bba119073",
               "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -614,7 +614,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "f08db565-3ad0-4316-bd26-17a2ed5f843d",
+              "id": "746165e3-de1d-4788-b333-6d56bfa2e9bb",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -676,7 +676,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c44f6a83-d1f9-4c41-9873-ff53cce2ce4c",
+              "id": "560c744d-2ac7-442b-8dad-b12da834c537",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -745,7 +745,7 @@
           }
         },
         {
-          "id": "62669f12-8f8d-4132-849d-3b09139f1800",
+          "id": "72ba0475-2300-4127-8efb-a7c8f13fa9e9",
           "name": "Refund Transaction",
           "request": {
             "name": "Refund Transaction",
@@ -799,7 +799,7 @@
           },
           "response": [
             {
-              "id": "8db23643-0ef9-423a-bd3a-b96cb97ed59d",
+              "id": "ab652857-cadb-441f-8172-d5440f23202f",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -861,7 +861,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "ff6b34f8-e276-47ec-a8fe-f5451b56a97a",
+              "id": "ca40485c-d930-4418-8b33-e2147e3faeb7",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -923,7 +923,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "31c2cd17-149c-4e89-a8c1-eb9ff80b1448",
+              "id": "6f0c310b-4d23-46e1-9223-d5b9ff99c1ea",
               "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -986,7 +986,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "83e77209-e1d3-441f-b96d-ef01d392771b",
+              "id": "a47e9f39-f530-47ac-8ea0-4197d6a2a4a8",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1048,7 +1048,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "44b5f8c1-4bb7-4fa3-8086-f97fec16fe7a",
+              "id": "cbdac8e3-55ee-4f04-b35b-e26a0bd2bf6a",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -1117,7 +1117,7 @@
           }
         },
         {
-          "id": "a2acb63e-f9e4-419b-9717-756a3753bc05",
+          "id": "a60082ab-e348-4641-992d-b04debe8bb73",
           "name": "Transaction Status",
           "request": {
             "name": "Transaction Status",
@@ -1158,7 +1158,7 @@
           },
           "response": [
             {
-              "id": "974495be-66f8-4338-b5e1-69ea57f24852",
+              "id": "08b51ad8-27e2-4655-9a3f-dd6629f257a6",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1212,7 +1212,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "7869c775-4c47-4d54-ad10-e537b52b116c",
+              "id": "4087effd-e90e-4ed0-843c-a2ecb8c5beac",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1266,7 +1266,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "4cd96446-44a9-4121-a0a4-709d10ca1a5c",
+              "id": "028f0b6a-bedb-4152-bade-b3072274af9b",
               "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -1321,7 +1321,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "370f7420-13b2-4ff2-95b3-fbb632670b72",
+              "id": "cbf518a1-646d-4679-b93b-41a08912c7ed",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -1382,7 +1382,7 @@
           }
         },
         {
-          "id": "ed05f556-3544-434d-83ea-fce2984437cb",
+          "id": "b4ee5391-e31d-4f6d-82e2-9d2efe0d5b7e",
           "name": "Void Transaction",
           "request": {
             "name": "Void Transaction",
@@ -1436,7 +1436,7 @@
           },
           "response": [
             {
-              "id": "d1966530-3abf-4da7-a253-25b4d54d2634",
+              "id": "6eb93802-53ee-4da5-8959-e0246055de85",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1498,7 +1498,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "ecc96d15-1291-48f6-966c-853f8ee43582",
+              "id": "7decaee3-fa70-446b-8140-6b4722d11cbf",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1560,7 +1560,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "f33e38a5-47bf-479f-b883-0cc11e0719cc",
+              "id": "3b4ca3fc-bb5c-4d64-9bd1-41b31c546132",
               "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -1623,7 +1623,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "804578c6-e46f-4342-8ffe-a8943a1e4a13",
+              "id": "e6b96e5b-263e-4409-b8a2-78778abe30cc",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1685,7 +1685,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "b61c68de-b818-43e9-9c70-16e08656f2b6",
+              "id": "dbe67dda-3866-46ab-8acb-a42e96a58560",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -1757,7 +1757,793 @@
       "event": []
     },
     {
-      "id": "c2203057-d854-4ae9-abee-76c0edfe4727",
+      "id": "6baf4b6f-033b-4284-9402-dda7a2df7c9b",
+      "name": "Payment Sessions",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "e23f9656-e579-4e8d-9e30-8c8295459eab",
+          "name": "Create a payment session",
+          "request": {
+            "name": "Create a payment session",
+            "description": {
+              "content": "Create a redirect payment session and return the provider `checkout_url` to send\nthe customer to. The session expires 15 minutes after creation if the customer\ndoes not complete the hosted payment page.\n\nMerchant API keys act on their own account. Partner API keys must include\n`merchant_id` for a linked merchant.\n\nSessions never accept card data. Requests carrying card, token, CVV or voucher\nfields are rejected with HTTP 422. Duplicate requests reusing an active\n`reference` are rejected with HTTP 409. See the [duplicate protection guide](/guides/duplicate-protection).\n\nFollow the [alternative payment guide](/guides/accept-an-alternative-payment) for the full flow.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "payment-sessions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "88460c30-c7c2-4965-a6f2-6e54f00077fd",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Payment session created\",\n  \"code\": \"\",\n  \"data\": {\n    \"payment_session\": {\n      \"payment_session_id\": \"ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE\",\n      \"transaction_id\": 4512,\n      \"merchant_id\": 123,\n      \"merchant_reference\": \"DEP-2048\",\n      \"provider\": \"skrill\",\n      \"payment_method\": \"psc\",\n      \"status\": \"pending_redirect\",\n      \"amount\": 2500,\n      \"amount_formatted\": \"25.00\",\n      \"currency\": \"EUR\",\n      \"checkout_url\": \"https://pay.skrill.com/app/?sid=a1b2c3d4e5\",\n      \"return_url\": \"https://merchant.example.com/deposit/complete\",\n      \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n      \"provider_session_id\": \"a1b2c3d4e5\",\n      \"provider_transaction_id\": \"string\",\n      \"customer_reference\": \"player-981\",\n      \"expires_at\": \"2026-08-08T10:30:00.000000Z\",\n      \"finalised_at\": \"string\",\n      \"created_at\": \"2026-08-08T10:15:00.000000Z\",\n      \"updated_at\": \"2026-08-08T10:15:00.000000Z\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aef528f4-922e-479f-8be4-dabec05b9e4a",
+              "name": "Session rejected. The `code` field identifies the reason, for example ERR_PAYMENT_METHOD_NOT_ENABLED when the method, currency or country is not enabled for the merchant. See the [error catalogue](/api-basics/errors).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"This payment method is not enabled for the merchant.\",\n  \"code\": \"ERR_PAYMENT_METHOD_NOT_ENABLED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "26037b2f-2a4f-499e-8c66-45029d0df0e1",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Authentication failed\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8e9743ff-294c-43c4-a729-07ce24b1d6f6",
+              "name": "A session or transaction with this `reference` already exists. See the [duplicate protection guide](/guides/duplicate-protection).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"A payment session with this reference already exists.\",\n  \"code\": \"ERR_DUPLICATE\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b906e10c-a97e-483c-b4e6-e19e4e9234b2",
+              "name": "Validation failed. This includes any request carrying card, token, CVV or voucher data.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation errors\",\n  \"code\": \"ERR_VALIDATION_FAILED\",\n  \"data\": \"string\",\n  \"errors\": {\n    \"card\": [\n      \"Card, token, CVV and voucher data are not accepted on redirect payment sessions.\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6b5aec8b-0eee-457d-bb5c-924034836b7b",
+              "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Too many requests\",\n  \"code\": \"ERR_RATE_LIMITED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "25dcede5-8e2c-44ea-ad7c-b4c68b512850",
+              "name": "The provider could not prepare the hosted session. The session and its transaction are marked failed. Create a new session to retry.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n  \"customer_reference\": \"player-981\",\n  \"metadata\": {\n    \"campaign\": \"welcome\"\n  },\n  \"merchant_id\": 123\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Gateway",
+              "code": 502,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Failed to create the payment session with the provider.\",\n  \"code\": \"ERR_GATEWAY_ERROR\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3d47fb83-13b9-439b-9b60-1c07c19d89be",
+          "name": "Get a payment session",
+          "request": {
+            "name": "Get a payment session",
+            "description": {
+              "content": "Retrieve the current state of a payment session. Poll this endpoint after the\ncustomer returns to your success URL or rely on [webhooks](/guides/webhooks)\nfor the final outcome. A session is only complete when its status is `paid`.\n\nMerchant API keys can read their own sessions. Partner API keys can read\nsessions belonging to linked merchants.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "payment-sessions",
+                ":paymentSession_public_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "architecto",
+                  "key": "paymentSession_public_id",
+                  "description": "(Required) The ID of the paymentSession public."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+                  "key": "paymentSession",
+                  "description": "(Required) The payment session id."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ce4f5471-3339-4ca8-8de2-239b806f4f30",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions",
+                    ":paymentSession_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "architecto",
+                      "key": "paymentSession_public_id",
+                      "description": "(Required) The ID of the paymentSession public."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+                      "key": "paymentSession",
+                      "description": "(Required) The payment session id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Payment session retrieved\",\n  \"code\": \"\",\n  \"data\": {\n    \"payment_session\": {\n      \"payment_session_id\": \"ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE\",\n      \"transaction_id\": 4512,\n      \"merchant_id\": 123,\n      \"merchant_reference\": \"DEP-2048\",\n      \"provider\": \"skrill\",\n      \"payment_method\": \"psc\",\n      \"status\": \"paid\",\n      \"amount\": 2500,\n      \"amount_formatted\": \"25.00\",\n      \"currency\": \"EUR\",\n      \"checkout_url\": \"https://pay.skrill.com/app/?sid=a1b2c3d4e5\",\n      \"return_url\": \"https://merchant.example.com/deposit/complete\",\n      \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\",\n      \"provider_session_id\": \"a1b2c3d4e5\",\n      \"provider_transaction_id\": \"2649912345\",\n      \"customer_reference\": \"player-981\",\n      \"expires_at\": \"2026-08-08T10:30:00.000000Z\",\n      \"finalised_at\": \"2026-08-08T10:18:42.000000Z\",\n      \"created_at\": \"2026-08-08T10:15:00.000000Z\",\n      \"updated_at\": \"2026-08-08T10:18:42.000000Z\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b22906d1-d858-4dfd-a1be-bfec094df71b",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions",
+                    ":paymentSession_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "architecto",
+                      "key": "paymentSession_public_id",
+                      "description": "(Required) The ID of the paymentSession public."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+                      "key": "paymentSession",
+                      "description": "(Required) The payment session id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Authentication failed\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "92aff9f9-4abc-4251-8ea0-5231722471c3",
+              "name": "The session belongs to a merchant this API key cannot access.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions",
+                    ":paymentSession_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "architecto",
+                      "key": "paymentSession_public_id",
+                      "description": "(Required) The ID of the paymentSession public."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+                      "key": "paymentSession",
+                      "description": "(Required) The payment session id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Access denied: Resource not accessible\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f8396014-653a-475a-abe7-7236c08cf938",
+              "name": "No payment session with this id exists. See the [error catalogue](/api-basics/errors).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions",
+                    ":paymentSession_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "architecto",
+                      "key": "paymentSession_public_id",
+                      "description": "(Required) The ID of the paymentSession public."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+                      "key": "paymentSession",
+                      "description": "(Required) The payment session id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"PaymentSession not found\",\n  \"code\": \"ERR_NOT_FOUND\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "051e5ce8-73f0-4281-8416-238a1d9da4dd",
+              "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-sessions",
+                    ":paymentSession_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "architecto",
+                      "key": "paymentSession_public_id",
+                      "description": "(Required) The ID of the paymentSession public."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+                      "key": "paymentSession",
+                      "description": "(Required) The payment session id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Too many requests\",\n  \"code\": \"ERR_RATE_LIMITED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "9b274314-967c-4537-9a8e-ef2de100c87c",
       "name": "Card Verification",
       "description": {
         "content": "",
@@ -1765,7 +2551,7 @@
       },
       "item": [
         {
-          "id": "35eada20-9d36-4859-93a9-098e4282f679",
+          "id": "e3a23f47-41eb-45be-94b7-2c9c47f84009",
           "name": "Initiate Card Verification",
           "request": {
             "name": "Initiate Card Verification",
@@ -1810,7 +2596,7 @@
           },
           "response": [
             {
-              "id": "d5a209ed-2ac6-4a6d-b7a7-523853911a77",
+              "id": "bc6581d7-14f3-41d9-932d-7bab40698bcb",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1863,7 +2649,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "fd4bf5b5-300e-4130-aa5c-593ca8bb430b",
+              "id": "b17c45a2-2394-49c1-a4bb-66be42616c5d",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1916,7 +2702,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "8d018afd-e996-4f11-bb26-ca09147f0191",
+              "id": "a1deb140-b38f-4d66-a590-895d58a68230",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1969,7 +2755,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "bd09934d-bffe-4593-80c8-91a024728d9c",
+              "id": "cbd9e887-5ed8-44e2-81a5-a46262004786",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -2032,7 +2818,7 @@
       "event": []
     },
     {
-      "id": "6cb28fa4-8891-4b9c-9b50-cae9329693f9",
+      "id": "23156523-f35f-428f-8bde-997d3c5a4a09",
       "name": "API Operations",
       "description": {
         "content": "",
@@ -2040,7 +2826,7 @@
       },
       "item": [
         {
-          "id": "b42d9e1e-544a-4a56-b19f-4178d8b89afd",
+          "id": "7eaf6467-a6d8-4d37-b222-961515c77151",
           "name": "Get API Key Information",
           "request": {
             "name": "Get API Key Information",
@@ -2071,7 +2857,7 @@
           },
           "response": [
             {
-              "id": "5db7f225-74c8-4039-b893-70e5a4da1b85",
+              "id": "71b078eb-0b3c-42f5-9072-2114557c3c07",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2115,7 +2901,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "a9a8ff46-cfbb-4759-8447-2d419ed1ae88",
+              "id": "7f320cb8-a6fe-478f-a20c-cd52ff2ef7e0",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2159,7 +2945,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "297576b3-42f6-4af2-956e-c42ca7f10ae7",
+              "id": "da365135-f08a-4bb6-906e-3dee27f1f3d9",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -2231,11 +3017,11 @@
     ]
   },
   "info": {
-    "_postman_id": "9bcd7628-a8d0-40f1-8afa-b63eb20a9b7f",
+    "_postman_id": "71b248cc-7e91-4173-b956-ef5d26be39c4",
     "name": "Softlemon Merchant API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "description": {
-      "content": "Production-ready merchant integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the merchant integration surface for admin-provisioned API keys.\n\nUse these endpoints when a merchant is processing payments for its own account.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## 3D Secure Integration Flow\n\nSoftLemon uses a server-managed 3DS flow. You do **not** need to handle CAVV, ECI or DS Transaction IDs yourself.\n\n### Step 1: Initiate 3DS Verification\n\n`POST /api/v1/3ds/verify` with card details, amount, currency and `auth_url` (your frontend return URL).\n\n### Step 2: Handle the response\n\n- **Frictionless:** The response returns immediately with `status: full_auth`. Use the returned `id` in Step 4.\n- **Challenge:** The response includes a `challenge_url`. Redirect the cardholder to this URL to complete the bank challenge.\n\n### Step 3: Cardholder completes challenge (if applicable)\n\nAfter the cardholder completes the challenge, they are redirected to your `auth_url` with query parameters:\n\n`?card_verification_id={id}&status=full_auth` (or `status=failed`)\n\n### Step 4: Initiate the transaction\n\n`POST /api/v1/transactions` with `card_verification_data.id` set to the verification ID from Step 1 or the redirect.\n\n```json\n\"card_verification_data\": { \"id\": 43 }\n```\n\nThe API automatically retrieves the stored 3DS authentication data (including CAVV and ECI) and passes it to the payment gateway.\n\n## Integration guides\n\nStep-by-step walkthroughs for the most common flows, each with full requests and responses:\n\n- [Accept a card payment](/guides/accept-a-payment): 3D Secure verification, the sale and confirmation. Start here.\n- [Authorize now, capture later](/guides/authorize-and-capture): holds, full and partial captures and voids.\n- [Refund a payment](/guides/refunds): full and partial refunds and the events they emit.\n- [Charge a returning customer](/guides/returning-customers): repeat payments with a vault token.\n- [Webhook integration](/guides/webhooks): signatures, retries, replays and keeping your system in sync.\n\nPrefer exploring in Postman? Download the [Merchant API Postman collection](/collections/softlemon-merchant-api.postman_collection.json) and set your API key as the Bearer token on the collection.\n\n## 3D Secure test cards\n\nUse these sandbox cards when testing `POST /api/v1/3ds/verify`.\n\n| Scheme | Flow | Returns method data | Card number | Expected result |\n|---|---|---|---|---|\n| Visa | Frictionless | Y | `4200000000000091` | Successful frictionless authentication. |\n| Visa | Frictionless | Y | `4200000000000109` | Attempted authentication. |\n| Visa | Frictionless | N | `4200000000000026` | Successful frictionless authentication. |\n| Visa | Frictionless | N | `4200000000000059` | Attempted authentication. |\n| Visa | Error | N | `4012001037461114` | Technical error. |\n| Visa | Error | N | `4012001037141112` | User not enrolled. |\n| Visa | Not Applicable | N/A | `4532497088771651` | Card not participating. |\n| Visa | Challenge | Y | `4200000000000042` | Challenge flow. |\n| Visa | Challenge | Y | `4200000000000067` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000018` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000075` | Challenge flow. |\n| Mastercard | Frictionless | Y | `5200000000000007` | Successful frictionless authentication. |\n| Mastercard | Frictionless | Y | `5200000000000023` | Attempted authentication. |\n| Mastercard | Frictionless | N | `5200000000000056` | Successful frictionless authentication. |\n| Mastercard | Frictionless | N | `5200000000000006` | Attempted authentication. |\n| Mastercard | Error | N | `5434580000000006` | Technical error. |\n| Mastercard | Error | N | `5457350076543210` | User not enrolled. |\n| Mastercard | Not Applicable | N/A | `5497260847316287` | Card not participating. |\n| Mastercard | Challenge | Y | `5200000000000015` | Challenge flow. |\n| Mastercard | Challenge | Y | `5200000000000049` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000064` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000072` | Challenge flow. |",
+      "content": "Production-ready merchant integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the merchant integration surface for admin-provisioned API keys.\n\nUse these endpoints when a merchant is processing payments for its own account.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## 3D Secure Integration Flow\n\nSoftLemon uses a server-managed 3DS flow. You do **not** need to handle CAVV, ECI or DS Transaction IDs yourself.\n\n### Step 1: Initiate 3DS Verification\n\n`POST /api/v1/3ds/verify` with card details, amount, currency and `auth_url` (your frontend return URL).\n\n### Step 2: Handle the response\n\n- **Frictionless:** The response returns immediately with `status: full_auth`. Use the returned `id` in Step 4.\n- **Challenge:** The response includes a `challenge_url`. Redirect the cardholder to this URL to complete the bank challenge.\n\n### Step 3: Cardholder completes challenge (if applicable)\n\nAfter the cardholder completes the challenge, they are redirected to your `auth_url` with query parameters:\n\n`?card_verification_id={id}&status=full_auth` (or `status=failed`)\n\n### Step 4: Initiate the transaction\n\n`POST /api/v1/transactions` with `card_verification_data.id` set to the verification ID from Step 1 or the redirect.\n\n```json\n\"card_verification_data\": { \"id\": 43 }\n```\n\nThe API automatically retrieves the stored 3DS authentication data (including CAVV and ECI) and passes it to the payment gateway.\n\n## Integration guides\n\nStep-by-step walkthroughs for the most common flows, each with full requests and responses:\n\n- [Accept a card payment](/guides/accept-a-payment): 3D Secure verification, the sale and confirmation. Start here.\n- [Authorize now, capture later](/guides/authorize-and-capture): holds, full and partial captures and voids.\n- [Refund a payment](/guides/refunds): full and partial refunds and the events they emit.\n- [Charge a returning customer](/guides/returning-customers): repeat payments with a vault token.\n- [Accept an alternative payment](/guides/accept-an-alternative-payment): hosted redirect payments such as Paysafecard through payment sessions.\n- [Webhook integration](/guides/webhooks): signatures, retries, replays and keeping your system in sync.\n\nPrefer exploring in Postman? Download the [Merchant API Postman collection](/collections/softlemon-merchant-api.postman_collection.json) and set your API key as the Bearer token on the collection.\n\n## 3D Secure test cards\n\nUse these sandbox cards when testing `POST /api/v1/3ds/verify`.\n\n| Scheme | Flow | Returns method data | Card number | Expected result |\n|---|---|---|---|---|\n| Visa | Frictionless | Y | `4200000000000091` | Successful frictionless authentication. |\n| Visa | Frictionless | Y | `4200000000000109` | Attempted authentication. |\n| Visa | Frictionless | N | `4200000000000026` | Successful frictionless authentication. |\n| Visa | Frictionless | N | `4200000000000059` | Attempted authentication. |\n| Visa | Error | N | `4012001037461114` | Technical error. |\n| Visa | Error | N | `4012001037141112` | User not enrolled. |\n| Visa | Not Applicable | N/A | `4532497088771651` | Card not participating. |\n| Visa | Challenge | Y | `4200000000000042` | Challenge flow. |\n| Visa | Challenge | Y | `4200000000000067` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000018` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000075` | Challenge flow. |\n| Mastercard | Frictionless | Y | `5200000000000007` | Successful frictionless authentication. |\n| Mastercard | Frictionless | Y | `5200000000000023` | Attempted authentication. |\n| Mastercard | Frictionless | N | `5200000000000056` | Successful frictionless authentication. |\n| Mastercard | Frictionless | N | `5200000000000006` | Attempted authentication. |\n| Mastercard | Error | N | `5434580000000006` | Technical error. |\n| Mastercard | Error | N | `5457350076543210` | User not enrolled. |\n| Mastercard | Not Applicable | N/A | `5497260847316287` | Card not participating. |\n| Mastercard | Challenge | Y | `5200000000000015` | Challenge flow. |\n| Mastercard | Challenge | Y | `5200000000000049` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000064` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000072` | Challenge flow. |",
       "type": "text/plain"
     }
   }

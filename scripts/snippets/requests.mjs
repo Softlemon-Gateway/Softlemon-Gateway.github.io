@@ -143,4 +143,30 @@ export const guides = {
       },
     },
   },
+
+  "accept-an-alternative-payment": {
+    "create-session": {
+      method: "POST",
+      path: "/api/v1/payment-sessions",
+      body: {
+        amount: 25,
+        currency: "EUR",
+        reference: "DEP-2048",
+        payment_method: "psc",
+        customer: {
+          first_name: "Jane",
+          last_name: "Doe",
+          country_code: "GB",
+          merchant_customer_id: "player-981",
+        },
+        customer_reference: "player-981",
+        success_url: "https://merchant.example.com/deposit/complete",
+        cancel_url: "https://merchant.example.com/deposit/cancelled",
+      },
+    },
+    "poll-session": {
+      method: "GET",
+      path: "/api/v1/payment-sessions/ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
+    },
+  },
 };
