@@ -48,36 +48,31 @@ npm run preview    # serves the built site locally
 
 ## Content sources and the publish pipeline
 
-The specs and the webhooks guide originate in the `api` repository. Its
-`publish-docs.yml` workflow currently rsync-mirrors `docs/site/` over this entire
-repository on pushes to `stage`. **That workflow must be retired or reworked before
-this site goes live**, otherwise its next run deletes the Zudoku app. Durable prose
-changes should also land in the api repository sources (`config/scribe.php`,
-`app/Services/Docs/WebhooksOpenApiGenerator.php`, `docs/guides/webhooks.md`,
-`docs/openapi/webhooks.yaml`) so regeneration does not reintroduce old text.
+The two OpenAPI specs are generated in the `api` repository by `make docs`
+(Scribe for both audiences, then `scripts/clean_openapi_specs.php` for the
+artifacts Scribe cannot suppress) and staged into its `docs/site/specs/`. On
+pushes to `stage` that touch `docs/site/`, the api repository's
+`publish-docs.yml` workflow copies only those two files into `specs/` here and
+commits. It writes nothing else in this repository. Everything else on the
+site (pages, guides, navigation, theme) is authored in this repository and
+built by `deploy-pages.yml`.
+
+Durable reference prose lives in the api repository sources: the spec intros
+in `docs/openapi/descriptions/*.md`, endpoint and field prose in the
+controller and FormRequest annotations, response examples in
+`storage/responses/` and the outbound webhook contract in
+`docs/openapi/webhooks.yaml`. Editing `specs/` here directly works until the
+next publish overwrites it, so land spec changes upstream.
+
+The guide pages under `pages/guides/` are authored here for a public audience
+(no internal file paths, class names, log strings or incident details). The
+api repository keeps its own internal copies under `docs/guides/`, which are
+no longer published anywhere.
 
 ## Go-live checklist
 
-1. Rework or disable `publish-docs.yml` in the api repository (target end state: it
-   publishes only `specs/**` and guide markdown into this repository, not HTML).
-   The guide set to publish is `webhooks.md`, `transaction-statuses.md` and
-   `duplicate-protection.md` (`webhook-admin-api.md` stays internal). Note the
-   published pages here are edited for a public audience: no internal file paths,
-   class names, log strings or incident details. The transaction statuses page was
-   also rewritten from the current 16-value enum because the api repo copy lists
-   only 9 statuses.
-2. In the api repository, add `@responseFile status=200` annotations (fixtures under
-   `storage/responses/`, same pattern as `ApiKeyController::generateMerchantApiKey`)
-   to `ApiKeyController::getKeyInfo` and the four `PartnerMerchantController` methods.
-   Scribe currently captures unauthenticated 401s for these five operations, so
-   regeneration would drop the 200 examples added here. The generator also emitted
-   the `POST /api/v1/3ds/verify` body fields a second time as query parameters,
-   duplicated every parameter description into its schema, wrote empty array
-   examples for object fields and omitted `merchant_id` from the 3DS body. All of
-   those are fixed in this repository's specs. Diff the published specs against
-   these after any regeneration.
-3. Switch this repository's Settings > Pages > Source to "GitHub Actions".
-4. Push to main. The deploy workflow builds and publishes the site.
-5. Spot-check https://softlemon-gateway.github.io/: root redirect, both API docs,
+1. Switch this repository's Settings > Pages > Source to "GitHub Actions".
+2. Push to main. The deploy workflow builds and publishes the site.
+3. Spot-check https://softlemon-gateway.github.io/: root redirect, both API docs,
    `/guides/webhooks`, legacy URLs (`/merchant.html`, `/partner.html`,
    `/guides/webhooks.html`) and the raw spec URLs under `/specs/`.

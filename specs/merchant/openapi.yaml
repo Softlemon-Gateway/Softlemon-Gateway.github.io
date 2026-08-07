@@ -1,92 +1,7 @@
 openapi: 3.1.0
 info:
   title: 'Softlemon Merchant API'
-  description: |
-    Production-ready merchant integration endpoints for admin-provisioned API keys.
-
-    **Base URL:** `https://api.sandbox.softlemons.com/`
-
-    This documentation covers the merchant integration surface for admin-provisioned API keys.
-
-    Use these endpoints when a merchant is processing payments for its own account.
-
-    API keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.
-
-    The gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.
-
-    ## Authenticating requests
-
-    To authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.
-
-    ## 3D Secure Integration Flow
-
-    SoftLemon uses a server-managed 3DS flow. You do **not** need to handle CAVV, ECI or DS Transaction IDs yourself.
-
-    ### Step 1: Initiate 3DS Verification
-
-    `POST /api/v1/3ds/verify` with card details, amount, currency and `auth_url` (your frontend return URL).
-
-    ### Step 2: Handle the response
-
-    - **Frictionless:** The response returns immediately with `status: full_auth`. Use the returned `id` in Step 4.
-    - **Challenge:** The response includes a `challenge_url`. Redirect the cardholder to this URL to complete the bank challenge.
-
-    ### Step 3: Cardholder completes challenge (if applicable)
-
-    After the cardholder completes the challenge, they are redirected to your `auth_url` with query parameters:
-
-    `?card_verification_id={id}&status=full_auth` (or `status=failed`)
-
-    ### Step 4: Initiate the transaction
-
-    `POST /api/v1/transactions` with `card_verification_data.id` set to the verification ID from Step 1 or the redirect.
-
-    ```json
-    "card_verification_data": { "id": 43 }
-    ```
-
-    The API automatically retrieves the stored 3DS authentication data (including CAVV and ECI) and passes it to the payment gateway.
-
-    ## Integration guides
-
-    Step-by-step walkthroughs for the most common flows, each with full requests and responses:
-
-    - [Accept a card payment](/guides/accept-a-payment): 3D Secure verification, the sale and confirmation. Start here.
-    - [Authorize now, capture later](/guides/authorize-and-capture): holds, full and partial captures and voids.
-    - [Refund a payment](/guides/refunds): full and partial refunds and the events they emit.
-    - [Charge a returning customer](/guides/returning-customers): repeat payments with a vault token.
-    - [Webhook integration](/guides/webhooks): signatures, retries, replays and keeping your system in sync.
-
-    Prefer exploring in Postman? Download the [Merchant API Postman collection](/collections/softlemon-merchant-api.postman_collection.json) and set your API key as the Bearer token on the collection.
-
-    ## 3D Secure test cards
-
-    Use these sandbox cards when testing `POST /api/v1/3ds/verify`.
-
-    | Scheme | Flow | Returns method data | Card number | Expected result |
-    |---|---|---|---|---|
-    | Visa | Frictionless | Y | `4200000000000091` | Successful frictionless authentication. |
-    | Visa | Frictionless | Y | `4200000000000109` | Attempted authentication. |
-    | Visa | Frictionless | N | `4200000000000026` | Successful frictionless authentication. |
-    | Visa | Frictionless | N | `4200000000000059` | Attempted authentication. |
-    | Visa | Error | N | `4012001037461114` | Technical error. |
-    | Visa | Error | N | `4012001037141112` | User not enrolled. |
-    | Visa | Not Applicable | N/A | `4532497088771651` | Card not participating. |
-    | Visa | Challenge | Y | `4200000000000042` | Challenge flow. |
-    | Visa | Challenge | Y | `4200000000000067` | Challenge flow. |
-    | Visa | Challenge | N | `4200000000000018` | Challenge flow. |
-    | Visa | Challenge | N | `4200000000000075` | Challenge flow. |
-    | Mastercard | Frictionless | Y | `5200000000000007` | Successful frictionless authentication. |
-    | Mastercard | Frictionless | Y | `5200000000000023` | Attempted authentication. |
-    | Mastercard | Frictionless | N | `5200000000000056` | Successful frictionless authentication. |
-    | Mastercard | Frictionless | N | `5200000000000006` | Attempted authentication. |
-    | Mastercard | Error | N | `5434580000000006` | Technical error. |
-    | Mastercard | Error | N | `5457350076543210` | User not enrolled. |
-    | Mastercard | Not Applicable | N/A | `5497260847316287` | Card not participating. |
-    | Mastercard | Challenge | Y | `5200000000000015` | Challenge flow. |
-    | Mastercard | Challenge | Y | `5200000000000049` | Challenge flow. |
-    | Mastercard | Challenge | N | `5200000000000064` | Challenge flow. |
-    | Mastercard | Challenge | N | `5200000000000072` | Challenge flow. |
+  description: "Production-ready merchant integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the merchant integration surface for admin-provisioned API keys.\n\nUse these endpoints when a merchant is processing payments for its own account.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## 3D Secure Integration Flow\n\nSoftLemon uses a server-managed 3DS flow. You do **not** need to handle CAVV, ECI or DS Transaction IDs yourself.\n\n### Step 1: Initiate 3DS Verification\n\n`POST /api/v1/3ds/verify` with card details, amount, currency and `auth_url` (your frontend return URL).\n\n### Step 2: Handle the response\n\n- **Frictionless:** The response returns immediately with `status: full_auth`. Use the returned `id` in Step 4.\n- **Challenge:** The response includes a `challenge_url`. Redirect the cardholder to this URL to complete the bank challenge.\n\n### Step 3: Cardholder completes challenge (if applicable)\n\nAfter the cardholder completes the challenge, they are redirected to your `auth_url` with query parameters:\n\n`?card_verification_id={id}&status=full_auth` (or `status=failed`)\n\n### Step 4: Initiate the transaction\n\n`POST /api/v1/transactions` with `card_verification_data.id` set to the verification ID from Step 1 or the redirect.\n\n```json\n\"card_verification_data\": { \"id\": 43 }\n```\n\nThe API automatically retrieves the stored 3DS authentication data (including CAVV and ECI) and passes it to the payment gateway.\n\n## Integration guides\n\nStep-by-step walkthroughs for the most common flows, each with full requests and responses:\n\n- [Accept a card payment](/guides/accept-a-payment): 3D Secure verification, the sale and confirmation. Start here.\n- [Authorize now, capture later](/guides/authorize-and-capture): holds, full and partial captures and voids.\n- [Refund a payment](/guides/refunds): full and partial refunds and the events they emit.\n- [Charge a returning customer](/guides/returning-customers): repeat payments with a vault token.\n- [Webhook integration](/guides/webhooks): signatures, retries, replays and keeping your system in sync.\n\nPrefer exploring in Postman? Download the [Merchant API Postman collection](/collections/softlemon-merchant-api.postman_collection.json) and set your API key as the Bearer token on the collection.\n\n## 3D Secure test cards\n\nUse these sandbox cards when testing `POST /api/v1/3ds/verify`.\n\n| Scheme | Flow | Returns method data | Card number | Expected result |\n|---|---|---|---|---|\n| Visa | Frictionless | Y | `4200000000000091` | Successful frictionless authentication. |\n| Visa | Frictionless | Y | `4200000000000109` | Attempted authentication. |\n| Visa | Frictionless | N | `4200000000000026` | Successful frictionless authentication. |\n| Visa | Frictionless | N | `4200000000000059` | Attempted authentication. |\n| Visa | Error | N | `4012001037461114` | Technical error. |\n| Visa | Error | N | `4012001037141112` | User not enrolled. |\n| Visa | Not Applicable | N/A | `4532497088771651` | Card not participating. |\n| Visa | Challenge | Y | `4200000000000042` | Challenge flow. |\n| Visa | Challenge | Y | `4200000000000067` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000018` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000075` | Challenge flow. |\n| Mastercard | Frictionless | Y | `5200000000000007` | Successful frictionless authentication. |\n| Mastercard | Frictionless | Y | `5200000000000023` | Attempted authentication. |\n| Mastercard | Frictionless | N | `5200000000000056` | Successful frictionless authentication. |\n| Mastercard | Frictionless | N | `5200000000000006` | Attempted authentication. |\n| Mastercard | Error | N | `5434580000000006` | Technical error. |\n| Mastercard | Error | N | `5457350076543210` | User not enrolled. |\n| Mastercard | Not Applicable | N/A | `5497260847316287` | Card not participating. |\n| Mastercard | Challenge | Y | `5200000000000015` | Challenge flow. |\n| Mastercard | Challenge | Y | `5200000000000049` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000064` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000072` | Challenge flow. |"
   version: 0.9.0
 servers:
   -
@@ -1250,6 +1165,82 @@ paths:
                       example: architecto
                   required:
                     - id
+                browser_data:
+                  type:
+                    - object
+                    - 'null'
+                  description: 'Browser fingerprint for provider-led 3DS (same shape as POST /api/v1/3ds/verify). Recommended for Paycent to reduce unnecessary 3DS challenges.'
+                  example:
+                    accept_header: text/html
+                    color_depth: 24
+                    java_enabled: false
+                    java_script_enabled: true
+                    language: en-US
+                    screen_height: 1080
+                    screen_width: 1920
+                    time_zone_offset_in_minutes: -60
+                    user_agent: Mozilla/5.0
+                  properties:
+                    accept_header:
+                      type: string
+                      description: ''
+                      example: 'text/html,application/xhtml+xml'
+                    color_depth:
+                      type: integer
+                      description: ''
+                      example: 24
+                    java_enabled:
+                      type: boolean
+                      description: ''
+                      example: false
+                    java_script_enabled:
+                      type: boolean
+                      description: ''
+                      example: true
+                    language:
+                      type: string
+                      description: ''
+                      example: en-US
+                    screen_height:
+                      type: integer
+                      description: ''
+                      example: 1080
+                    screen_width:
+                      type: integer
+                      description: ''
+                      example: 1920
+                    time_zone_offset_in_minutes:
+                      type: integer
+                      description: ''
+                      example: -60
+                    user_agent:
+                      type: string
+                      description: ''
+                      example: Mozilla/5.0...
+                    ip_address:
+                      type:
+                        - string
+                        - 'null'
+                      description: ''
+                      example: 203.0.113.1
+                    window_height:
+                      type:
+                        - integer
+                        - 'null'
+                      description: 'Paycent device window height.'
+                      example: 700
+                    window_width:
+                      type:
+                        - integer
+                        - 'null'
+                      description: 'Paycent device window width.'
+                      example: 1220
+                    time_zone:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Paycent IANA time zone.'
+                      example: Europe/Paris
               required:
                 - amount
                 - currency
@@ -2098,7 +2089,7 @@ paths:
                   type:
                     - string
                     - 'null'
-                  description: 'Reason for refund.'
+                  description: 'Reason for void.'
                   example: architecto
     parameters:
       -
@@ -2187,7 +2178,7 @@ paths:
                         example: frictionless
                       challenge_url:
                         type: string
-                        example: 'https://yoursite.com/checkout/3ds-complete'
+                        example: null
                       post_url:
                         type: string
                         example: null
@@ -2335,9 +2326,7 @@ paths:
                   description: 'Your return URL. After the cardholder completes the 3DS challenge, they are redirected here with ?card_verification_id={id}&status={full_auth|failed} query parameters.'
                   example: 'https://yoursite.com/checkout/3ds-complete'
                 merchant_id:
-                  type:
-                    - integer
-                    - 'null'
+                  type: integer
                   description: 'Required when authenticating with a partner API key. The id of a merchant linked to that partner. Omit when using a merchant API key.'
                   example: 123
                 browser_data:

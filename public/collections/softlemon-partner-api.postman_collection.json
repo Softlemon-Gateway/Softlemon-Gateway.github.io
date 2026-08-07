@@ -1,7 +1,7 @@
 {
   "item": [
     {
-      "id": "70687b98-40a1-40bc-bf30-b890006d55f2",
+      "id": "8288014e-bea5-4c11-9b04-c0aefe99e908",
       "name": "Partner API",
       "description": {
         "content": "",
@@ -9,7 +9,7 @@
       },
       "item": [
         {
-          "id": "e6577455-154b-4d21-8249-ea05a0c85fda",
+          "id": "2b168961-d5e0-4b57-99db-5f6e90ddcc81",
           "name": "List Merchants",
           "request": {
             "name": "List Merchants",
@@ -40,7 +40,7 @@
           },
           "response": [
             {
-              "id": "0887e297-9c36-43ef-a2ce-b130162fde7d",
+              "id": "52839776-15c1-40b7-8ef7-c18107aacc68",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -79,12 +79,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Merchants retrieved successfully\",\n  \"code\": \"\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Demo Store Ltd\",\n      \"mcc\": \"5734\",\n      \"status\": \"active\",\n      \"address\": \"1 High Street\",\n      \"city\": \"London\",\n      \"country_code\": \"GB\",\n      \"email\": \"merchant@example.com\",\n      \"phone\": \"+441234567890\",\n      \"website\": \"https://demo-store.example.com\",\n      \"acquirer_id\": 1,\n      \"acquirer\": {\n        \"id\": 1,\n        \"code\": \"qashpay\",\n        \"name\": \"QashPay\",\n        \"bank_name\": \"Example Bank\",\n        \"bank_country_code\": \"GB\",\n        \"settlement_currency_code\": \"EUR\",\n        \"status\": \"active\",\n        \"created_at\": \"2025-01-15T09:00:00.000000Z\",\n        \"updated_at\": \"2025-01-15T09:00:00.000000Z\"\n      },\n      \"transactions_count\": 128,\n      \"transaction_stats\": {\n        \"total_count\": 128,\n        \"total_volume\": 645000\n      },\n      \"partnership\": {\n        \"status\": \"active\",\n        \"notes\": null,\n        \"approved_at\": \"2025-02-01T12:00:00.000000Z\"\n      },\n      \"created_at\": \"2025-01-20T09:00:00.000000Z\",\n      \"updated_at\": \"2025-05-20T09:18:47.000000Z\"\n    }\n  ]\n}",
+              "body": "{\n  \"success\": true,\n  \"message\": \"Merchants retrieved successfully\",\n  \"code\": \"\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Demo Store Ltd\",\n      \"mcc\": \"5734\",\n      \"status\": \"active\",\n      \"address\": \"1 High Street\",\n      \"city\": \"London\",\n      \"country_code\": \"GB\",\n      \"email\": \"merchant@example.com\",\n      \"phone\": \"+441234567890\",\n      \"website\": \"https://demo-store.example.com\",\n      \"acquirer_id\": 1,\n      \"acquirer\": {\n        \"id\": 1,\n        \"code\": \"qashpay\",\n        \"name\": \"QashPay\",\n        \"bank_name\": \"Example Bank\",\n        \"bank_country_code\": \"GB\",\n        \"settlement_currency_code\": \"EUR\",\n        \"status\": \"active\",\n        \"created_at\": \"2025-01-15T09:00:00.000000Z\",\n        \"updated_at\": \"2025-01-15T09:00:00.000000Z\"\n      },\n      \"transactions_count\": 128,\n      \"transaction_stats\": {\n        \"total_count\": 128,\n        \"total_volume\": 645000\n      },\n      \"partnership\": {\n        \"status\": \"active\",\n        \"notes\": \"string\",\n        \"approved_at\": \"2025-02-01T12:00:00.000000Z\"\n      },\n      \"created_at\": \"2025-01-20T09:00:00.000000Z\",\n      \"updated_at\": \"2025-05-20T09:18:47.000000Z\"\n    },\n    {\n      \"id\": 1,\n      \"name\": \"Demo Store Ltd\",\n      \"mcc\": \"5734\",\n      \"status\": \"active\",\n      \"address\": \"1 High Street\",\n      \"city\": \"London\",\n      \"country_code\": \"GB\",\n      \"email\": \"merchant@example.com\",\n      \"phone\": \"+441234567890\",\n      \"website\": \"https://demo-store.example.com\",\n      \"acquirer_id\": 1,\n      \"acquirer\": {\n        \"id\": 1,\n        \"code\": \"qashpay\",\n        \"name\": \"QashPay\",\n        \"bank_name\": \"Example Bank\",\n        \"bank_country_code\": \"GB\",\n        \"settlement_currency_code\": \"EUR\",\n        \"status\": \"active\",\n        \"created_at\": \"2025-01-15T09:00:00.000000Z\",\n        \"updated_at\": \"2025-01-15T09:00:00.000000Z\"\n      },\n      \"transactions_count\": 128,\n      \"transaction_stats\": {\n        \"total_count\": 128,\n        \"total_volume\": 645000\n      },\n      \"partnership\": {\n        \"status\": \"active\",\n        \"notes\": \"string\",\n        \"approved_at\": \"2025-02-01T12:00:00.000000Z\"\n      },\n      \"created_at\": \"2025-01-20T09:00:00.000000Z\",\n      \"updated_at\": \"2025-05-20T09:18:47.000000Z\"\n    }\n  ]\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "aed9d5a4-db9f-41a2-a103-6086f83ffc53",
+              "id": "decacb6c-0d7d-4f88-95ab-7f502a657c18",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -128,7 +128,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "49dc6c45-c439-48bf-b55b-e42daa0bf4c1",
+              "id": "b390a002-403b-4f6a-bb99-a160927af2cf",
               "name": "The API key is not a partner key or the partner account is not active. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -173,7 +173,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "11738130-4123-4007-b140-07701a66b063",
+              "id": "1de69d28-4198-4e68-aa3d-471aabe155a2",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -224,7 +224,7 @@
           }
         },
         {
-          "id": "999049fb-1814-4287-b0f2-94038cfe048e",
+          "id": "d338a5fc-4171-42af-9fd1-ebb7e0c88605",
           "name": "Get Merchant",
           "request": {
             "name": "Get Merchant",
@@ -264,7 +264,7 @@
           },
           "response": [
             {
-              "id": "0ddbb532-c07c-4646-8b8d-1efd74628418",
+              "id": "bba0010f-5b24-43f1-bb91-15cbdd77b1a9",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -317,7 +317,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "2b548d5b-2a39-4565-b39c-5ca75d0ce7d6",
+              "id": "d49b1219-9aa1-4018-b454-877ac1498c73",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -370,7 +370,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "4b508313-6289-4a10-9959-82bb2627f9ee",
+              "id": "116874ac-3837-4229-9c6d-39f8f682b28d",
               "name": "The API key is not a partner key or the partner account is not active. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -424,7 +424,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "6f43c992-4dc4-46cc-9018-3a9ddf20ec33",
+              "id": "bf7e0404-752f-4222-b5d7-72fb6bba7932",
               "name": "The merchant does not exist or is not linked to your partner account. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -478,7 +478,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "d175f071-70ea-4155-ba76-62bae3a8e865",
+              "id": "a92c8fb4-2d5d-47f4-909f-befe0984dfbe",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -538,7 +538,7 @@
           }
         },
         {
-          "id": "3377a43f-c763-4c38-9f8a-07bbe4a502dc",
+          "id": "869b76b1-44f3-4b64-abad-2161b3793cdf",
           "name": "Get Merchant Transactions",
           "request": {
             "name": "Get Merchant Transactions",
@@ -604,7 +604,7 @@
           },
           "response": [
             {
-              "id": "28f978f8-2784-4388-88a4-1252077d81c5",
+              "id": "2a902982-ad7c-429f-b50a-62dab02172f5",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -670,12 +670,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Transactions retrieved successfully\",\n  \"code\": \"\",\n  \"data\": {\n    \"transactions\": [\n      {\n        \"id\": 123456,\n        \"merchant_id\": 1,\n        \"merchant_trans_id\": \"ORDER-100045\",\n        \"amount\": 5000,\n        \"amount_formatted\": \"50.00 EUR\",\n        \"currency\": \"EUR\",\n        \"status\": \"success\",\n        \"transaction_type\": \"sale\",\n        \"description\": null,\n        \"acquirer_provider\": \"qashpay\",\n        \"acquirer_trans_id\": \"8ac7a4a29852f6f101985300a1b41c2f\",\n        \"acquirer_auth_code\": \"012345\",\n        \"related_trans_id\": null,\n        \"refunded_amount\": 0,\n        \"customer\": null,\n        \"cardholder\": null,\n        \"payment_instrument\": null,\n        \"ip_address\": \"172.19.0.7\",\n        \"created_at\": \"2025-05-20T09:18:47.000000Z\",\n        \"updated_at\": \"2025-05-20T09:18:48.000000Z\"\n      }\n    ],\n    \"pagination\": {\n      \"current_page\": 1,\n      \"last_page\": 1,\n      \"per_page\": 25,\n      \"total\": 1\n    }\n  }\n}",
+              "body": "{\n  \"success\": true,\n  \"message\": \"Transactions retrieved successfully\",\n  \"code\": \"\",\n  \"data\": {\n    \"transactions\": [\n      {\n        \"id\": 123456,\n        \"merchant_id\": 1,\n        \"merchant_trans_id\": \"ORDER-100045\",\n        \"amount\": 5000,\n        \"amount_formatted\": \"50.00 EUR\",\n        \"currency\": \"EUR\",\n        \"status\": \"success\",\n        \"transaction_type\": \"sale\",\n        \"description\": \"string\",\n        \"acquirer_provider\": \"qashpay\",\n        \"acquirer_trans_id\": \"8ac7a4a29852f6f101985300a1b41c2f\",\n        \"acquirer_auth_code\": \"012345\",\n        \"related_trans_id\": \"string\",\n        \"refunded_amount\": 0,\n        \"customer\": \"string\",\n        \"cardholder\": \"string\",\n        \"payment_instrument\": \"string\",\n        \"ip_address\": \"172.19.0.7\",\n        \"created_at\": \"2025-05-20T09:18:47.000000Z\",\n        \"updated_at\": \"2025-05-20T09:18:48.000000Z\"\n      },\n      {\n        \"id\": 123456,\n        \"merchant_id\": 1,\n        \"merchant_trans_id\": \"ORDER-100045\",\n        \"amount\": 5000,\n        \"amount_formatted\": \"50.00 EUR\",\n        \"currency\": \"EUR\",\n        \"status\": \"success\",\n        \"transaction_type\": \"sale\",\n        \"description\": \"string\",\n        \"acquirer_provider\": \"qashpay\",\n        \"acquirer_trans_id\": \"8ac7a4a29852f6f101985300a1b41c2f\",\n        \"acquirer_auth_code\": \"012345\",\n        \"related_trans_id\": \"string\",\n        \"refunded_amount\": 0,\n        \"customer\": \"string\",\n        \"cardholder\": \"string\",\n        \"payment_instrument\": \"string\",\n        \"ip_address\": \"172.19.0.7\",\n        \"created_at\": \"2025-05-20T09:18:47.000000Z\",\n        \"updated_at\": \"2025-05-20T09:18:48.000000Z\"\n      }\n    ],\n    \"pagination\": {\n      \"current_page\": 1,\n      \"last_page\": 1,\n      \"per_page\": 25,\n      \"total\": 1\n    }\n  }\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "8985f933-5c51-498b-90cf-7111bbab41a3",
+              "id": "bccc1a30-aa50-4b33-bf4f-ef1eba331a98",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -746,7 +746,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "6206a6da-c7ce-4bc0-b63f-373c197ae9e2",
+              "id": "f1577172-4cbb-4933-b6d6-672d3da62b54",
               "name": "The API key is not a partner key or the partner account is not active. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -818,7 +818,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "99f3209d-ec19-444b-9960-af06cb48416c",
+              "id": "b8c2e8a0-8b91-4d8d-b432-ddc6e8fee805",
               "name": "The merchant does not exist or is not linked to your partner account. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -890,7 +890,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "eda0a4c7-bf5f-4740-969f-755cdb40bb4c",
+              "id": "39118f8c-bc0b-424f-9aaa-be8338cd9f42",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -971,7 +971,7 @@
       "event": []
     },
     {
-      "id": "6547de54-3f77-4ed0-81ff-54d8d0e43f2b",
+      "id": "1a2a7c57-1c2e-4edd-ba36-189321656401",
       "name": "API Operations",
       "description": {
         "content": "",
@@ -979,7 +979,7 @@
       },
       "item": [
         {
-          "id": "648733b8-ea0d-438f-a11f-57a93b7d54f7",
+          "id": "d7bad0cc-1f7e-4621-82be-8be4be0fd955",
           "name": "Get API Key Information",
           "request": {
             "name": "Get API Key Information",
@@ -1010,7 +1010,7 @@
           },
           "response": [
             {
-              "id": "e9358e88-058f-42be-bca0-81dfba774b94",
+              "id": "1891bfc9-0339-4eaf-a57e-28cdc9bd0c73",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1054,7 +1054,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "ed632b40-d44e-4213-a201-d4ebbf5b5bb5",
+              "id": "7c2e8697-7fd9-4c82-b8f6-21f867fc4d23",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1098,7 +1098,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "613b8cb1-bc3e-41c8-909e-883dae4281fa",
+              "id": "4b2d6abb-84a8-4bc9-a639-ed74f21530d9",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -1170,11 +1170,11 @@
     ]
   },
   "info": {
-    "_postman_id": "7f414876-b6be-4605-8cc7-a32f9ffb8311",
+    "_postman_id": "41b2ea7b-53bb-4caa-8490-a165eea6286e",
     "name": "Softlemon Partner API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "description": {
-      "content": "Production-ready partner integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the partner integration surface for admin-provisioned API keys.\n\nUse these endpoints when a partner is managing linked merchants and accessing partner-facing operational resources.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## Integration guides\n\nThe [partner integration guide](/guides/partner-integration) walks through the full flow step by step: confirming your key's scope, listing linked merchants, reviewing their transactions and processing payments on a merchant's behalf with `merchant_id`. The [webhook integration guide](/guides/webhooks) covers event delivery and signature verification.\n\nPrefer exploring in Postman? Download the [Partner API Postman collection](/collections/softlemon-partner-api.postman_collection.json) and set your API key as the Bearer token on the collection.\n",
+      "content": "Production-ready partner integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the partner integration surface for admin-provisioned API keys.\n\nUse these endpoints when a partner is managing linked merchants and accessing partner-facing operational resources.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## Integration guides\n\nThe [partner integration guide](/guides/partner-integration) walks through the full flow step by step: confirming your key's scope, listing linked merchants, reviewing their transactions and processing payments on a merchant's behalf with `merchant_id`. The [webhook integration guide](/guides/webhooks) covers event delivery and signature verification.\n\nPrefer exploring in Postman? Download the [Partner API Postman collection](/collections/softlemon-partner-api.postman_collection.json) and set your API key as the Bearer token on the collection.",
       "type": "text/plain"
     }
   }

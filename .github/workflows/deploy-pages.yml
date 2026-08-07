@@ -1,10 +1,9 @@
 # Builds the Zudoku docs site and deploys it to GitHub Pages.
 #
-# INERT UNTIL GO-LIVE. Before this can take effect:
-#   1. Repository Settings > Pages > Source must be switched to "GitHub Actions".
-#   2. The api repository's publish-docs.yml (rsync mirror of docs/site/) must be
-#      retired or reworked to publish only specs and guide markdown, otherwise its
-#      next run will overwrite this repository. See README.md for the checklist.
+# INERT UNTIL GO-LIVE. Before this can take effect, repository Settings >
+# Pages > Source must be switched to "GitHub Actions". See README.md for the
+# go-live checklist. The api repository's publish-docs.yml only refreshes
+# specs/ here, so both workflows can coexist.
 name: Deploy docs site
 
 on:
