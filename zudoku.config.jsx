@@ -68,6 +68,20 @@ const config = {
       items: [
         {
           type: "category",
+          label: "API basics",
+          collapsible: false,
+          items: [
+            "/api-basics/conventions",
+            "/api-basics/environments",
+            "/api-basics/errors",
+            "/api-basics/rate-limits",
+            "/api-basics/sca-and-psd2",
+            "/api-basics/support",
+            "/api-basics/changelog",
+          ],
+        },
+        {
+          type: "category",
           label: "Integration flows",
           collapsible: false,
           items: [
@@ -92,6 +106,9 @@ const config = {
     },
   ],
   redirects: [{ from: "/", to: "/merchant" }],
+  search: {
+    type: "pagefind",
+  },
   defaults: {
     apis: {
       disablePlayground: true,

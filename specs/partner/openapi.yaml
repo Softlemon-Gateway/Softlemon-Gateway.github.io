@@ -824,6 +824,54 @@ paths:
                   data:
                     type: string
                     example: null
+        403:
+          description: 'The API key is not a partner key or the partner account is not active. See the [error catalogue](/api-basics/errors).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Access denied: This endpoint is only accessible to partners.'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Access denied: This endpoint is only accessible to partners.'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
       tags:
         - 'Partner API'
   '/api/v1/merchants/{merchant_id}':
@@ -907,6 +955,78 @@ paths:
                   code:
                     type: string
                     example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        403:
+          description: 'The API key is not a partner key or the partner account is not active. See the [error catalogue](/api-basics/errors).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Access denied: This endpoint is only accessible to partners.'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Access denied: This endpoint is only accessible to partners.'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        404:
+          description: 'The merchant does not exist or is not linked to your partner account. See the [error catalogue](/api-basics/errors).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Merchant not found.'
+                  code: ERR_NOT_FOUND
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Merchant not found.'
+                  code:
+                    type: string
+                    example: ERR_NOT_FOUND
+                  data:
+                    type: string
+                    example: null
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
                   data:
                     type: string
                     example: null
@@ -1035,6 +1155,78 @@ paths:
                   data:
                     type: string
                     example: null
+        403:
+          description: 'The API key is not a partner key or the partner account is not active. See the [error catalogue](/api-basics/errors).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Access denied: This endpoint is only accessible to partners.'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Access denied: This endpoint is only accessible to partners.'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        404:
+          description: 'The merchant does not exist or is not linked to your partner account. See the [error catalogue](/api-basics/errors).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Merchant not found.'
+                  code: ERR_NOT_FOUND
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Merchant not found.'
+                  code:
+                    type: string
+                    example: ERR_NOT_FOUND
+                  data:
+                    type: string
+                    example: null
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
       tags:
         - 'Partner API'
     parameters:
@@ -1134,6 +1326,30 @@ paths:
                   code:
                     type: string
                     example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
                   data:
                     type: string
                     example: null
