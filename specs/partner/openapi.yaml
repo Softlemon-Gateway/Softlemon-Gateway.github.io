@@ -21,6 +21,8 @@ info:
     ## Integration guides
 
     The [partner integration guide](/guides/partner-integration) walks through the full flow step by step: confirming your key's scope, listing linked merchants, reviewing their transactions and processing payments on a merchant's behalf with `merchant_id`. The [webhook integration guide](/guides/webhooks) covers event delivery and signature verification.
+
+    Prefer exploring in Postman? Download the [Partner API Postman collection](/collections/softlemon-partner-api.postman_collection.json) and set your API key as the Bearer token on the collection.
   version: 0.9.0
 servers:
   -

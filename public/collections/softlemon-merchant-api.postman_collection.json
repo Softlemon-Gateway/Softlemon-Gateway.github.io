@@ -1,0 +1,2242 @@
+{
+  "item": [
+    {
+      "id": "1e13222d-0717-455c-bf6d-345786abbafa",
+      "name": "Transactions",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7abac37b-b335-4955-beef-b07edfaf141f",
+          "name": "Initiate Transaction",
+          "request": {
+            "name": "Initiate Transaction",
+            "description": {
+              "content": "Initiate a new transaction (sale or auth).\n\nMerchant API keys can call this endpoint for their own account.\nPartner API keys can also call this endpoint, but they must include `merchant_id`\nfor a merchant linked to that partner.\nPartner API keys can also capture, refund and void transactions for linked merchants under the same `merchant_id` rules.\n\nDuplicate requests reusing an active `reference` are rejected with HTTP 409. See the [duplicate protection guide](/guides/duplicate-protection).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "transactions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"unavailable\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5d0eadeb-fd21-4054-ac74-5b2e3704a02b",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"unavailable\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction initiated\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 2,\n    \"related_trans_id\": \"string\",\n    \"merchant_id\": 1,\n    \"cardholder_id\": 2,\n    \"amount\": 1250,\n    \"currency\": \"EUR\",\n    \"status\": \"auth\",\n    \"transaction_type\": \"auth\",\n    \"merchant_trans_id\": \"ORDER-912346\",\n    \"acquirer_trans_id\": \"514009741995\",\n    \"acquirer_auth_code\": \"400066\",\n    \"acquirer_ref_num\": \"741995\",\n    \"ip_address\": \"172.19.0.7\",\n    \"updated_at\": \"2025-05-20T09:18:48.000000Z\",\n    \"created_at\": \"2025-05-20T09:18:47.000000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e839327e-8bd1-4a55-b201-b2b106a9aa1a",
+              "name": "Transaction rejected. The `code` field identifies the reason. See the [error catalogue](/api-basics/errors).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"unavailable\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Rejected because transaction is marked for no retries\",\n  \"code\": \"ERR_DO_NOT_RETRY\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "86a39c0c-b4c2-4bec-8fc1-816b25d4be14",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"unavailable\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Authentication failed\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7a7d60b7-738c-40dd-8229-02d9bdf39540",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"unavailable\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"A transaction with this reference already exists\",\n  \"code\": \"ERR_DUPLICATE\",\n  \"data\": {\n    \"transaction_id\": 123\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6b5e3c64-cf71-4c67-b963-a3d102101b78",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"unavailable\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation errors\",\n  \"code\": \"ERR_VALIDATION_FAILED\",\n  \"data\": \"string\",\n  \"errors\": {\n    \"amount\": [\n      \"The transaction amount must be a number.\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ded54a73-1900-46c6-8750-39c79733a5f6",
+              "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"unavailable\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Too many requests\",\n  \"code\": \"ERR_RATE_LIMITED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1d5190d9-dd06-4641-8530-0a9aca428427",
+          "name": "Capture Transaction",
+          "request": {
+            "name": "Capture Transaction",
+            "description": {
+              "content": "Capture a previously authorized transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "transactions",
+                ":transaction_id",
+                "capture"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "21",
+                  "key": "transaction_id",
+                  "description": "(Required) The ID of the transaction."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 12.5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "dc0241a7-cd81-4326-aef6-7c448aa74227",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "capture"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction captured\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 3,\n    \"related_trans_id\": 2,\n    \"merchant_id\": 1,\n    \"cardholder_id\": 2,\n    \"amount\": 1250,\n    \"currency\": \"EUR\",\n    \"status\": \"captured\",\n    \"transaction_type\": \"capture\",\n    \"merchant_trans_id\": \"ORDER-912346\",\n    \"acquirer_trans_id\": \"995140741995\",\n    \"acquirer_auth_code\": \"400066\",\n    \"acquirer_ref_num\": \"741995\",\n    \"ip_address\": \"172.19.0.7\",\n    \"updated_at\": \"2025-05-20T09:18:48.000000Z\",\n    \"created_at\": \"2025-05-20T09:18:47.000000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "011a922c-a55f-4d52-a1a7-ecdd0609b1a7",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "capture"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Authentication failed\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7aed11b2-a87a-42ec-a8db-a6d64d1ed11b",
+              "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "capture"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Transaction not found\",\n  \"code\": \"ERR_NOT_FOUND\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "00d5d50c-771e-4fc1-ad9d-d8f363434872",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "capture"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation errors\",\n  \"code\": \"ERR_VALIDATION_FAILED\",\n  \"data\": \"string\",\n  \"errors\": {\n    \"amount\": [\n      \"The capture amount must be a number.\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "65a984a2-5b88-4603-9131-c497b352d3d6",
+              "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "capture"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Too many requests\",\n  \"code\": \"ERR_RATE_LIMITED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "02d2883b-a363-458f-8c5f-25660452f0b5",
+          "name": "Refund Transaction",
+          "request": {
+            "name": "Refund Transaction",
+            "description": {
+              "content": "Refund a previously captured transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "transactions",
+                ":transaction_id",
+                "refund"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "21",
+                  "key": "transaction_id",
+                  "description": "(Required) The ID of the transaction."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 12.5,\n  \"reason\": \"architecto\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "22853ae0-b92e-4ae5-b607-7721b7165a20",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "refund"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"reason\": \"architecto\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction refunded\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 4,\n    \"related_trans_id\": 3,\n    \"merchant_id\": 1,\n    \"cardholder_id\": 2,\n    \"amount\": 1250,\n    \"currency\": \"EUR\",\n    \"status\": \"refunded\",\n    \"transaction_type\": \"refund\",\n    \"merchant_trans_id\": \"ORDER-912346\",\n    \"acquirer_trans_id\": \"514009741995\",\n    \"acquirer_auth_code\": \"400066\",\n    \"acquirer_ref_num\": \"741995\",\n    \"ip_address\": \"172.19.0.7\",\n    \"updated_at\": \"2025-05-20T09:18:48.000000Z\",\n    \"created_at\": \"2025-05-20T09:18:47.000000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "227902da-6658-4a4a-a030-25ec84061aeb",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "refund"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"reason\": \"architecto\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Authentication failed\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "88e5e804-140e-48c8-a3cd-5f76c88e3208",
+              "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "refund"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"reason\": \"architecto\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Transaction not found\",\n  \"code\": \"ERR_NOT_FOUND\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fcbd8d85-7f55-44e8-a4f1-5bb8c2338ef1",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "refund"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"reason\": \"architecto\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation errors\",\n  \"code\": \"ERR_VALIDATION_FAILED\",\n  \"data\": \"string\",\n  \"errors\": {\n    \"amount\": [\n      \"The refund amount must be a number.\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b57eec06-36dc-4c65-9729-a017073ac09c",
+              "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "refund"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"reason\": \"architecto\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Too many requests\",\n  \"code\": \"ERR_RATE_LIMITED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "15e6c8f9-803a-4193-b091-6b200fcf1b5c",
+          "name": "Transaction Status",
+          "request": {
+            "name": "Transaction Status",
+            "description": {
+              "content": "Get the status of a transaction.\n\nMerchant API keys can check their own transactions. Partner API keys can\ncheck, capture, refund and void transactions belonging to linked merchants\nthey are allowed to access. Ownership is enforced by the request layer.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "transactions",
+                ":transaction_id",
+                "status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "21",
+                  "key": "transaction_id",
+                  "description": "(Required) The ID of the transaction."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e0c38e9b-b8c6-42b7-befa-7d21cf5770b5",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction status\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 2,\n    \"related_trans_id\": \"string\",\n    \"merchant_id\": 1,\n    \"cardholder_id\": 2,\n    \"amount\": 1250,\n    \"currency\": \"EUR\",\n    \"status\": \"auth\",\n    \"transaction_type\": \"auth\",\n    \"merchant_trans_id\": \"ORDER-912346\",\n    \"acquirer_trans_id\": \"514009741995\",\n    \"acquirer_auth_code\": \"400066\",\n    \"acquirer_ref_num\": \"741995\",\n    \"ip_address\": \"172.19.0.7\",\n    \"updated_at\": \"2025-05-20T09:18:48.000000Z\",\n    \"created_at\": \"2025-05-20T09:18:47.000000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "304c3a45-74a5-45b9-9c53-50a5bd199fc9",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Authentication failed\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "af80fc6b-2c53-40e3-9470-b0e4dd86549f",
+              "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Transaction not found\",\n  \"code\": \"ERR_NOT_FOUND\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3af493b0-0878-477e-aad2-1598c96c944c",
+              "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Too many requests\",\n  \"code\": \"ERR_RATE_LIMITED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b10beeec-b0bc-4abc-9454-de25a26459fd",
+          "name": "Void Transaction",
+          "request": {
+            "name": "Void Transaction",
+            "description": {
+              "content": "Void a previously initiated auth transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "transactions",
+                ":transaction_id",
+                "void"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "21",
+                  "key": "transaction_id",
+                  "description": "(Required) The ID of the transaction."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 12.5,\n  \"reason\": \"architecto\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "96ef0d59-febb-4d18-a675-efe3aa6c3677",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "void"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"reason\": \"architecto\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction voided\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 4,\n    \"related_trans_id\": 3,\n    \"merchant_id\": 1,\n    \"cardholder_id\": 2,\n    \"amount\": 1250,\n    \"currency\": \"EUR\",\n    \"status\": \"voided\",\n    \"transaction_type\": \"void\",\n    \"merchant_trans_id\": \"ORDER-912346\",\n    \"acquirer_trans_id\": \"514009741995\",\n    \"acquirer_auth_code\": \"400066\",\n    \"acquirer_ref_num\": \"741995\",\n    \"ip_address\": \"172.19.0.7\",\n    \"updated_at\": \"2025-05-20T09:18:48.000000Z\",\n    \"created_at\": \"2025-05-20T09:18:47.000000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a9e32dbe-19f9-4457-a677-2bf932f6fc82",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "void"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"reason\": \"architecto\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Authentication failed\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c6a6dc25-1d16-4921-be60-ba93de056d40",
+              "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "void"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"reason\": \"architecto\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Transaction not found\",\n  \"code\": \"ERR_NOT_FOUND\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0e2723b7-08ae-4a39-9127-d90abea00d3b",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "void"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"reason\": \"architecto\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation errors\",\n  \"code\": \"ERR_VALIDATION_FAILED\",\n  \"data\": \"string\",\n  \"errors\": {\n    \"amount\": [\n      \"The void amount must be a number.\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "019e9d80-28d4-49af-b1b4-3efd8a1abec8",
+              "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "void"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"reason\": \"architecto\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Too many requests\",\n  \"code\": \"ERR_RATE_LIMITED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "bfdb395c-0739-47ce-bd41-fcf258d7e3c3",
+      "name": "Card Verification",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b2d26b40-e113-44c4-957f-cc5e8fadb867",
+          "name": "Initiate Card Verification",
+          "request": {
+            "name": "Initiate Card Verification",
+            "description": {
+              "content": "Initiate a 3D Secure card verification process before a payment request.\n\n**Frictionless flow:** If the issuer does not require a challenge, the response returns immediately\nwith `status: full_auth`. Use the returned `id` in `card_verification_data.id` when initiating the transaction.\n\n**Challenge flow:** The response includes a `challenge_url`. Redirect the cardholder there. After they\ncomplete the bank challenge, they are redirected to your `auth_url` with\n`?card_verification_id={id}&status={full_auth|failed}` query parameters. Use the `card_verification_id`\nvalue in `card_verification_data.id` when initiating the transaction.\n\nAuthenticate with a merchant API key or a partner API key plus `merchant_id`\nfor the merchant being acted on behalf of (same rules as the transaction endpoint).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "3ds",
+                "verify"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"auth_url\": \"https://yoursite.com/checkout/3ds-complete\",\n  \"merchant_id\": 123,\n  \"browser_data\": {\n    \"accept_header\": \"text/html,application/xhtml+xml\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0...\",\n    \"ip_address\": \"203.0.113.1\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "43128b06-12d5-4f94-9fa1-60020bc76ba8",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "3ds",
+                    "verify"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"auth_url\": \"https://yoursite.com/checkout/3ds-complete\",\n  \"merchant_id\": 123,\n  \"browser_data\": {\n    \"accept_header\": \"text/html,application/xhtml+xml\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0...\",\n    \"ip_address\": \"203.0.113.1\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"3DS authentication completed (frictionless)\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 166,\n    \"amount\": 1250,\n    \"currency\": \"EUR\",\n    \"version\": \"2.2.0\",\n    \"eci\": \"05\",\n    \"cavv\": \"AAABA0UREQAAAAAAAAAAAAAAAAA=\",\n    \"xid\": \"string\",\n    \"ds_trans_id\": \"6b66be83-f692-405c-9079-92f7182af5e5\",\n    \"status\": \"full_auth\",\n    \"auth_type\": \"frictionless\",\n    \"challenge_url\": \"https://yoursite.com/checkout/3ds-complete\",\n    \"post_url\": \"string\",\n    \"html\": \"string\",\n    \"created_at\": \"2025-06-12 09:47:15\",\n    \"updated_at\": \"2025-06-12 09:47:15\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a089936a-a240-4493-bfe2-d1bdb37a9cf2",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "3ds",
+                    "verify"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"auth_url\": \"https://yoursite.com/checkout/3ds-complete\",\n  \"merchant_id\": 123,\n  \"browser_data\": {\n    \"accept_header\": \"text/html,application/xhtml+xml\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0...\",\n    \"ip_address\": \"203.0.113.1\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Authentication failed\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9830f030-03fb-4c6d-bb3e-be7163bdbc42",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "3ds",
+                    "verify"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"auth_url\": \"https://yoursite.com/checkout/3ds-complete\",\n  \"merchant_id\": 123,\n  \"browser_data\": {\n    \"accept_header\": \"text/html,application/xhtml+xml\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0...\",\n    \"ip_address\": \"203.0.113.1\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Validation errors\",\n  \"code\": \"ERR_VALIDATION_FAILED\",\n  \"data\": \"string\",\n  \"errors\": {\n    \"amount\": [\n      \"The amount is required.\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9c6fd15d-8446-49ac-85cd-3be5e07fdba8",
+              "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "3ds",
+                    "verify"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"auth_url\": \"https://yoursite.com/checkout/3ds-complete\",\n  \"merchant_id\": 123,\n  \"browser_data\": {\n    \"accept_header\": \"text/html,application/xhtml+xml\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0...\",\n    \"ip_address\": \"203.0.113.1\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Too many requests\",\n  \"code\": \"ERR_RATE_LIMITED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "d61497bf-2277-4cae-96e1-49635b47b22b",
+      "name": "API Operations",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "3130ab53-e9c3-40e9-a72f-40e9ad84dc08",
+          "name": "Get API Key Information",
+          "request": {
+            "name": "Get API Key Information",
+            "description": {
+              "content": "Returns information about the API key being used to authenticate the request.\nAPI keys are provisioned by SoftLemon admins for merchants and partners.\nSelf-service onboarding and API key generation are not currently available.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "key-info"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ff0fd81d-efe7-413c-8b61-fb4b5e8abe95",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "key-info"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"API key information retrieved successfully\",\n  \"code\": \"\",\n  \"data\": {\n    \"key_identifier\": \"sl_20250411105714_TTwbAVtw\",\n    \"name\": \"Production key\",\n    \"status\": \"active\",\n    \"entity_type\": \"merchant\",\n    \"entity_id\": 1,\n    \"entity_name\": \"Demo Store Ltd\",\n    \"created_at\": \"2025-04-11T10:57:14.000000Z\",\n    \"last_used_at\": \"2025-05-20T09:18:47.000000Z\",\n    \"expires_at\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "60f37c9e-0b8f-4e5a-bc6c-bb18c83909cc",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "key-info"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Authentication failed\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4c2375b7-2a93-4039-92db-91ebc29051b6",
+              "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "key-info"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Too many requests\",\n  \"code\": \"ERR_RATE_LIMITED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.sandbox.softlemons.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "5bcdbe5b-81dc-43b3-8c0c-eb6d405a5de9",
+    "name": "Softlemon Merchant API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Production-ready merchant integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the merchant integration surface for admin-provisioned API keys.\n\nUse these endpoints when a merchant is processing payments for its own account.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## 3D Secure Integration Flow\n\nSoftLemon uses a server-managed 3DS flow. You do **not** need to handle CAVV, ECI or DS Transaction IDs yourself.\n\n### Step 1: Initiate 3DS Verification\n\n`POST /api/v1/3ds/verify` with card details, amount, currency and `auth_url` (your frontend return URL).\n\n### Step 2: Handle the response\n\n- **Frictionless:** The response returns immediately with `status: full_auth`. Use the returned `id` in Step 4.\n- **Challenge:** The response includes a `challenge_url`. Redirect the cardholder to this URL to complete the bank challenge.\n\n### Step 3: Cardholder completes challenge (if applicable)\n\nAfter the cardholder completes the challenge, they are redirected to your `auth_url` with query parameters:\n\n`?card_verification_id={id}&status=full_auth` (or `status=failed`)\n\n### Step 4: Initiate the transaction\n\n`POST /api/v1/transactions` with `card_verification_data.id` set to the verification ID from Step 1 or the redirect.\n\n```json\n\"card_verification_data\": { \"id\": 43 }\n```\n\nThe API automatically retrieves the stored 3DS authentication data (including CAVV and ECI) and passes it to the payment gateway.\n\n## Integration guides\n\nStep-by-step walkthroughs for the most common flows, each with full requests and responses:\n\n- [Accept a card payment](/guides/accept-a-payment): 3D Secure verification, the sale and confirmation. Start here.\n- [Authorize now, capture later](/guides/authorize-and-capture): holds, full and partial captures and voids.\n- [Refund a payment](/guides/refunds): full and partial refunds and the events they emit.\n- [Charge a returning customer](/guides/returning-customers): repeat payments with a vault token.\n- [Webhook integration](/guides/webhooks): signatures, retries, replays and keeping your system in sync.\n\nPrefer exploring in Postman? Download the [Merchant API Postman collection](/collections/softlemon-merchant-api.postman_collection.json) and set your API key as the Bearer token on the collection.\n\n## 3D Secure test cards\n\nUse these sandbox cards when testing `POST /api/v1/3ds/verify`.\n\n| Scheme | Flow | Returns method data | Card number | Expected result |\n|---|---|---|---|---|\n| Visa | Frictionless | Y | `4200000000000091` | Successful frictionless authentication. |\n| Visa | Frictionless | Y | `4200000000000109` | Attempted authentication. |\n| Visa | Frictionless | N | `4200000000000026` | Successful frictionless authentication. |\n| Visa | Frictionless | N | `4200000000000059` | Attempted authentication. |\n| Visa | Error | N | `4012001037461114` | Technical error. |\n| Visa | Error | N | `4012001037141112` | User not enrolled. |\n| Visa | Not Applicable | N/A | `4532497088771651` | Card not participating. |\n| Visa | Challenge | Y | `4200000000000042` | Challenge flow. |\n| Visa | Challenge | Y | `4200000000000067` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000018` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000075` | Challenge flow. |\n| Mastercard | Frictionless | Y | `5200000000000007` | Successful frictionless authentication. |\n| Mastercard | Frictionless | Y | `5200000000000023` | Attempted authentication. |\n| Mastercard | Frictionless | N | `5200000000000056` | Successful frictionless authentication. |\n| Mastercard | Frictionless | N | `5200000000000006` | Attempted authentication. |\n| Mastercard | Error | N | `5434580000000006` | Technical error. |\n| Mastercard | Error | N | `5457350076543210` | User not enrolled. |\n| Mastercard | Not Applicable | N/A | `5497260847316287` | Card not participating. |\n| Mastercard | Challenge | Y | `5200000000000015` | Challenge flow. |\n| Mastercard | Challenge | Y | `5200000000000049` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000064` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000072` | Challenge flow. |\n",
+      "type": "text/plain"
+    }
+  }
+}

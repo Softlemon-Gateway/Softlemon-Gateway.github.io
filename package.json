@@ -11,11 +11,17 @@
     "prebuild": "rm -rf public/specs && cp -R specs public/specs",
     "build": "zudoku build",
     "postbuild": "node scripts/strip-preconnect.mjs",
-    "preview": "zudoku preview"
+    "preview": "zudoku preview",
+    "snippets": "node scripts/generate-snippets.mjs",
+    "postman": "node scripts/generate-postman.mjs"
   },
   "dependencies": {
     "react": ">=19.2.0",
     "react-dom": ">=19.2.0",
     "zudoku": "0.83.0"
+  },
+  "devDependencies": {
+    "@scalar/snippetz": "0.9.23",
+    "openapi-to-postmanv2": "^6.3.2"
   }
 }

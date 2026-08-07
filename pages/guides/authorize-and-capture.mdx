@@ -1,0 +1,997 @@
+# Authorize Now, Capture Later
+
+Use this flow when you want to reserve funds at order time and take the money later, for example when goods ship or a booking is confirmed. It has two halves: an authorization that places a hold and a capture that settles it. If you never capture, you void the hold instead.
+
+This guide assumes you have read [Accept a card payment](/guides/accept-a-payment). 3D Secure works exactly the same here, so verify the cardholder first and pass `card_verification_data.id` on the authorization.
+
+## Step 1: Place the hold
+
+Call `POST /api/v1/transactions` with `transaction_type: "auth"` instead of `sale`:
+
+{/* snippet:authorize-and-capture:place-hold */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/transactions \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --data '{
+  "transaction_type": "auth",
+  "amount": 12.5,
+  "currency": "EUR",
+  "reference": "ORDER-912346",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "card_verification_data": {
+    "id": 166
+  }
+}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/transactions', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  },
+  body: JSON.stringify({
+    transaction_type: 'auth',
+    amount: 12.5,
+    currency: 'EUR',
+    reference: 'ORDER-912346',
+    card: {
+      number: '4200000000000091',
+      exp_month: 12,
+      exp_year: 2030,
+      name: 'John Doe',
+      cvv: '123'
+    },
+    card_verification_data: {
+      id: 166
+    }
+  })
+})
+```
+
+```python title="Python"
+requests.post(
+    "https://api.sandbox.softlemons.com/api/v1/transactions",
+    headers={
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    },
+    json={
+      "transaction_type": "auth",
+      "amount": 12.5,
+      "currency": "EUR",
+      "reference": "ORDER-912346",
+      "card": {
+        "number": "4200000000000091",
+        "exp_month": 12,
+        "exp_year": 2030,
+        "name": "John Doe",
+        "cvv": "123"
+      },
+      "card_verification_data": {
+        "id": 166
+      }
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{\n  \"transaction_type\": \"auth\",\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"reference\": \"ORDER-912346\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"card_verification_data\": {\n    \"id\": 166\n  }\n}");
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/transactions")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/transactions"
+
+	payload := strings.NewReader(`{
+  "transaction_type": "auth",
+  "amount": 12.5,
+  "currency": "EUR",
+  "reference": "ORDER-912346",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "card_verification_data": {
+    "id": 166
+  }
+}`)
+
+	req, _ := http.NewRequest("POST", requestUrl, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/transactions");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Content = new StringContent(
+"""
+{
+  "transaction_type": "auth",
+  "amount": 12.5,
+  "currency": "EUR",
+  "reference": "ORDER-912346",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "card_verification_data": {
+    "id": 166
+  }
+}
+""",
+System.Text.Encoding.UTF8, "application/json");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val mediaType = MediaType.parse("application/json")
+val body = RequestBody.create(mediaType, "{\n  \"transaction_type\": \"auth\",\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"reference\": \"ORDER-912346\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"card_verification_data\": {\n    \"id\": 166\n  }\n}")
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/transactions")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Content-Type": @"application/json",
+                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSDictionary *parameters = @{ @"transaction_type": @"auth",
+                              @"amount": @12.5,
+                              @"currency": @"EUR",
+                              @"reference": @"ORDER-912346",
+                              @"card": @{ @"number": @"4200000000000091", @"exp_month": @12, @"exp_year": @2030, @"name": @"John Doe", @"cvv": @"123" },
+                              @"card_verification_data": @{ @"id": @166 } };
+
+NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/transactions"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"POST"];
+[request setAllHTTPHeaderFields:headers];
+[request setHTTPBody:postData];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/transactions");
+
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'transaction_type' => 'auth',
+  'amount' => 12.5,
+  'currency' => 'EUR',
+  'reference' => 'ORDER-912346',
+  'card' => [
+    'number' => '4200000000000091',
+    'exp_month' => 12,
+    'exp_year' => 2030,
+    'name' => 'John Doe',
+    'cvv' => '123'
+  ],
+  'card_verification_data' => [
+    'id' => 166
+  ]
+]));
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/transactions")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(url)
+request["Content-Type"] = 'application/json'
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request.body = <<~JSON
+{
+  "transaction_type": "auth",
+  "amount": 12.5,
+  "currency": "EUR",
+  "reference": "ORDER-912346",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "card_verification_data": {
+    "id": 166
+  }
+}
+JSON
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/transactions")!)
+request.httpMethod = "POST"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+let jsonBody = #"""
+{
+  "transaction_type": "auth",
+  "amount": 12.5,
+  "currency": "EUR",
+  "reference": "ORDER-912346",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "card_verification_data": {
+    "id": 166
+  }
+}
+"""#
+request.httpBody = jsonBody.data(using: .utf8)
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+```json
+{
+  "success": true,
+  "message": "Transaction initiated",
+  "code": "",
+  "data": {
+    "id": 2,
+    "related_trans_id": null,
+    "merchant_id": 1,
+    "amount": 1250,
+    "currency": "EUR",
+    "status": "auth",
+    "transaction_type": "auth",
+    "merchant_trans_id": "ORDER-912346",
+    "acquirer_trans_id": "514009741995",
+    "acquirer_auth_code": "400066",
+    "created_at": "2025-05-20T09:18:47.000000Z"
+  }
+}
+```
+
+The funds are reserved on the customer's card and the transaction reports status `auth`. Your webhook endpoint receives `transaction.authorized`. Nothing has been charged yet.
+
+## Step 2: Capture when you are ready to settle
+
+Call `POST /api/v1/transactions/{transaction_id}/capture` with the authorization's id (`2` above). Omit `amount` to capture the full authorized amount:
+
+{/* snippet:authorize-and-capture:capture-full */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/transactions/2/capture \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --data '{}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/transactions/2/capture', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  },
+  body: JSON.stringify({})
+})
+```
+
+```python title="Python"
+requests.post(
+    "https://api.sandbox.softlemons.com/api/v1/transactions/2/capture",
+    headers={
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    },
+    json={}
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{}");
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/transactions/2/capture")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/transactions/2/capture"
+
+	payload := strings.NewReader(`{}`)
+
+	req, _ := http.NewRequest("POST", requestUrl, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/transactions/2/capture");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Content = new StringContent(
+"""
+{}
+""",
+System.Text.Encoding.UTF8, "application/json");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val mediaType = MediaType.parse("application/json")
+val body = RequestBody.create(mediaType, "{}")
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/transactions/2/capture")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Content-Type": @"application/json",
+                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSDictionary *parameters = @{  };
+
+NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/transactions/2/capture"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"POST"];
+[request setAllHTTPHeaderFields:headers];
+[request setHTTPBody:postData];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/transactions/2/capture");
+
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([]));
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/transactions/2/capture")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(url)
+request["Content-Type"] = 'application/json'
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request.body = <<~JSON
+{}
+JSON
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/transactions/2/capture")!)
+request.httpMethod = "POST"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+let jsonBody = #"""
+{}
+"""#
+request.httpBody = jsonBody.data(using: .utf8)
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+```json
+{
+  "success": true,
+  "message": "Transaction captured",
+  "code": "",
+  "data": {
+    "id": 3,
+    "related_trans_id": 2,
+    "merchant_id": 1,
+    "amount": 1250,
+    "currency": "EUR",
+    "status": "captured",
+    "transaction_type": "capture",
+    "merchant_trans_id": "ORDER-912346",
+    "created_at": "2025-05-20T09:18:47.000000Z"
+  }
+}
+```
+
+Two things to notice:
+
+- The capture is its own transaction row (`id: 3`) linked to the parent authorization by `related_trans_id: 2`. It shares the parent's `merchant_trans_id`, so use `id` when you need a unique identifier.
+- Your webhook endpoint receives `transaction.captured`. On a full capture the parent authorization rolls up to `settled` territory and emits its own event. The [webhooks guide](/guides/webhooks) explains the parent and child event pairing.
+
+## Step 3: Partial captures
+
+Pass an `amount` in major units to capture part of the hold:
+
+{/* snippet:authorize-and-capture:capture-partial */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/transactions/2/capture \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --data '{
+  "amount": 5
+}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/transactions/2/capture', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  },
+  body: JSON.stringify({
+    amount: 5
+  })
+})
+```
+
+```python title="Python"
+requests.post(
+    "https://api.sandbox.softlemons.com/api/v1/transactions/2/capture",
+    headers={
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    },
+    json={
+      "amount": 5
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{\n  \"amount\": 5\n}");
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/transactions/2/capture")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/transactions/2/capture"
+
+	payload := strings.NewReader(`{
+  "amount": 5
+}`)
+
+	req, _ := http.NewRequest("POST", requestUrl, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/transactions/2/capture");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Content = new StringContent(
+"""
+{
+  "amount": 5
+}
+""",
+System.Text.Encoding.UTF8, "application/json");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val mediaType = MediaType.parse("application/json")
+val body = RequestBody.create(mediaType, "{\n  \"amount\": 5\n}")
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/transactions/2/capture")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Content-Type": @"application/json",
+                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSDictionary *parameters = @{ @"amount": @5 };
+
+NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/transactions/2/capture"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"POST"];
+[request setAllHTTPHeaderFields:headers];
+[request setHTTPBody:postData];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/transactions/2/capture");
+
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'amount' => 5
+]));
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/transactions/2/capture")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(url)
+request["Content-Type"] = 'application/json'
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request.body = <<~JSON
+{
+  "amount": 5
+}
+JSON
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/transactions/2/capture")!)
+request.httpMethod = "POST"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+let jsonBody = #"""
+{
+  "amount": 5
+}
+"""#
+request.httpBody = jsonBody.data(using: .utf8)
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+The capture child row is created for `500` minor units and the parent authorization reports `partially_settled` with a `transaction.partially_settled` event. A capture may not exceed the authorized amount.
+
+## Step 4: Void what you no longer need
+
+If the order is cancelled before capture, release the hold with `POST /api/v1/transactions/{transaction_id}/void`. Omit `amount` for a full void:
+
+{/* snippet:authorize-and-capture:void */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/transactions/2/void \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --data '{}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/transactions/2/void', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  },
+  body: JSON.stringify({})
+})
+```
+
+```python title="Python"
+requests.post(
+    "https://api.sandbox.softlemons.com/api/v1/transactions/2/void",
+    headers={
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    },
+    json={}
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{}");
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/transactions/2/void")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/transactions/2/void"
+
+	payload := strings.NewReader(`{}`)
+
+	req, _ := http.NewRequest("POST", requestUrl, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/transactions/2/void");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Content = new StringContent(
+"""
+{}
+""",
+System.Text.Encoding.UTF8, "application/json");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val mediaType = MediaType.parse("application/json")
+val body = RequestBody.create(mediaType, "{}")
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/transactions/2/void")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Content-Type": @"application/json",
+                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSDictionary *parameters = @{  };
+
+NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/transactions/2/void"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"POST"];
+[request setAllHTTPHeaderFields:headers];
+[request setHTTPBody:postData];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/transactions/2/void");
+
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([]));
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/transactions/2/void")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(url)
+request["Content-Type"] = 'application/json'
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request.body = <<~JSON
+{}
+JSON
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/transactions/2/void")!)
+request.httpMethod = "POST"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+let jsonBody = #"""
+{}
+"""#
+request.httpBody = jsonBody.data(using: .utf8)
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+The response is a `void` child row and your webhook endpoint receives `transaction.voided`. The customer's funds are released without a charge. Voiding the remainder after a partial capture closes the parent authorization.
+
+## Checking where things stand
+
+`GET /api/v1/transactions/{transaction_id}/status` on the parent authorization returns its current roll-up, including `captured_amount`. The [transaction statuses guide](/guides/transaction-statuses) lists every state this flow can produce.

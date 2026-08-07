@@ -1,0 +1,1142 @@
+# Integrate as a Partner
+
+Partner API keys manage a portfolio of linked merchants: they can review each merchant's activity and process payments on a merchant's behalf. This guide walks through both, from confirming your key's scope to acting for a merchant.
+
+All requests use your partner API key as `Authorization: Bearer {YOUR_API_KEY}` against `https://api.sandbox.softlemons.com`.
+
+## Step 1: Confirm what your key can do
+
+Start with `GET /api/v1/key-info` to confirm you are holding a partner key and which partner it belongs to:
+
+{/* snippet:partner-integration:key-info */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/key-info \
+  --header 'Authorization: Bearer {YOUR_API_KEY}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/key-info', {
+  headers: {
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  }
+})
+```
+
+```python title="Python"
+requests.get(
+    "https://api.sandbox.softlemons.com/api/v1/key-info",
+    headers={
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/key-info")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/key-info"
+
+	req, _ := http.NewRequest("GET", requestUrl, nil)
+
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Get, "https://api.sandbox.softlemons.com/api/v1/key-info");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/key-info")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/key-info"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"GET"];
+[request setAllHTTPHeaderFields:headers];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/key-info");
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer {YOUR_API_KEY}']);
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/key-info")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Get.new(url)
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/key-info")!)
+request.httpMethod = "GET"
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+```json
+{
+  "success": true,
+  "message": "API key information retrieved successfully",
+  "code": "",
+  "data": {
+    "key_identifier": "sl_20250411105714_TTwbAVtw",
+    "name": "Partner production key",
+    "status": "active",
+    "entity_type": "partner",
+    "entity_id": 7,
+    "entity_name": "Acme Payments Partner"
+  }
+}
+```
+
+`entity_type: partner` confirms the key's audience. A merchant key would say `merchant` and cannot call the partner endpoints below.
+
+## Step 2: List your linked merchants
+
+`GET /api/v1/merchants` returns every merchant linked to your partner account, including the acquirer, transaction stats and the partnership status:
+
+{/* snippet:partner-integration:list-merchants */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/merchants \
+  --header 'Authorization: Bearer {YOUR_API_KEY}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/merchants', {
+  headers: {
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  }
+})
+```
+
+```python title="Python"
+requests.get(
+    "https://api.sandbox.softlemons.com/api/v1/merchants",
+    headers={
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/merchants")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/merchants"
+
+	req, _ := http.NewRequest("GET", requestUrl, nil)
+
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Get, "https://api.sandbox.softlemons.com/api/v1/merchants");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/merchants")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/merchants"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"GET"];
+[request setAllHTTPHeaderFields:headers];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/merchants");
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer {YOUR_API_KEY}']);
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/merchants")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Get.new(url)
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/merchants")!)
+request.httpMethod = "GET"
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+Each entry carries the merchant's `id`. That id is what you pass as `merchant_id` when acting on the merchant's behalf. For a single merchant's profile use `GET /api/v1/merchants/{merchant_id}`.
+
+## Step 3: Review a merchant's transactions
+
+`GET /api/v1/merchants/{merchant_id}/transactions` returns the merchant's transactions newest first, with `status`, `from`, `to` and `per_page` filters:
+
+{/* snippet:partner-integration:merchant-transactions */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl 'https://api.sandbox.softlemons.com/api/v1/merchants/1/transactions?status=success&per_page=25' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/merchants/1/transactions?status=success&per_page=25', {
+  headers: {
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  }
+})
+```
+
+```python title="Python"
+requests.get(
+    "https://api.sandbox.softlemons.com/api/v1/merchants/1/transactions?status=success&per_page=25",
+    headers={
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/merchants/1/transactions?status=success&per_page=25")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/merchants/1/transactions?status=success&per_page=25"
+
+	req, _ := http.NewRequest("GET", requestUrl, nil)
+
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Get, "https://api.sandbox.softlemons.com/api/v1/merchants/1/transactions?status=success&per_page=25");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/merchants/1/transactions?status=success&per_page=25")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/merchants/1/transactions?status=success&per_page=25"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"GET"];
+[request setAllHTTPHeaderFields:headers];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/merchants/1/transactions?status=success&per_page=25");
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer {YOUR_API_KEY}']);
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/merchants/1/transactions?status=success&per_page=25")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Get.new(url)
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/merchants/1/transactions?status=success&per_page=25")!)
+request.httpMethod = "GET"
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+The response contains a `transactions` array and a `pagination` object. Reconcile on the gateway `id` field because captures, refunds and voids share their parent's reference.
+
+## Step 4: Process a payment for a merchant
+
+Partner keys can call the Merchant API payment endpoints by adding `merchant_id` to the request body. The flow is the same as [Accept a card payment](/guides/accept-a-payment) with one extra field at each step.
+
+3DS verification for the merchant:
+
+{/* snippet:partner-integration:partner-3ds-verify */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/3ds/verify \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --data '{
+  "merchant_id": 1,
+  "amount": 12.5,
+  "currency": "EUR",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "auth_url": "https://yoursite.com/checkout/3ds-complete"
+}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/3ds/verify', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  },
+  body: JSON.stringify({
+    merchant_id: 1,
+    amount: 12.5,
+    currency: 'EUR',
+    card: {
+      number: '4200000000000091',
+      exp_month: 12,
+      exp_year: 2030,
+      name: 'John Doe',
+      cvv: '123'
+    },
+    auth_url: 'https://yoursite.com/checkout/3ds-complete'
+  })
+})
+```
+
+```python title="Python"
+requests.post(
+    "https://api.sandbox.softlemons.com/api/v1/3ds/verify",
+    headers={
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    },
+    json={
+      "merchant_id": 1,
+      "amount": 12.5,
+      "currency": "EUR",
+      "card": {
+        "number": "4200000000000091",
+        "exp_month": 12,
+        "exp_year": 2030,
+        "name": "John Doe",
+        "cvv": "123"
+      },
+      "auth_url": "https://yoursite.com/checkout/3ds-complete"
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{\n  \"merchant_id\": 1,\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"auth_url\": \"https://yoursite.com/checkout/3ds-complete\"\n}");
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/3ds/verify")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/3ds/verify"
+
+	payload := strings.NewReader(`{
+  "merchant_id": 1,
+  "amount": 12.5,
+  "currency": "EUR",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "auth_url": "https://yoursite.com/checkout/3ds-complete"
+}`)
+
+	req, _ := http.NewRequest("POST", requestUrl, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/3ds/verify");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Content = new StringContent(
+"""
+{
+  "merchant_id": 1,
+  "amount": 12.5,
+  "currency": "EUR",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "auth_url": "https://yoursite.com/checkout/3ds-complete"
+}
+""",
+System.Text.Encoding.UTF8, "application/json");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val mediaType = MediaType.parse("application/json")
+val body = RequestBody.create(mediaType, "{\n  \"merchant_id\": 1,\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"auth_url\": \"https://yoursite.com/checkout/3ds-complete\"\n}")
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/3ds/verify")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Content-Type": @"application/json",
+                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSDictionary *parameters = @{ @"merchant_id": @1,
+                              @"amount": @12.5,
+                              @"currency": @"EUR",
+                              @"card": @{ @"number": @"4200000000000091", @"exp_month": @12, @"exp_year": @2030, @"name": @"John Doe", @"cvv": @"123" },
+                              @"auth_url": @"https://yoursite.com/checkout/3ds-complete" };
+
+NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/3ds/verify"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"POST"];
+[request setAllHTTPHeaderFields:headers];
+[request setHTTPBody:postData];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/3ds/verify");
+
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'merchant_id' => 1,
+  'amount' => 12.5,
+  'currency' => 'EUR',
+  'card' => [
+    'number' => '4200000000000091',
+    'exp_month' => 12,
+    'exp_year' => 2030,
+    'name' => 'John Doe',
+    'cvv' => '123'
+  ],
+  'auth_url' => 'https://yoursite.com/checkout/3ds-complete'
+]));
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/3ds/verify")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(url)
+request["Content-Type"] = 'application/json'
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request.body = <<~JSON
+{
+  "merchant_id": 1,
+  "amount": 12.5,
+  "currency": "EUR",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "auth_url": "https://yoursite.com/checkout/3ds-complete"
+}
+JSON
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/3ds/verify")!)
+request.httpMethod = "POST"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+let jsonBody = #"""
+{
+  "merchant_id": 1,
+  "amount": 12.5,
+  "currency": "EUR",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "auth_url": "https://yoursite.com/checkout/3ds-complete"
+}
+"""#
+request.httpBody = jsonBody.data(using: .utf8)
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+Then the sale, again with `merchant_id`:
+
+{/* snippet:partner-integration:partner-sale */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/transactions \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --data '{
+  "merchant_id": 1,
+  "transaction_type": "sale",
+  "amount": 12.5,
+  "currency": "EUR",
+  "reference": "ORDER-912346",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "card_verification_data": {
+    "id": 166
+  }
+}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/transactions', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  },
+  body: JSON.stringify({
+    merchant_id: 1,
+    transaction_type: 'sale',
+    amount: 12.5,
+    currency: 'EUR',
+    reference: 'ORDER-912346',
+    card: {
+      number: '4200000000000091',
+      exp_month: 12,
+      exp_year: 2030,
+      name: 'John Doe',
+      cvv: '123'
+    },
+    card_verification_data: {
+      id: 166
+    }
+  })
+})
+```
+
+```python title="Python"
+requests.post(
+    "https://api.sandbox.softlemons.com/api/v1/transactions",
+    headers={
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    },
+    json={
+      "merchant_id": 1,
+      "transaction_type": "sale",
+      "amount": 12.5,
+      "currency": "EUR",
+      "reference": "ORDER-912346",
+      "card": {
+        "number": "4200000000000091",
+        "exp_month": 12,
+        "exp_year": 2030,
+        "name": "John Doe",
+        "cvv": "123"
+      },
+      "card_verification_data": {
+        "id": 166
+      }
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{\n  \"merchant_id\": 1,\n  \"transaction_type\": \"sale\",\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"reference\": \"ORDER-912346\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"card_verification_data\": {\n    \"id\": 166\n  }\n}");
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/transactions")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/transactions"
+
+	payload := strings.NewReader(`{
+  "merchant_id": 1,
+  "transaction_type": "sale",
+  "amount": 12.5,
+  "currency": "EUR",
+  "reference": "ORDER-912346",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "card_verification_data": {
+    "id": 166
+  }
+}`)
+
+	req, _ := http.NewRequest("POST", requestUrl, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/transactions");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Content = new StringContent(
+"""
+{
+  "merchant_id": 1,
+  "transaction_type": "sale",
+  "amount": 12.5,
+  "currency": "EUR",
+  "reference": "ORDER-912346",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "card_verification_data": {
+    "id": 166
+  }
+}
+""",
+System.Text.Encoding.UTF8, "application/json");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val mediaType = MediaType.parse("application/json")
+val body = RequestBody.create(mediaType, "{\n  \"merchant_id\": 1,\n  \"transaction_type\": \"sale\",\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"reference\": \"ORDER-912346\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"card_verification_data\": {\n    \"id\": 166\n  }\n}")
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/transactions")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Content-Type": @"application/json",
+                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSDictionary *parameters = @{ @"merchant_id": @1,
+                              @"transaction_type": @"sale",
+                              @"amount": @12.5,
+                              @"currency": @"EUR",
+                              @"reference": @"ORDER-912346",
+                              @"card": @{ @"number": @"4200000000000091", @"exp_month": @12, @"exp_year": @2030, @"name": @"John Doe", @"cvv": @"123" },
+                              @"card_verification_data": @{ @"id": @166 } };
+
+NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/transactions"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"POST"];
+[request setAllHTTPHeaderFields:headers];
+[request setHTTPBody:postData];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/transactions");
+
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'merchant_id' => 1,
+  'transaction_type' => 'sale',
+  'amount' => 12.5,
+  'currency' => 'EUR',
+  'reference' => 'ORDER-912346',
+  'card' => [
+    'number' => '4200000000000091',
+    'exp_month' => 12,
+    'exp_year' => 2030,
+    'name' => 'John Doe',
+    'cvv' => '123'
+  ],
+  'card_verification_data' => [
+    'id' => 166
+  ]
+]));
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/transactions")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(url)
+request["Content-Type"] = 'application/json'
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request.body = <<~JSON
+{
+  "merchant_id": 1,
+  "transaction_type": "sale",
+  "amount": 12.5,
+  "currency": "EUR",
+  "reference": "ORDER-912346",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "card_verification_data": {
+    "id": 166
+  }
+}
+JSON
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/transactions")!)
+request.httpMethod = "POST"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+let jsonBody = #"""
+{
+  "merchant_id": 1,
+  "transaction_type": "sale",
+  "amount": 12.5,
+  "currency": "EUR",
+  "reference": "ORDER-912346",
+  "card": {
+    "number": "4200000000000091",
+    "exp_month": 12,
+    "exp_year": 2030,
+    "name": "John Doe",
+    "cvv": "123"
+  },
+  "card_verification_data": {
+    "id": 166
+  }
+}
+"""#
+request.httpBody = jsonBody.data(using: .utf8)
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+The `merchant_id` must belong to a merchant linked to your partner account. Requests for unlinked merchants are rejected.
+
+## Step 5: Manage the payment afterwards
+
+Captures, refunds, voids and status checks work for partner keys under the same linked-merchant rules. Follow [Authorize now, capture later](/guides/authorize-and-capture) and [Refund a payment](/guides/refunds) using the transaction ids you created for the merchant.

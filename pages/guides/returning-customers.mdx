@@ -1,0 +1,299 @@
+# Charge a Returning Customer
+
+After a customer's first successful card payment, the gateway stores the card as a reusable payment instrument in its vault. Later payments can then reference the stored card with a vault token instead of collecting the full card details again. The customer only re-enters the CVV.
+
+## Step 1: Take the first payment normally
+
+Process the first payment with full card details, exactly as described in [Accept a card payment](/guides/accept-a-payment). When the payment succeeds, the gateway stores the instrument and associates a vault token with it.
+
+## Step 2: Charge the stored card
+
+For a later payment, call `POST /api/v1/transactions` with `vault_token` in place of the card number and expiry. Only the CVV is still needed:
+
+{/* snippet:returning-customers:charge-vault */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/transactions \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --data '{
+  "transaction_type": "sale",
+  "amount": 24,
+  "currency": "EUR",
+  "reference": "ORDER-912401",
+  "vault_token": "8ac7a4a29852f6f101985300a1b41c2f",
+  "card": {
+    "cvv": "123"
+  }
+}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/transactions', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  },
+  body: JSON.stringify({
+    transaction_type: 'sale',
+    amount: 24,
+    currency: 'EUR',
+    reference: 'ORDER-912401',
+    vault_token: '8ac7a4a29852f6f101985300a1b41c2f',
+    card: {
+      cvv: '123'
+    }
+  })
+})
+```
+
+```python title="Python"
+requests.post(
+    "https://api.sandbox.softlemons.com/api/v1/transactions",
+    headers={
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    },
+    json={
+      "transaction_type": "sale",
+      "amount": 24,
+      "currency": "EUR",
+      "reference": "ORDER-912401",
+      "vault_token": "8ac7a4a29852f6f101985300a1b41c2f",
+      "card": {
+        "cvv": "123"
+      }
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{\n  \"transaction_type\": \"sale\",\n  \"amount\": 24,\n  \"currency\": \"EUR\",\n  \"reference\": \"ORDER-912401\",\n  \"vault_token\": \"8ac7a4a29852f6f101985300a1b41c2f\",\n  \"card\": {\n    \"cvv\": \"123\"\n  }\n}");
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/transactions")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/transactions"
+
+	payload := strings.NewReader(`{
+  "transaction_type": "sale",
+  "amount": 24,
+  "currency": "EUR",
+  "reference": "ORDER-912401",
+  "vault_token": "8ac7a4a29852f6f101985300a1b41c2f",
+  "card": {
+    "cvv": "123"
+  }
+}`)
+
+	req, _ := http.NewRequest("POST", requestUrl, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/transactions");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Content = new StringContent(
+"""
+{
+  "transaction_type": "sale",
+  "amount": 24,
+  "currency": "EUR",
+  "reference": "ORDER-912401",
+  "vault_token": "8ac7a4a29852f6f101985300a1b41c2f",
+  "card": {
+    "cvv": "123"
+  }
+}
+""",
+System.Text.Encoding.UTF8, "application/json");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val mediaType = MediaType.parse("application/json")
+val body = RequestBody.create(mediaType, "{\n  \"transaction_type\": \"sale\",\n  \"amount\": 24,\n  \"currency\": \"EUR\",\n  \"reference\": \"ORDER-912401\",\n  \"vault_token\": \"8ac7a4a29852f6f101985300a1b41c2f\",\n  \"card\": {\n    \"cvv\": \"123\"\n  }\n}")
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/transactions")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Content-Type": @"application/json",
+                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSDictionary *parameters = @{ @"transaction_type": @"sale",
+                              @"amount": @24,
+                              @"currency": @"EUR",
+                              @"reference": @"ORDER-912401",
+                              @"vault_token": @"8ac7a4a29852f6f101985300a1b41c2f",
+                              @"card": @{ @"cvv": @"123" } };
+
+NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/transactions"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"POST"];
+[request setAllHTTPHeaderFields:headers];
+[request setHTTPBody:postData];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/transactions");
+
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'transaction_type' => 'sale',
+  'amount' => 24,
+  'currency' => 'EUR',
+  'reference' => 'ORDER-912401',
+  'vault_token' => '8ac7a4a29852f6f101985300a1b41c2f',
+  'card' => [
+    'cvv' => '123'
+  ]
+]));
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/transactions")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(url)
+request["Content-Type"] = 'application/json'
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request.body = <<~JSON
+{
+  "transaction_type": "sale",
+  "amount": 24,
+  "currency": "EUR",
+  "reference": "ORDER-912401",
+  "vault_token": "8ac7a4a29852f6f101985300a1b41c2f",
+  "card": {
+    "cvv": "123"
+  }
+}
+JSON
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/transactions")!)
+request.httpMethod = "POST"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+let jsonBody = #"""
+{
+  "transaction_type": "sale",
+  "amount": 24,
+  "currency": "EUR",
+  "reference": "ORDER-912401",
+  "vault_token": "8ac7a4a29852f6f101985300a1b41c2f",
+  "card": {
+    "cvv": "123"
+  }
+}
+"""#
+request.httpBody = jsonBody.data(using: .utf8)
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+Notes on the request:
+
+- `vault_token` and full card details are alternatives. When the token is present, `card.number`, `card.exp_month` and `card.exp_year` are not required.
+- `vault_token` is mutually exclusive with wallet payments.
+- Use a fresh `reference` for every new payment. Charging the same customer again is a new payment, not a retry. See the [duplicate protection guide](/guides/duplicate-protection).
+
+The response, statuses and webhook events are identical to a normal card payment. The same capture, void and refund flows apply afterwards.
+
+## Where the vault token comes from
+
+The vault token is created by the gateway when the first card payment succeeds. It is not currently returned in API responses, so coordinate with your SoftLemon admin team on how tokens are supplied to your system. Treat tokens as sensitive values: store them server-side and never expose them in browsers or logs.
+
+## 3D Secure on repeat payments
+
+Whether a repeat payment needs a fresh 3DS verification depends on your acquirer's rules for merchant-initiated and recurring payments. When it is required, run the same `POST /api/v1/3ds/verify` step as a first payment and pass `card_verification_data.id` on the transaction.

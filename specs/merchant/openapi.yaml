@@ -57,6 +57,8 @@ info:
     - [Charge a returning customer](/guides/returning-customers): repeat payments with a vault token.
     - [Webhook integration](/guides/webhooks): signatures, retries, replays and keeping your system in sync.
 
+    Prefer exploring in Postman? Download the [Merchant API Postman collection](/collections/softlemon-merchant-api.postman_collection.json) and set your API key as the Bearer token on the collection.
+
     ## 3D Secure test cards
 
     Use these sandbox cards when testing `POST /api/v1/3ds/verify`.
