@@ -1,7 +1,7 @@
 {
   "item": [
     {
-      "id": "f08563b5-d2cc-4d6a-bc8b-1bc29ec5402a",
+      "id": "7591d961-5513-4a6e-b3d2-6441221b456e",
       "name": "Transactions",
       "description": {
         "content": "",
@@ -9,7 +9,7 @@
       },
       "item": [
         {
-          "id": "fbd11710-235b-4c5e-bdfd-2fcc5b61f064",
+          "id": "0152dbff-85aa-44a9-ab34-3cbd2dfc1243",
           "name": "Initiate Transaction",
           "request": {
             "name": "Initiate Transaction",
@@ -43,7 +43,7 @@
             "auth": null,
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"failed\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+              "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"challenge_pending\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -53,7 +53,7 @@
           },
           "response": [
             {
-              "id": "ed6d6841-d559-4b81-bea7-62630ceb051d",
+              "id": "7c4f65eb-b857-4203-a5a3-6f786b363f6f",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -84,7 +84,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"failed\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"challenge_pending\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -100,12 +100,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction initiated\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 2,\n    \"related_trans_id\": \"string\",\n    \"merchant_id\": 1,\n    \"cardholder_id\": 2,\n    \"amount\": 1250,\n    \"currency\": \"EUR\",\n    \"status\": \"auth\",\n    \"transaction_type\": \"auth\",\n    \"merchant_trans_id\": \"ORDER-912346\",\n    \"acquirer_trans_id\": \"514009741995\",\n    \"acquirer_auth_code\": \"400066\",\n    \"acquirer_ref_num\": \"741995\",\n    \"ip_address\": \"172.19.0.7\",\n    \"updated_at\": \"2025-05-20T09:18:48.000000Z\",\n    \"created_at\": \"2025-05-20T09:18:47.000000Z\"\n  }\n}",
+              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction initiated\",\n  \"code\": \"\",\n  \"data\": {\n    \"transaction\": {\n      \"id\": 2,\n      \"merchant_id\": 1,\n      \"merchant_trans_id\": \"ORDER-912346\",\n      \"amount\": 1250,\n      \"amount_formatted\": \"12.5 EUR\",\n      \"currency\": \"EUR\",\n      \"status\": \"auth\",\n      \"transaction_type\": \"auth\",\n      \"description\": \"string\",\n      \"acquirer_provider\": \"string\",\n      \"acquirer_trans_id\": \"514009741995\",\n      \"acquirer_auth_code\": \"400066\",\n      \"related_trans_id\": \"string\",\n      \"captured_amount\": 0,\n      \"customer\": \"string\",\n      \"cardholder\": {\n        \"card_last_four\": \"1111\",\n        \"card_brand\": \"visa\",\n        \"card_expiry_month\": 12,\n        \"card_expiry_year\": 2030,\n        \"created_at\": \"2025-05-20T09:18:47.000000Z\",\n        \"updated_at\": \"2025-05-20T09:18:47.000000Z\"\n      },\n      \"payment_instrument\": {\n        \"payment_instrument_id\": \"pi_01k24d5re8xh1v0c9jc0m8w3ns\",\n        \"vault_token\": \"8ac7a4a29852f6f101985300a1b41c2f\",\n        \"type\": \"card\",\n        \"status\": \"active\",\n        \"card_brand\": \"visa\",\n        \"card_last_four\": \"1111\",\n        \"card_expiry_month\": 12,\n        \"card_expiry_year\": 2030,\n        \"created_at\": \"2025-05-20T09:18:48.000000Z\",\n        \"updated_at\": \"2025-05-20T09:18:48.000000Z\"\n      },\n      \"ip_address\": \"203.0.113.10\",\n      \"created_at\": \"2025-05-20T09:18:47.000000Z\",\n      \"updated_at\": \"2025-05-20T09:18:48.000000Z\"\n    }\n  }\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "a121bb51-6d00-4d30-b5d6-9604a28b5788",
+              "id": "f40ce106-2ce6-456f-8241-d43cebdb4d0c",
               "name": "Transaction rejected. The `code` field identifies the reason. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -137,7 +137,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"failed\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"challenge_pending\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -158,7 +158,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "75974cbd-2c98-4224-ab84-31bd514774f4",
+              "id": "c8bf7788-b7d9-4b93-8c19-6f6a8f1ea846",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -189,7 +189,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"failed\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"challenge_pending\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -210,7 +210,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "66e058a6-4784-43b3-8d3f-ffa8aba1070a",
+              "id": "4937e4fe-160c-40d9-86cf-5ad55113545a",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -241,7 +241,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"failed\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"challenge_pending\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -262,7 +262,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "7fbbb9ef-25cf-45fd-bdec-01208b572eb7",
+              "id": "83ca1aaa-ebe6-41b1-b2fb-2227ba3b6827",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -293,7 +293,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"failed\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"challenge_pending\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -314,7 +314,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "d0ba4c9d-7f71-4dfd-b4cf-b3b5b2707d1f",
+              "id": "32f95d69-d205-4d0b-b86b-086a0b81c88a",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -346,7 +346,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"failed\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"challenge_pending\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -373,7 +373,7 @@
           }
         },
         {
-          "id": "355c65ff-cc52-4176-b8fe-da0ab5ef7b1f",
+          "id": "4491227e-4e8d-43f6-a4da-bcb070d04d37",
           "name": "Capture Transaction",
           "request": {
             "name": "Capture Transaction",
@@ -427,7 +427,7 @@
           },
           "response": [
             {
-              "id": "0c8c36a5-9295-48b8-83b3-c6401f8ee61c",
+              "id": "b44b7c12-e8fd-4b73-aad5-d4d0db5f9121",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -484,12 +484,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction captured\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 3,\n    \"related_trans_id\": 2,\n    \"merchant_id\": 1,\n    \"cardholder_id\": 2,\n    \"amount\": 1250,\n    \"currency\": \"EUR\",\n    \"status\": \"captured\",\n    \"transaction_type\": \"capture\",\n    \"merchant_trans_id\": \"ORDER-912346\",\n    \"acquirer_trans_id\": \"995140741995\",\n    \"acquirer_auth_code\": \"400066\",\n    \"acquirer_ref_num\": \"741995\",\n    \"ip_address\": \"172.19.0.7\",\n    \"updated_at\": \"2025-05-20T09:18:48.000000Z\",\n    \"created_at\": \"2025-05-20T09:18:47.000000Z\"\n  }\n}",
+              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction captured\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 3,\n    \"merchant_id\": 1,\n    \"merchant_trans_id\": \"ORDER-912346\",\n    \"amount\": 1250,\n    \"amount_formatted\": \"12.5 EUR\",\n    \"currency\": \"EUR\",\n    \"status\": \"captured\",\n    \"transaction_type\": \"capture\",\n    \"description\": \"string\",\n    \"acquirer_provider\": \"string\",\n    \"acquirer_trans_id\": \"995140741995\",\n    \"acquirer_auth_code\": \"400066\",\n    \"related_trans_id\": 2,\n    \"refunded_amount\": 0,\n    \"cardholder\": {\n      \"card_last_four\": \"1111\",\n      \"card_brand\": \"visa\",\n      \"card_expiry_month\": 12,\n      \"card_expiry_year\": 2030,\n      \"created_at\": \"2025-05-20T09:18:47.000000Z\",\n      \"updated_at\": \"2025-05-20T09:18:47.000000Z\"\n    },\n    \"ip_address\": \"203.0.113.10\",\n    \"created_at\": \"2025-05-20T10:04:12.000000Z\",\n    \"updated_at\": \"2025-05-20T10:04:13.000000Z\"\n  }\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "3f19e18e-3f64-4c10-b8ce-ef1ffca3d035",
+              "id": "c94c61bb-a68f-431e-a115-64ebfbbe4270",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -551,7 +551,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c6c336df-bf24-47f2-8eac-bf2bba119073",
+              "id": "e8e096d6-b34a-4b84-9e11-0dbff129565f",
               "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -614,7 +614,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "746165e3-de1d-4788-b333-6d56bfa2e9bb",
+              "id": "5121548d-ecff-4ab4-9cb9-80d4b20d265b",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -676,7 +676,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "560c744d-2ac7-442b-8dad-b12da834c537",
+              "id": "c4e2036e-bd95-4e44-966e-8e963fa0cbc3",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -745,7 +745,7 @@
           }
         },
         {
-          "id": "72ba0475-2300-4127-8efb-a7c8f13fa9e9",
+          "id": "62b8f2b3-17ee-4413-9c34-cecee81180b6",
           "name": "Refund Transaction",
           "request": {
             "name": "Refund Transaction",
@@ -799,7 +799,7 @@
           },
           "response": [
             {
-              "id": "ab652857-cadb-441f-8172-d5440f23202f",
+              "id": "ac2b3bf8-74de-4a4c-b57b-f3732e934263",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -856,12 +856,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction refunded\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 4,\n    \"related_trans_id\": 3,\n    \"merchant_id\": 1,\n    \"cardholder_id\": 2,\n    \"amount\": 1250,\n    \"currency\": \"EUR\",\n    \"status\": \"refunded\",\n    \"transaction_type\": \"refund\",\n    \"merchant_trans_id\": \"ORDER-912346\",\n    \"acquirer_trans_id\": \"514009741995\",\n    \"acquirer_auth_code\": \"400066\",\n    \"acquirer_ref_num\": \"741995\",\n    \"ip_address\": \"172.19.0.7\",\n    \"updated_at\": \"2025-05-20T09:18:48.000000Z\",\n    \"created_at\": \"2025-05-20T09:18:47.000000Z\"\n  }\n}",
+              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction refunded\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 4,\n    \"merchant_id\": 1,\n    \"merchant_trans_id\": \"ORDER-912346\",\n    \"amount\": 1250,\n    \"amount_formatted\": \"12.5 EUR\",\n    \"currency\": \"EUR\",\n    \"status\": \"refunded\",\n    \"transaction_type\": \"refund\",\n    \"description\": \"string\",\n    \"acquirer_provider\": \"string\",\n    \"acquirer_trans_id\": \"514009741995\",\n    \"acquirer_auth_code\": \"400066\",\n    \"related_trans_id\": 3,\n    \"cardholder\": {\n      \"card_last_four\": \"1111\",\n      \"card_brand\": \"visa\",\n      \"card_expiry_month\": 12,\n      \"card_expiry_year\": 2030,\n      \"created_at\": \"2025-05-20T09:18:47.000000Z\",\n      \"updated_at\": \"2025-05-20T09:18:47.000000Z\"\n    },\n    \"ip_address\": \"203.0.113.10\",\n    \"created_at\": \"2025-05-21T14:30:02.000000Z\",\n    \"updated_at\": \"2025-05-21T14:30:03.000000Z\"\n  }\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "ca40485c-d930-4418-8b33-e2147e3faeb7",
+              "id": "7b378aa0-cb05-434e-8e86-868e8beb356e",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -923,7 +923,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "6f0c310b-4d23-46e1-9223-d5b9ff99c1ea",
+              "id": "8aee89e8-7b4f-47a2-8f98-ef8b7b52a9c4",
               "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -986,7 +986,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "a47e9f39-f530-47ac-8ea0-4197d6a2a4a8",
+              "id": "0ab9cffb-877e-4c5b-a961-1154679f6479",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1048,7 +1048,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "cbdac8e3-55ee-4f04-b35b-e26a0bd2bf6a",
+              "id": "33281653-cd54-425f-8398-62b86a3ac8f3",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -1117,7 +1117,7 @@
           }
         },
         {
-          "id": "a60082ab-e348-4641-992d-b04debe8bb73",
+          "id": "1d1d9650-6847-49d8-b5b0-bd1d639a9493",
           "name": "Transaction Status",
           "request": {
             "name": "Transaction Status",
@@ -1158,7 +1158,7 @@
           },
           "response": [
             {
-              "id": "08b51ad8-27e2-4655-9a3f-dd6629f257a6",
+              "id": "e662c806-6ea5-4139-adb3-c97074a17147",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1207,12 +1207,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction status\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 2,\n    \"related_trans_id\": \"string\",\n    \"merchant_id\": 1,\n    \"cardholder_id\": 2,\n    \"amount\": 1250,\n    \"currency\": \"EUR\",\n    \"status\": \"auth\",\n    \"transaction_type\": \"auth\",\n    \"merchant_trans_id\": \"ORDER-912346\",\n    \"acquirer_trans_id\": \"514009741995\",\n    \"acquirer_auth_code\": \"400066\",\n    \"acquirer_ref_num\": \"741995\",\n    \"ip_address\": \"172.19.0.7\",\n    \"updated_at\": \"2025-05-20T09:18:48.000000Z\",\n    \"created_at\": \"2025-05-20T09:18:47.000000Z\"\n  }\n}",
+              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction status\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 2,\n    \"merchant_id\": 1,\n    \"merchant_trans_id\": \"ORDER-912346\",\n    \"amount\": 1250,\n    \"amount_formatted\": \"12.5 EUR\",\n    \"currency\": \"EUR\",\n    \"status\": \"auth\",\n    \"transaction_type\": \"auth\",\n    \"description\": \"string\",\n    \"acquirer_provider\": \"string\",\n    \"acquirer_trans_id\": \"514009741995\",\n    \"acquirer_auth_code\": \"400066\",\n    \"related_trans_id\": \"string\",\n    \"captured_amount\": 0,\n    \"cardholder\": {\n      \"card_last_four\": \"1111\",\n      \"card_brand\": \"visa\",\n      \"card_expiry_month\": 12,\n      \"card_expiry_year\": 2030,\n      \"created_at\": \"2025-05-20T09:18:47.000000Z\",\n      \"updated_at\": \"2025-05-20T09:18:47.000000Z\"\n    },\n    \"ip_address\": \"203.0.113.10\",\n    \"created_at\": \"2025-05-20T09:18:47.000000Z\",\n    \"updated_at\": \"2025-05-20T09:18:48.000000Z\"\n  }\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "4087effd-e90e-4ed0-843c-a2ecb8c5beac",
+              "id": "6753ee10-3e18-46c3-8074-bd58cde7ba83",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1266,7 +1266,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "028f0b6a-bedb-4152-bade-b3072274af9b",
+              "id": "c58a93e3-9d0d-43b1-ae1a-e34a596953c5",
               "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -1321,7 +1321,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "cbf518a1-646d-4679-b93b-41a08912c7ed",
+              "id": "e596d39a-f8dc-4191-8269-00f2dd3b7e66",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -1382,7 +1382,7 @@
           }
         },
         {
-          "id": "b4ee5391-e31d-4f6d-82e2-9d2efe0d5b7e",
+          "id": "8900e709-c4e6-425e-88bb-c43b78bb92e8",
           "name": "Void Transaction",
           "request": {
             "name": "Void Transaction",
@@ -1436,7 +1436,7 @@
           },
           "response": [
             {
-              "id": "6eb93802-53ee-4da5-8959-e0246055de85",
+              "id": "2b0e17f9-7280-444b-9531-be64329ccbea",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1493,12 +1493,12 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction voided\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 4,\n    \"related_trans_id\": 3,\n    \"merchant_id\": 1,\n    \"cardholder_id\": 2,\n    \"amount\": 1250,\n    \"currency\": \"EUR\",\n    \"status\": \"voided\",\n    \"transaction_type\": \"void\",\n    \"merchant_trans_id\": \"ORDER-912346\",\n    \"acquirer_trans_id\": \"514009741995\",\n    \"acquirer_auth_code\": \"400066\",\n    \"acquirer_ref_num\": \"741995\",\n    \"ip_address\": \"172.19.0.7\",\n    \"updated_at\": \"2025-05-20T09:18:48.000000Z\",\n    \"created_at\": \"2025-05-20T09:18:47.000000Z\"\n  }\n}",
+              "body": "{\n  \"success\": true,\n  \"message\": \"Transaction voided\",\n  \"code\": \"\",\n  \"data\": {\n    \"id\": 3,\n    \"merchant_id\": 1,\n    \"merchant_trans_id\": \"ORDER-912346\",\n    \"amount\": 1250,\n    \"amount_formatted\": \"12.5 EUR\",\n    \"currency\": \"EUR\",\n    \"status\": \"voided\",\n    \"transaction_type\": \"void\",\n    \"description\": \"string\",\n    \"acquirer_provider\": \"string\",\n    \"acquirer_trans_id\": \"514009741995\",\n    \"acquirer_auth_code\": \"400066\",\n    \"related_trans_id\": 2,\n    \"cardholder\": {\n      \"card_last_four\": \"1111\",\n      \"card_brand\": \"visa\",\n      \"card_expiry_month\": 12,\n      \"card_expiry_year\": 2030,\n      \"created_at\": \"2025-05-20T09:18:47.000000Z\",\n      \"updated_at\": \"2025-05-20T09:18:47.000000Z\"\n    },\n    \"ip_address\": \"203.0.113.10\",\n    \"created_at\": \"2025-05-20T11:15:40.000000Z\",\n    \"updated_at\": \"2025-05-20T11:15:41.000000Z\"\n  }\n}",
               "cookie": [],
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "7decaee3-fa70-446b-8140-6b4722d11cbf",
+              "id": "95fddf75-f0c7-4f8e-8657-91b4abd7cffa",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1560,7 +1560,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "3b4ca3fc-bb5c-4d64-9bd1-41b31c546132",
+              "id": "160370a7-6e04-42eb-b51a-2a1a1c234bc3",
               "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -1623,7 +1623,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e6b96e5b-263e-4409-b8a2-78778abe30cc",
+              "id": "c18b1263-565f-4c2b-bbf4-7ce0071bc526",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1685,7 +1685,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "dbe67dda-3866-46ab-8acb-a42e96a58560",
+              "id": "0d6d0373-fd24-4207-ad2d-cfaff749c230",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -1757,7 +1757,640 @@
       "event": []
     },
     {
-      "id": "6baf4b6f-033b-4284-9402-dda7a2df7c9b",
+      "id": "ceb35255-8972-4fa8-84fa-6f87deb71adc",
+      "name": "Payment Instruments",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c5149bbd-7272-4c49-ab49-56ac229d3fa5",
+          "name": "List payment instruments",
+          "request": {
+            "name": "List payment instruments",
+            "description": {
+              "content": "List the cards stored in the vault for a merchant. An instrument is\ncreated automatically when a card transaction succeeds and the acquirer\nreturns a vault token. Use the `vault_token` value to charge the stored\ncard again, as described in the [returning customers guide](/guides/returning-customers).\n\nMerchant API keys list their own instruments. Partner API keys must\ninclude `merchant_id` for a linked merchant.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "payment-instruments"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "active",
+                  "description": "Filter by status."
+                },
+                {
+                  "disabled": false,
+                  "key": "merchant_id",
+                  "value": "123",
+                  "description": "Required for partner API keys. Must be a merchant linked to the authenticated partner."
+                },
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "25",
+                  "description": "Number of instruments per page (1-100, default 25)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (1+)."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "950fa7fc-4fbf-4e59-b060-14747e28a942",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-instruments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "active"
+                    },
+                    {
+                      "key": "merchant_id",
+                      "value": "123"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "25"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Payment instruments retrieved\",\n  \"code\": \"\",\n  \"data\": {\n    \"payment_instruments\": [\n      {\n        \"payment_instrument_id\": \"pi_01k24d5re8xh1v0c9jc0m8w3ns\",\n        \"vault_token\": \"8ac7a4a29852f6f101985300a1b41c2f\",\n        \"type\": \"card\",\n        \"status\": \"active\",\n        \"card_brand\": \"visa\",\n        \"card_last_four\": \"1111\",\n        \"card_expiry_month\": 12,\n        \"card_expiry_year\": 2030,\n        \"created_at\": \"2026-08-01T09:18:47.000000Z\",\n        \"updated_at\": \"2026-08-01T09:18:47.000000Z\"\n      },\n      {\n        \"payment_instrument_id\": \"pi_01k1zx9v2m5re8ah3t6wd0q7bc\",\n        \"vault_token\": \"5fb2c8d10474e2a90198a3f2b17d33aa\",\n        \"type\": \"card\",\n        \"status\": \"revoked\",\n        \"card_brand\": \"mastercard\",\n        \"card_last_four\": \"4444\",\n        \"card_expiry_month\": 6,\n        \"card_expiry_year\": 2028,\n        \"created_at\": \"2026-07-14T15:02:10.000000Z\",\n        \"updated_at\": \"2026-07-30T11:41:05.000000Z\"\n      }\n    ],\n    \"pagination\": {\n      \"current_page\": 1,\n      \"last_page\": 1,\n      \"per_page\": 25,\n      \"total\": 2\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9f69780b-892c-4782-9f58-366a909b4ad1",
+              "name": "A partner API key omitted `merchant_id` or referenced a merchant that is not linked to it.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-instruments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "active"
+                    },
+                    {
+                      "key": "merchant_id",
+                      "value": "123"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "25"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"merchant_id is required for partner transactions. Please specify which merchant account to use.\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e22e115f-4e5c-48a1-acce-170c1ef0c716",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-instruments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "active"
+                    },
+                    {
+                      "key": "merchant_id",
+                      "value": "123"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "25"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Authentication failed\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cbc02352-c275-4197-8d92-cf465888b0d2",
+              "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-instruments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "active"
+                    },
+                    {
+                      "key": "merchant_id",
+                      "value": "123"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "25"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Too many requests\",\n  \"code\": \"ERR_RATE_LIMITED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9eb7e998-4d97-4208-a505-2f51dd14c363",
+          "name": "Revoke a payment instrument",
+          "request": {
+            "name": "Revoke a payment instrument",
+            "description": {
+              "content": "Revoke a stored card so its vault token can no longer initiate\ntransactions. Revocation is idempotent: revoking an already revoked\ninstrument succeeds without changing anything. If the same card is\nstored again later, the instrument reactivates with the same token.\n\nMerchant API keys revoke their own instruments. Partner API keys can\nrevoke instruments of linked merchants.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "payment-instruments",
+                ":paymentInstrument_public_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "pi_01k24d5re8xh1v0c9jc0m8w3ns",
+                  "key": "paymentInstrument_public_id",
+                  "description": "(Required) The payment instrument id."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "91fd85e1-f48f-41ea-96df-d42825df7a71",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-instruments",
+                    ":paymentInstrument_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "pi_01k24d5re8xh1v0c9jc0m8w3ns",
+                      "key": "paymentInstrument_public_id",
+                      "description": "(Required) The payment instrument id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Payment instrument revoked\",\n  \"code\": \"\",\n  \"data\": {\n    \"payment_instrument\": {\n      \"payment_instrument_id\": \"pi_01k24d5re8xh1v0c9jc0m8w3ns\",\n      \"vault_token\": \"8ac7a4a29852f6f101985300a1b41c2f\",\n      \"type\": \"card\",\n      \"status\": \"revoked\",\n      \"card_brand\": \"visa\",\n      \"card_last_four\": \"1111\",\n      \"card_expiry_month\": 12,\n      \"card_expiry_year\": 2030,\n      \"created_at\": \"2026-08-01T09:18:47.000000Z\",\n      \"updated_at\": \"2026-08-08T10:22:31.000000Z\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1f43fbcd-9f1a-4b36-bd69-e87388e39a3c",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-instruments",
+                    ":paymentInstrument_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "pi_01k24d5re8xh1v0c9jc0m8w3ns",
+                      "key": "paymentInstrument_public_id",
+                      "description": "(Required) The payment instrument id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Authentication failed\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fe371406-2311-4788-a48f-1bf8ab08a85b",
+              "name": "The instrument belongs to a merchant this API key cannot access.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-instruments",
+                    ":paymentInstrument_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "pi_01k24d5re8xh1v0c9jc0m8w3ns",
+                      "key": "paymentInstrument_public_id",
+                      "description": "(Required) The payment instrument id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Access denied: Resource not accessible\",\n  \"code\": \"ERR_AUTH_FAILED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bf295120-a628-4636-9545-9a1f43fee554",
+              "name": "No payment instrument with this id exists. See the [error catalogue](/api-basics/errors).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-instruments",
+                    ":paymentInstrument_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "pi_01k24d5re8xh1v0c9jc0m8w3ns",
+                      "key": "paymentInstrument_public_id",
+                      "description": "(Required) The payment instrument id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"PaymentInstrument not found\",\n  \"code\": \"ERR_NOT_FOUND\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "186cd38b-0f3a-452a-b920-8056ce33de21",
+              "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "payment-instruments",
+                    ":paymentInstrument_public_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "pi_01k24d5re8xh1v0c9jc0m8w3ns",
+                      "key": "paymentInstrument_public_id",
+                      "description": "(Required) The payment instrument id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Too many requests\",\n  \"code\": \"ERR_RATE_LIMITED\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "0a36c821-c4c9-4e50-ac13-49a1a6150768",
       "name": "Payment Sessions",
       "description": {
         "content": "",
@@ -1765,7 +2398,7 @@
       },
       "item": [
         {
-          "id": "e23f9656-e579-4e8d-9e30-8c8295459eab",
+          "id": "dce6c1b8-397d-48a6-ac15-76e0d8d946d8",
           "name": "Create a payment session",
           "request": {
             "name": "Create a payment session",
@@ -1809,7 +2442,7 @@
           },
           "response": [
             {
-              "id": "88460c30-c7c2-4965-a6f2-6e54f00077fd",
+              "id": "7df0d9df-d24a-4b6b-a7b7-caa7b362db2b",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1861,7 +2494,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "aef528f4-922e-479f-8be4-dabec05b9e4a",
+              "id": "beb379c0-446f-45a9-9160-9f0bdfbd3ed5",
               "name": "Session rejected. The `code` field identifies the reason, for example ERR_PAYMENT_METHOD_NOT_ENABLED when the method, currency or country is not enabled for the merchant. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -1914,7 +2547,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "26037b2f-2a4f-499e-8c66-45029d0df0e1",
+              "id": "5c05058a-0895-43cb-8e25-bc71db30eba5",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1966,7 +2599,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "8e9743ff-294c-43c4-a729-07ce24b1d6f6",
+              "id": "b778e87e-ca23-44d6-a38a-f426cf676057",
               "name": "A session or transaction with this `reference` already exists. See the [duplicate protection guide](/guides/duplicate-protection).",
               "originalRequest": {
                 "url": {
@@ -2019,7 +2652,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "b906e10c-a97e-483c-b4e6-e19e4e9234b2",
+              "id": "786a1266-ebe7-4e77-9cc5-175c31b0f7e3",
               "name": "Validation failed. This includes any request carrying card, token, CVV or voucher data.",
               "originalRequest": {
                 "url": {
@@ -2072,7 +2705,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "6b5aec8b-0eee-457d-bb5c-924034836b7b",
+              "id": "2d71934f-7949-4bdd-8b67-90c41e252b3a",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -2125,7 +2758,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "25dcede5-8e2c-44ea-ad7c-b4c68b512850",
+              "id": "f1ae5dad-9bf3-4255-a1c1-1bbed7b9909c",
               "name": "The provider could not prepare the hosted session. The session and its transaction are marked failed. Create a new session to retry.",
               "originalRequest": {
                 "url": {
@@ -2184,7 +2817,7 @@
           }
         },
         {
-          "id": "3d47fb83-13b9-439b-9b60-1c07c19d89be",
+          "id": "71dfae3b-d95f-40ff-b3db-3988c7ba2769",
           "name": "Get a payment session",
           "request": {
             "name": "Get a payment session",
@@ -2207,15 +2840,8 @@
                 {
                   "disabled": false,
                   "type": "any",
-                  "value": "architecto",
-                  "key": "paymentSession_public_id",
-                  "description": "(Required) The ID of the paymentSession public."
-                },
-                {
-                  "disabled": false,
-                  "type": "any",
                   "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
-                  "key": "paymentSession",
+                  "key": "paymentSession_public_id",
                   "description": "(Required) The payment session id."
                 }
               ]
@@ -2231,7 +2857,7 @@
           },
           "response": [
             {
-              "id": "ce4f5471-3339-4ca8-8de2-239b806f4f30",
+              "id": "a62a493a-288c-46bd-8046-9685e48e7153",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2248,15 +2874,8 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "architecto",
-                      "key": "paymentSession_public_id",
-                      "description": "(Required) The ID of the paymentSession public."
-                    },
-                    {
-                      "disabled": false,
-                      "type": "any",
                       "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
-                      "key": "paymentSession",
+                      "key": "paymentSession_public_id",
                       "description": "(Required) The payment session id."
                     }
                   ]
@@ -2291,7 +2910,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "b22906d1-d858-4dfd-a1be-bfec094df71b",
+              "id": "b8864005-14d2-4469-9240-f6553a96d4c1",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2308,15 +2927,8 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "architecto",
-                      "key": "paymentSession_public_id",
-                      "description": "(Required) The ID of the paymentSession public."
-                    },
-                    {
-                      "disabled": false,
-                      "type": "any",
                       "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
-                      "key": "paymentSession",
+                      "key": "paymentSession_public_id",
                       "description": "(Required) The payment session id."
                     }
                   ]
@@ -2351,7 +2963,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "92aff9f9-4abc-4251-8ea0-5231722471c3",
+              "id": "6eb1ba73-7475-4a8f-9c88-a840c363539a",
               "name": "The session belongs to a merchant this API key cannot access.",
               "originalRequest": {
                 "url": {
@@ -2369,15 +2981,8 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "architecto",
-                      "key": "paymentSession_public_id",
-                      "description": "(Required) The ID of the paymentSession public."
-                    },
-                    {
-                      "disabled": false,
-                      "type": "any",
                       "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
-                      "key": "paymentSession",
+                      "key": "paymentSession_public_id",
                       "description": "(Required) The payment session id."
                     }
                   ]
@@ -2412,7 +3017,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "f8396014-653a-475a-abe7-7236c08cf938",
+              "id": "88274f4a-7072-408f-951e-d9691253a079",
               "name": "No payment session with this id exists. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -2430,15 +3035,8 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "architecto",
-                      "key": "paymentSession_public_id",
-                      "description": "(Required) The ID of the paymentSession public."
-                    },
-                    {
-                      "disabled": false,
-                      "type": "any",
                       "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
-                      "key": "paymentSession",
+                      "key": "paymentSession_public_id",
                       "description": "(Required) The payment session id."
                     }
                   ]
@@ -2473,7 +3071,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "051e5ce8-73f0-4281-8416-238a1d9da4dd",
+              "id": "4d4a1ad9-7ce5-462b-a6e6-7ad78cdd3899",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -2491,15 +3089,8 @@
                     {
                       "disabled": false,
                       "type": "any",
-                      "value": "architecto",
-                      "key": "paymentSession_public_id",
-                      "description": "(Required) The ID of the paymentSession public."
-                    },
-                    {
-                      "disabled": false,
-                      "type": "any",
                       "value": "ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE",
-                      "key": "paymentSession",
+                      "key": "paymentSession_public_id",
                       "description": "(Required) The payment session id."
                     }
                   ]
@@ -2543,7 +3134,7 @@
       "event": []
     },
     {
-      "id": "9b274314-967c-4537-9a8e-ef2de100c87c",
+      "id": "09e7e31e-82c7-44cc-9762-7804cc88cbc3",
       "name": "Card Verification",
       "description": {
         "content": "",
@@ -2551,7 +3142,7 @@
       },
       "item": [
         {
-          "id": "e3a23f47-41eb-45be-94b7-2c9c47f84009",
+          "id": "9f8b7100-4b28-4230-964a-02cf3f509545",
           "name": "Initiate Card Verification",
           "request": {
             "name": "Initiate Card Verification",
@@ -2596,7 +3187,7 @@
           },
           "response": [
             {
-              "id": "bc6581d7-14f3-41d9-932d-7bab40698bcb",
+              "id": "e4bf9f05-b84a-4169-b9a1-316f7fc3b642",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2649,7 +3240,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "b17c45a2-2394-49c1-a4bb-66be42616c5d",
+              "id": "fa4a8970-adc0-42df-ac81-813643893d2b",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2702,7 +3293,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "a1deb140-b38f-4d66-a590-895d58a68230",
+              "id": "d683a257-fa94-4505-ac72-9198ec9677cb",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2755,7 +3346,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "cbd9e887-5ed8-44e2-81a5-a46262004786",
+              "id": "3aa82058-e543-46d5-bee1-25c889db953c",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -2818,7 +3409,7 @@
       "event": []
     },
     {
-      "id": "23156523-f35f-428f-8bde-997d3c5a4a09",
+      "id": "7f87547f-ff8e-45bf-a4f6-9876d5d1d424",
       "name": "API Operations",
       "description": {
         "content": "",
@@ -2826,7 +3417,7 @@
       },
       "item": [
         {
-          "id": "7eaf6467-a6d8-4d37-b222-961515c77151",
+          "id": "025b966d-7d85-4ede-8aad-9f8974c5f512",
           "name": "Get API Key Information",
           "request": {
             "name": "Get API Key Information",
@@ -2857,7 +3448,7 @@
           },
           "response": [
             {
-              "id": "71b078eb-0b3c-42f5-9072-2114557c3c07",
+              "id": "c6b7b158-74dc-4b09-a4aa-bc31e29d0135",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2901,7 +3492,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "7f320cb8-a6fe-478f-a20c-cd52ff2ef7e0",
+              "id": "66f83646-5a11-4385-96d7-d3cda4befad1",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2945,7 +3536,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "da365135-f08a-4bb6-906e-3dee27f1f3d9",
+              "id": "2a8faee3-64db-4bbc-b521-19eaea498ae8",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -3017,7 +3608,7 @@
     ]
   },
   "info": {
-    "_postman_id": "71b248cc-7e91-4173-b956-ef5d26be39c4",
+    "_postman_id": "8fea255c-1911-4a79-887d-643e1f5a7a99",
     "name": "Softlemon Merchant API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "description": {

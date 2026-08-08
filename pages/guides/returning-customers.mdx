@@ -2,9 +2,35 @@
 
 After a customer's first successful card payment, the gateway stores the card as a reusable payment instrument in its vault. Later payments can then reference the stored card with a vault token instead of collecting the full card details again. The customer only re-enters the CVV.
 
-## Step 1: Take the first payment normally
+## Step 1: Take the first payment and store the token
 
-Process the first payment with full card details, exactly as described in [Accept a card payment](/guides/accept-a-payment). When the payment succeeds, the gateway stores the instrument and associates a vault token with it.
+Process the first payment with full card details, exactly as described in [Accept a card payment](/guides/accept-a-payment). When the payment succeeds and the acquirer supports vaulting, the response includes a `payment_instrument` object with the stored card and its `vault_token`:
+
+```json
+{
+  "success": true,
+  "message": "Transaction initiated",
+  "code": "",
+  "data": {
+    "transaction": {
+      "id": 2,
+      "status": "auth",
+      "payment_instrument": {
+        "payment_instrument_id": "pi_01k24d5re8xh1v0c9jc0m8w3ns",
+        "vault_token": "8ac7a4a29852f6f101985300a1b41c2f",
+        "type": "card",
+        "status": "active",
+        "card_brand": "visa",
+        "card_last_four": "1111",
+        "card_expiry_month": 12,
+        "card_expiry_year": 2030
+      }
+    }
+  }
+}
+```
+
+Persist the `vault_token` server-side against your customer record. Treat it as a sensitive value: never expose it in browsers or logs. The `card_brand` and `card_last_four` fields are safe to show the customer when offering the stored card at checkout.
 
 ## Step 2: Charge the stored card
 
@@ -286,13 +312,331 @@ Notes on the request:
 
 - `vault_token` and full card details are alternatives. When the token is present, `card.number`, `card.exp_month` and `card.exp_year` are not required.
 - `vault_token` is mutually exclusive with wallet payments.
+- Vault tokens are scoped to the merchant that stored the card. A token from another merchant account fails validation exactly like an unknown token.
 - Use a fresh `reference` for every new payment. Charging the same customer again is a new payment, not a retry. See the [duplicate protection guide](/guides/duplicate-protection).
 
 The response, statuses and webhook events are identical to a normal card payment. The same capture, void and refund flows apply afterwards.
 
-## Where the vault token comes from
+## Manage stored cards
 
-The vault token is created by the gateway when the first card payment succeeds. It is not currently returned in API responses, so coordinate with your SoftLemon admin team on how tokens are supplied to your system. Treat tokens as sensitive values: store them server-side and never expose them in browsers or logs.
+List the cards stored for your account with `GET /api/v1/payment-instruments`. The endpoint is paginated and accepts a `status` filter. Partner API keys add `merchant_id` for a linked merchant:
+
+{/* snippet:returning-customers:list-instruments */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl 'https://api.sandbox.softlemons.com/api/v1/payment-instruments?status=active' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/payment-instruments?status=active', {
+  headers: {
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  }
+})
+```
+
+```python title="Python"
+requests.get(
+    "https://api.sandbox.softlemons.com/api/v1/payment-instruments?status=active",
+    headers={
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/payment-instruments?status=active")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/payment-instruments?status=active"
+
+	req, _ := http.NewRequest("GET", requestUrl, nil)
+
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Get, "https://api.sandbox.softlemons.com/api/v1/payment-instruments?status=active");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/payment-instruments?status=active")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/payment-instruments?status=active"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"GET"];
+[request setAllHTTPHeaderFields:headers];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/payment-instruments?status=active");
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer {YOUR_API_KEY}']);
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/payment-instruments?status=active")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Get.new(url)
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/payment-instruments?status=active")!)
+request.httpMethod = "GET"
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+When a customer removes a card or asks you to delete their data, revoke the instrument by its `payment_instrument_id`:
+
+{/* snippet:returning-customers:revoke-instrument */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/payment-instruments/pi_01k24d5re8xh1v0c9jc0m8w3ns \
+  --request DELETE \
+  --header 'Authorization: Bearer {YOUR_API_KEY}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/payment-instruments/pi_01k24d5re8xh1v0c9jc0m8w3ns', {
+  method: 'DELETE',
+  headers: {
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  }
+})
+```
+
+```python title="Python"
+requests.delete(
+    "https://api.sandbox.softlemons.com/api/v1/payment-instruments/pi_01k24d5re8xh1v0c9jc0m8w3ns",
+    headers={
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/payment-instruments/pi_01k24d5re8xh1v0c9jc0m8w3ns")
+  .delete(null)
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/payment-instruments/pi_01k24d5re8xh1v0c9jc0m8w3ns"
+
+	req, _ := http.NewRequest("DELETE", requestUrl, nil)
+
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Delete, "https://api.sandbox.softlemons.com/api/v1/payment-instruments/pi_01k24d5re8xh1v0c9jc0m8w3ns");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/payment-instruments/pi_01k24d5re8xh1v0c9jc0m8w3ns")
+  .delete(null)
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/payment-instruments/pi_01k24d5re8xh1v0c9jc0m8w3ns"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"DELETE"];
+[request setAllHTTPHeaderFields:headers];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/payment-instruments/pi_01k24d5re8xh1v0c9jc0m8w3ns");
+
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer {YOUR_API_KEY}']);
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/payment-instruments/pi_01k24d5re8xh1v0c9jc0m8w3ns")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Delete.new(url)
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/payment-instruments/pi_01k24d5re8xh1v0c9jc0m8w3ns")!)
+request.httpMethod = "DELETE"
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+An instrument is `active`, `expired` or `revoked`. Only active instruments can be charged: a revoked token fails `POST /api/v1/transactions` with HTTP 400 and code `ERR_INVALID_CARD_TOKEN`. Revocation is idempotent and does not touch past transactions. If the customer pays with the same card again later, the instrument reactivates with the same token.
 
 ## 3D Secure on repeat payments
 

@@ -102,6 +102,15 @@ export const guides = {
         card: { cvv: "123" },
       },
     },
+    "list-instruments": {
+      method: "GET",
+      path: "/api/v1/payment-instruments",
+      query: { status: "active" },
+    },
+    "revoke-instrument": {
+      method: "DELETE",
+      path: "/api/v1/payment-instruments/pi_01k24d5re8xh1v0c9jc0m8w3ns",
+    },
   },
 
   "partner-integration": {

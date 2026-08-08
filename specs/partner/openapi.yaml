@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: 'Softlemon Partner API'
-  description: "Production-ready partner integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the partner integration surface for admin-provisioned API keys.\n\nUse these endpoints when a partner is managing linked merchants and accessing partner-facing operational resources.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## Integration guides\n\nThe [partner integration guide](/guides/partner-integration) walks through the full flow step by step: confirming your key's scope, listing linked merchants, reviewing their transactions and processing payments on a merchant's behalf with `merchant_id`. The same `merchant_id` rules apply to [alternative payments](/guides/accept-an-alternative-payment) through payment sessions. The [webhook integration guide](/guides/webhooks) covers event delivery and signature verification.\n\nPrefer exploring in Postman? Download the [Partner API Postman collection](/collections/softlemon-partner-api.postman_collection.json) and set your API key as the Bearer token on the collection."
+  description: "Production-ready partner integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the partner integration surface for admin-provisioned API keys.\n\nUse these endpoints when a partner is managing linked merchants and accessing partner-facing operational resources.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## Integration guides\n\nThe [partner integration guide](/guides/partner-integration) walks through the full flow step by step: confirming your key's scope, listing linked merchants, reviewing their transactions and processing payments on a merchant's behalf with `merchant_id`. The same `merchant_id` rules apply to [alternative payments](/guides/accept-an-alternative-payment) through payment sessions and to the stored cards covered in the [returning customers guide](/guides/returning-customers). The [webhook integration guide](/guides/webhooks) covers event delivery and signature verification.\n\nPrefer exploring in Postman? Download the [Partner API Postman collection](/collections/softlemon-partner-api.postman_collection.json) and set your API key as the Bearer token on the collection."
   version: 0.9.0
 servers:
   -
@@ -12,6 +12,9 @@ tags:
     description: ''
   -
     name: 'Payment Sessions'
+    description: ''
+  -
+    name: 'Payment Instruments'
     description: ''
   -
     name: 'API Operations'
@@ -1296,20 +1299,36 @@ paths:
                         merchant_id: 1
                         merchant_trans_id: ORDER-100045
                         amount: 5000
-                        amount_formatted: '50.00 EUR'
+                        amount_formatted: '50 EUR'
                         currency: EUR
                         status: success
                         transaction_type: sale
                         description: null
                         acquirer_provider: qashpay
-                        acquirer_trans_id: 8ac7a4a29852f6f101985300a1b41c2f
+                        acquirer_trans_id: '514009742001'
                         acquirer_auth_code: '012345'
                         related_trans_id: null
                         refunded_amount: 0
                         customer: null
-                        cardholder: null
-                        payment_instrument: null
-                        ip_address: 172.19.0.7
+                        cardholder:
+                          card_last_four: '1111'
+                          card_brand: visa
+                          card_expiry_month: 12
+                          card_expiry_year: 2030
+                          created_at: '2025-05-20T09:18:47.000000Z'
+                          updated_at: '2025-05-20T09:18:47.000000Z'
+                        payment_instrument:
+                          payment_instrument_id: pi_01k24d5re8xh1v0c9jc0m8w3ns
+                          vault_token: 8ac7a4a29852f6f101985300a1b41c2f
+                          type: card
+                          status: active
+                          card_brand: visa
+                          card_last_four: '1111'
+                          card_expiry_month: 12
+                          card_expiry_year: 2030
+                          created_at: '2025-05-20T09:18:48.000000Z'
+                          updated_at: '2025-05-20T09:18:48.000000Z'
+                        ip_address: 203.0.113.10
                         created_at: '2025-05-20T09:18:47.000000Z'
                         updated_at: '2025-05-20T09:18:48.000000Z'
                     pagination:
@@ -1338,20 +1357,36 @@ paths:
                             merchant_id: 1
                             merchant_trans_id: ORDER-100045
                             amount: 5000
-                            amount_formatted: '50.00 EUR'
+                            amount_formatted: '50 EUR'
                             currency: EUR
                             status: success
                             transaction_type: sale
                             description: null
                             acquirer_provider: qashpay
-                            acquirer_trans_id: 8ac7a4a29852f6f101985300a1b41c2f
+                            acquirer_trans_id: '514009742001'
                             acquirer_auth_code: '012345'
                             related_trans_id: null
                             refunded_amount: 0
                             customer: null
-                            cardholder: null
-                            payment_instrument: null
-                            ip_address: 172.19.0.7
+                            cardholder:
+                              card_last_four: '1111'
+                              card_brand: visa
+                              card_expiry_month: 12
+                              card_expiry_year: 2030
+                              created_at: '2025-05-20T09:18:47.000000Z'
+                              updated_at: '2025-05-20T09:18:47.000000Z'
+                            payment_instrument:
+                              payment_instrument_id: pi_01k24d5re8xh1v0c9jc0m8w3ns
+                              vault_token: 8ac7a4a29852f6f101985300a1b41c2f
+                              type: card
+                              status: active
+                              card_brand: visa
+                              card_last_four: '1111'
+                              card_expiry_month: 12
+                              card_expiry_year: 2030
+                              created_at: '2025-05-20T09:18:48.000000Z'
+                              updated_at: '2025-05-20T09:18:48.000000Z'
+                            ip_address: 203.0.113.10
                             created_at: '2025-05-20T09:18:47.000000Z'
                             updated_at: '2025-05-20T09:18:48.000000Z'
                         items:
@@ -1371,7 +1406,7 @@ paths:
                               example: 5000
                             amount_formatted:
                               type: string
-                              example: '50.00 EUR'
+                              example: '50 EUR'
                             currency:
                               type: string
                               example: EUR
@@ -1389,7 +1424,7 @@ paths:
                               example: qashpay
                             acquirer_trans_id:
                               type: string
-                              example: 8ac7a4a29852f6f101985300a1b41c2f
+                              example: '514009742001'
                             acquirer_auth_code:
                               type: string
                               example: '012345'
@@ -1403,14 +1438,62 @@ paths:
                               type: string
                               example: null
                             cardholder:
-                              type: string
-                              example: null
+                              type: object
+                              properties:
+                                card_last_four:
+                                  type: string
+                                  example: '1111'
+                                card_brand:
+                                  type: string
+                                  example: visa
+                                card_expiry_month:
+                                  type: integer
+                                  example: 12
+                                card_expiry_year:
+                                  type: integer
+                                  example: 2030
+                                created_at:
+                                  type: string
+                                  example: '2025-05-20T09:18:47.000000Z'
+                                updated_at:
+                                  type: string
+                                  example: '2025-05-20T09:18:47.000000Z'
                             payment_instrument:
-                              type: string
-                              example: null
+                              type: object
+                              properties:
+                                payment_instrument_id:
+                                  type: string
+                                  example: pi_01k24d5re8xh1v0c9jc0m8w3ns
+                                vault_token:
+                                  type: string
+                                  example: 8ac7a4a29852f6f101985300a1b41c2f
+                                type:
+                                  type: string
+                                  example: card
+                                status:
+                                  type: string
+                                  example: active
+                                card_brand:
+                                  type: string
+                                  example: visa
+                                card_last_four:
+                                  type: string
+                                  example: '1111'
+                                card_expiry_month:
+                                  type: integer
+                                  example: 12
+                                card_expiry_year:
+                                  type: integer
+                                  example: 2030
+                                created_at:
+                                  type: string
+                                  example: '2025-05-20T09:18:48.000000Z'
+                                updated_at:
+                                  type: string
+                                  example: '2025-05-20T09:18:48.000000Z'
                             ip_address:
                               type: string
-                              example: 172.19.0.7
+                              example: 203.0.113.10
                             created_at:
                               type: string
                               example: '2025-05-20T09:18:47.000000Z'
@@ -2119,16 +2202,432 @@ paths:
       -
         in: path
         name: paymentSession_public_id
-        description: 'The ID of the paymentSession public.'
-        example: architecto
+        description: 'The payment session id.'
+        example: ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE
         required: true
         schema:
           type: string
+  /api/v1/payment-instruments:
+    get:
+      summary: 'List payment instruments'
+      operationId: listPaymentInstruments
+      description: "List the cards stored in the vault for a merchant. An instrument is\ncreated automatically when a card transaction succeeds and the acquirer\nreturns a vault token. Use the `vault_token` value to charge the stored\ncard again, as described in the [returning customers guide](/guides/returning-customers).\n\nMerchant API keys list their own instruments. Partner API keys must\ninclude `merchant_id` for a linked merchant."
+      parameters:
+        -
+          in: query
+          name: status
+          description: 'Filter by status.'
+          example: active
+          required: false
+          schema:
+            type: string
+            enum:
+              - active
+              - expired
+              - revoked
+        -
+          in: query
+          name: merchant_id
+          description: 'Required for partner API keys. Must be a merchant linked to the authenticated partner.'
+          example: 123
+          required: false
+          schema:
+            type: integer
+        -
+          in: query
+          name: per_page
+          description: 'Number of instruments per page (1-100, default 25).'
+          example: 25
+          required: false
+          schema:
+            type: integer
+        -
+          in: query
+          name: page
+          description: 'Page number (1+).'
+          example: 1
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Payment instruments retrieved'
+                  code: ''
+                  data:
+                    payment_instruments:
+                      -
+                        payment_instrument_id: pi_01k24d5re8xh1v0c9jc0m8w3ns
+                        vault_token: 8ac7a4a29852f6f101985300a1b41c2f
+                        type: card
+                        status: active
+                        card_brand: visa
+                        card_last_four: '1111'
+                        card_expiry_month: 12
+                        card_expiry_year: 2030
+                        created_at: '2026-08-01T09:18:47.000000Z'
+                        updated_at: '2026-08-01T09:18:47.000000Z'
+                      -
+                        payment_instrument_id: pi_01k1zx9v2m5re8ah3t6wd0q7bc
+                        vault_token: 5fb2c8d10474e2a90198a3f2b17d33aa
+                        type: card
+                        status: revoked
+                        card_brand: mastercard
+                        card_last_four: '4444'
+                        card_expiry_month: 6
+                        card_expiry_year: 2028
+                        created_at: '2026-07-14T15:02:10.000000Z'
+                        updated_at: '2026-07-30T11:41:05.000000Z'
+                    pagination:
+                      current_page: 1
+                      last_page: 1
+                      per_page: 25
+                      total: 2
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Payment instruments retrieved'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      payment_instruments:
+                        type: array
+                        example:
+                          -
+                            payment_instrument_id: pi_01k24d5re8xh1v0c9jc0m8w3ns
+                            vault_token: 8ac7a4a29852f6f101985300a1b41c2f
+                            type: card
+                            status: active
+                            card_brand: visa
+                            card_last_four: '1111'
+                            card_expiry_month: 12
+                            card_expiry_year: 2030
+                            created_at: '2026-08-01T09:18:47.000000Z'
+                            updated_at: '2026-08-01T09:18:47.000000Z'
+                          -
+                            payment_instrument_id: pi_01k1zx9v2m5re8ah3t6wd0q7bc
+                            vault_token: 5fb2c8d10474e2a90198a3f2b17d33aa
+                            type: card
+                            status: revoked
+                            card_brand: mastercard
+                            card_last_four: '4444'
+                            card_expiry_month: 6
+                            card_expiry_year: 2028
+                            created_at: '2026-07-14T15:02:10.000000Z'
+                            updated_at: '2026-07-30T11:41:05.000000Z'
+                        items:
+                          type: object
+                          properties:
+                            payment_instrument_id:
+                              type: string
+                              example: pi_01k24d5re8xh1v0c9jc0m8w3ns
+                            vault_token:
+                              type: string
+                              example: 8ac7a4a29852f6f101985300a1b41c2f
+                            type:
+                              type: string
+                              example: card
+                            status:
+                              type: string
+                              example: active
+                            card_brand:
+                              type: string
+                              example: visa
+                            card_last_four:
+                              type: string
+                              example: '1111'
+                            card_expiry_month:
+                              type: integer
+                              example: 12
+                            card_expiry_year:
+                              type: integer
+                              example: 2030
+                            created_at:
+                              type: string
+                              example: '2026-08-01T09:18:47.000000Z'
+                            updated_at:
+                              type: string
+                              example: '2026-08-01T09:18:47.000000Z'
+                      pagination:
+                        type: object
+                        properties:
+                          current_page:
+                            type: integer
+                            example: 1
+                          last_page:
+                            type: integer
+                            example: 1
+                          per_page:
+                            type: integer
+                            example: 25
+                          total:
+                            type: integer
+                            example: 2
+        400:
+          description: 'A partner API key omitted `merchant_id` or referenced a merchant that is not linked to it.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'Payment Instruments'
+  '/api/v1/payment-instruments/{paymentInstrument_public_id}':
+    delete:
+      summary: 'Revoke a payment instrument'
+      operationId: revokeAPaymentInstrument
+      description: "Revoke a stored card so its vault token can no longer initiate\ntransactions. Revocation is idempotent: revoking an already revoked\ninstrument succeeds without changing anything. If the same card is\nstored again later, the instrument reactivates with the same token.\n\nMerchant API keys revoke their own instruments. Partner API keys can\nrevoke instruments of linked merchants."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Payment instrument revoked'
+                  code: ''
+                  data:
+                    payment_instrument:
+                      payment_instrument_id: pi_01k24d5re8xh1v0c9jc0m8w3ns
+                      vault_token: 8ac7a4a29852f6f101985300a1b41c2f
+                      type: card
+                      status: revoked
+                      card_brand: visa
+                      card_last_four: '1111'
+                      card_expiry_month: 12
+                      card_expiry_year: 2030
+                      created_at: '2026-08-01T09:18:47.000000Z'
+                      updated_at: '2026-08-08T10:22:31.000000Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Payment instrument revoked'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      payment_instrument:
+                        type: object
+                        properties:
+                          payment_instrument_id:
+                            type: string
+                            example: pi_01k24d5re8xh1v0c9jc0m8w3ns
+                          vault_token:
+                            type: string
+                            example: 8ac7a4a29852f6f101985300a1b41c2f
+                          type:
+                            type: string
+                            example: card
+                          status:
+                            type: string
+                            example: revoked
+                          card_brand:
+                            type: string
+                            example: visa
+                          card_last_four:
+                            type: string
+                            example: '1111'
+                          card_expiry_month:
+                            type: integer
+                            example: 12
+                          card_expiry_year:
+                            type: integer
+                            example: 2030
+                          created_at:
+                            type: string
+                            example: '2026-08-01T09:18:47.000000Z'
+                          updated_at:
+                            type: string
+                            example: '2026-08-08T10:22:31.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        403:
+          description: 'The instrument belongs to a merchant this API key cannot access.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Access denied: Resource not accessible'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Access denied: Resource not accessible'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        404:
+          description: 'No payment instrument with this id exists. See the [error catalogue](/api-basics/errors).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'PaymentInstrument not found'
+                  code: ERR_NOT_FOUND
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'PaymentInstrument not found'
+                  code:
+                    type: string
+                    example: ERR_NOT_FOUND
+                  data:
+                    type: string
+                    example: null
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'Payment Instruments'
+    parameters:
       -
         in: path
-        name: paymentSession
-        description: 'The payment session id.'
-        example: ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE
+        name: paymentInstrument_public_id
+        description: 'The payment instrument id.'
+        example: pi_01k24d5re8xh1v0c9jc0m8w3ns
         required: true
         schema:
           type: string
