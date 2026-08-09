@@ -1,5 +1,13 @@
+import { DropdownCodeTabs } from "./src/CodeTabs.jsx";
+
 /** @type {import('zudoku').ZudokuConfig} */
 const config = {
+  mdx: {
+    components: {
+      // Eleven-language tab rows overflow, render a dropdown instead.
+      CodeTabs: DropdownCodeTabs,
+    },
+  },
   site: {
     title: "Softlemon API Documentation",
     showPoweredBy: false,
