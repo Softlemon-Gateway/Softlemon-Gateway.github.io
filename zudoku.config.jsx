@@ -1,4 +1,5 @@
 import { DropdownCodeTabs } from "./src/CodeTabs.jsx";
+import { MdxCode } from "./src/MdxCode.jsx";
 
 /** @type {import('zudoku').ZudokuConfig} */
 const config = {
@@ -6,6 +7,8 @@ const config = {
     components: {
       // Eleven-language tab rows overflow, render a dropdown instead.
       CodeTabs: DropdownCodeTabs,
+      // Untitled fences show their language ("JSON") instead of "Code".
+      code: MdxCode,
     },
   },
   site: {
