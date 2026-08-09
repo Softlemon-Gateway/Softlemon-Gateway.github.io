@@ -72,7 +72,19 @@ List endpoints paginate with a `page` query parameter and return a `pagination` 
 
 ## Idempotency and duplicate protection
 
+Two mechanisms keep a network retry from moving money twice. The `reference` field guards the payment when you create it. The `Idempotency-Key` header guards the request when you manage it afterwards.
+
 `POST /api/v1/transactions` accepts a `reference` field holding your own unique id for the payment. Reusing a reference while a previous attempt is active returns HTTP 409 with code `ERR_DUPLICATE` instead of charging twice. Always send a reference. See the [duplicate protection guide](/guides/duplicate-protection).
+
+Capture, refund and void accept an optional `Idempotency-Key` header holding a unique string of up to 255 characters. A UUID works well. The contract:
+
+- Repeating the request with the same key and an identical body within 24 hours returns the stored original response instead of executing again. Replayed responses carry an `Idempotency-Replayed: true` header and reflect the state at first execution.
+- Replay covers declines too. A capture that failed with HTTP 400 replays that 400, so retrying a declined request needs a new key.
+- Reusing a key with a different body returns HTTP 409 with code `ERR_IDEMPOTENCY_CONFLICT`. Generate a fresh key for every new request.
+- While the original request is still running, a repeat returns HTTP 409 with code `ERR_IDEMPOTENT_REQUEST_IN_PROGRESS`. Wait a moment and send it again with the same key.
+- Requests that fail validation or authorization do not consume the key, so a corrected retry with the same key executes normally.
+
+Without the header these endpoints behave as before, every POST executes. Keys expire after 24 hours and are scoped to your API key.
 
 ## Changes
 

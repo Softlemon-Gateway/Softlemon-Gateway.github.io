@@ -44,6 +44,10 @@ const toHar = (step) => {
     url.searchParams.set(name, value);
   }
   const headers = [{ name: "Authorization", value: "Bearer {YOUR_API_KEY}" }];
+  // Opt-in extra headers (e.g. Idempotency-Key), never added to GET steps.
+  for (const [name, value] of Object.entries(step.headers ?? {})) {
+    headers.push({ name, value });
+  }
   const har = {
     url: url.toString(),
     method: step.method,

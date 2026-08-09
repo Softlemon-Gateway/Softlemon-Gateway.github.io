@@ -28,7 +28,16 @@ Once the limit is exceeded, requests fail with HTTP 429 and the standard error e
 }
 ```
 
-The response does not currently include a `Retry-After` header. Implement your own backoff: wait and retry with exponential delays. The window is 60 seconds long, so a full backoff of one minute always clears it.
+The 429 includes a `Retry-After` header with the number of seconds until the window frees up. Honour it before retrying. The window is 60 seconds long, so a full backoff of one minute always clears it.
+
+## Rate limit headers
+
+| Header | Sent on | Meaning |
+|---|---|---|
+| `X-RateLimit-Remaining` | Every response. | Requests left in the current 60 second window. |
+| `Retry-After` | 429 responses only. | Seconds to wait before retrying. |
+
+Watch `X-RateLimit-Remaining` to shed load before the slowdown thresholds instead of reacting to latency alone.
 
 ## Staying under the limit
 

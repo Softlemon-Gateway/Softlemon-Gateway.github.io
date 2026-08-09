@@ -99,3 +99,7 @@ The `status_reason` field explains why a row was cancelled without reaching the 
 ### Not to be confused with the decline cooldown
 
 A separate risk control blocks retrying a **declined** card with the same amount, currency and card for one hour. Those requests fail with `ERR_DO_NOT_RETRY` and HTTP 400. That is a control on retries of failures. The reference guard described in this document is the duplicate protection.
+
+### How this relates to the Idempotency-Key header
+
+The two mechanisms guard different things and work together. The `reference` guards the **payment** on `POST /api/v1/transactions`, the same reference means the same intended charge and an active duplicate is rejected with `ERR_DUPLICATE`. The `Idempotency-Key` header guards the **request** on capture, refund and void, the same key means the same submission and a repeat replays the stored original response instead of executing again. Use both: a `reference` on every payment you create and an `Idempotency-Key` on every capture, refund or void you might retry. The [conventions page](/api-basics/conventions) has the full header contract.

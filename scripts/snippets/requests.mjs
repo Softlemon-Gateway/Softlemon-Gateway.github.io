@@ -58,16 +58,19 @@ export const guides = {
     "capture-full": {
       method: "POST",
       path: "/api/v1/transactions/2/capture",
+      headers: { "Idempotency-Key": "9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f" },
       body: {},
     },
     "capture-partial": {
       method: "POST",
       path: "/api/v1/transactions/2/capture",
+      headers: { "Idempotency-Key": "b3e8f1a6-7c2d-4e9b-8a5f-1d6c3b9e2f7a" },
       body: { amount: 5.0 },
     },
     void: {
       method: "POST",
       path: "/api/v1/transactions/2/void",
+      headers: { "Idempotency-Key": "7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c" },
       body: {},
     },
   },
@@ -76,11 +79,13 @@ export const guides = {
     "refund-full": {
       method: "POST",
       path: "/api/v1/transactions/2/refund",
+      headers: { "Idempotency-Key": "4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f" },
       body: {},
     },
     "refund-partial": {
       method: "POST",
       path: "/api/v1/transactions/2/refund",
+      headers: { "Idempotency-Key": "e5a2c8f4-9d1b-4c6e-b7a3-2f8d5c1e9b4a" },
       body: { amount: 5.0 },
     },
     "poll-totals": {

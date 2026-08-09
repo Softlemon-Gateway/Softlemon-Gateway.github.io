@@ -1,7 +1,7 @@
 {
   "item": [
     {
-      "id": "7591d961-5513-4a6e-b3d2-6441221b456e",
+      "id": "9f62b1c5-7884-4c07-a7d0-6781b67e3dec",
       "name": "Transactions",
       "description": {
         "content": "",
@@ -9,7 +9,7 @@
       },
       "item": [
         {
-          "id": "0152dbff-85aa-44a9-ab34-3cbd2dfc1243",
+          "id": "f7963507-46e2-4b97-8f55-618dbd3db1a5",
           "name": "Initiate Transaction",
           "request": {
             "name": "Initiate Transaction",
@@ -43,7 +43,7 @@
             "auth": null,
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"challenge_pending\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+              "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"full_auth\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -53,7 +53,7 @@
           },
           "response": [
             {
-              "id": "7c4f65eb-b857-4203-a5a3-6f786b363f6f",
+              "id": "1c0fccfe-04c4-4994-84b8-9d6f88011041",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -84,7 +84,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"challenge_pending\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"full_auth\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -105,7 +105,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "f40ce106-2ce6-456f-8241-d43cebdb4d0c",
+              "id": "b0453386-288f-4a5f-a09e-8a9ee527078e",
               "name": "Transaction rejected. The `code` field identifies the reason. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -137,7 +137,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"challenge_pending\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"full_auth\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -158,7 +158,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c8bf7788-b7d9-4b93-8c19-6f6a8f1ea846",
+              "id": "91a3fab2-cf3b-49da-a1d6-c0388a58ba8d",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -189,7 +189,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"challenge_pending\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"full_auth\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -210,7 +210,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "4937e4fe-160c-40d9-86cf-5ad55113545a",
+              "id": "80c2cf88-285c-4528-9f32-799a634e47a5",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -241,7 +241,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"challenge_pending\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"full_auth\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -262,7 +262,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "83ca1aaa-ebe6-41b1-b2fb-2227ba3b6827",
+              "id": "7c7c14e7-c369-42a5-aa60-5f154494e715",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -293,7 +293,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"challenge_pending\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"full_auth\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -314,7 +314,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "32f95d69-d205-4d0b-b86b-086a0b81c88a",
+              "id": "a7b8e0a3-eb4f-4796-aaac-003605b19550",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -346,7 +346,7 @@
                 "method": "POST",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"challenge_pending\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"transaction_type\": \"sale\",\n  \"wallet\": {\n    \"type\": \"apple_pay\",\n    \"token\": \"{\\\"version\\\":\\\"EC_v1\\\",\\\"data\\\":\\\"...\\\"}\"\n  },\n  \"vault_token\": \"vtok_a1b2c3d4e5f6\",\n  \"card\": {\n    \"number\": \"4111111111111111\",\n    \"exp_month\": \"12\",\n    \"exp_year\": \"2030\",\n    \"cvv\": \"123\",\n    \"name\": \"John Doe\"\n  },\n  \"reference\": \"order-10001\",\n  \"merchant_id\": 123,\n  \"success_url\": \"https://yoursite.com/checkout/success\",\n  \"error_url\": \"https://yoursite.com/checkout/error\",\n  \"customer\": {\n    \"merchant_customer_id\": \"cust-001\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+441234567890\",\n    \"address\": \"1 High Street\",\n    \"city\": \"London\",\n    \"postal_code\": \"SW1A 1AA\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\"\n  },\n  \"card_verification_data\": {\n    \"id\": 43,\n    \"status\": \"full_auth\",\n    \"cavv\": \"architecto\",\n    \"xid\": \"architecto\",\n    \"ds_trans_id\": \"architecto\",\n    \"three_ds_version\": \"architecto\",\n    \"eci\": \"architecto\"\n  },\n  \"browser_data\": {\n    \"accept_header\": \"text/html\",\n    \"color_depth\": 24,\n    \"java_enabled\": false,\n    \"java_script_enabled\": true,\n    \"language\": \"en-US\",\n    \"screen_height\": 1080,\n    \"screen_width\": 1920,\n    \"time_zone_offset_in_minutes\": -60,\n    \"user_agent\": \"Mozilla/5.0\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -357,6 +357,18 @@
               "status": "Too Many Requests",
               "code": 429,
               "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "9703"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9703"
+                },
                 {
                   "key": "Content-Type",
                   "value": "application/json"
@@ -373,12 +385,12 @@
           }
         },
         {
-          "id": "4491227e-4e8d-43f6-a4da-bcb070d04d37",
+          "id": "9e5d0314-99e2-4726-bae2-1d040a233350",
           "name": "Capture Transaction",
           "request": {
             "name": "Capture Transaction",
             "description": {
-              "content": "Capture a previously authorized transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations.",
+              "content": "Capture a previously authorized transaction.\n\nSend an `Idempotency-Key` header to retry safely. A repeat with the same\nkey returns the original response without capturing again. The\n[API conventions](/api-basics/conventions) page has the full contract.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations.",
               "type": "text/plain"
             },
             "url": {
@@ -405,6 +417,12 @@
             },
             "header": [
               {
+                "disabled": false,
+                "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                "key": "Idempotency-Key",
+                "value": "9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f"
+              },
+              {
                 "key": "Content-Type",
                 "value": "application/json"
               },
@@ -427,7 +445,7 @@
           },
           "response": [
             {
-              "id": "b44b7c12-e8fd-4b73-aad5-d4d0db5f9121",
+              "id": "c708e72b-a326-4d4b-a611-b26ecd45a464",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -459,6 +477,12 @@
                     },
                     "key": "Authorization",
                     "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f"
                   },
                   {
                     "key": "Accept",
@@ -489,7 +513,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c94c61bb-a68f-431e-a115-64ebfbbe4270",
+              "id": "403d49aa-71ef-4682-918b-e6992b66a006",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -523,6 +547,12 @@
                     "value": "Bearer <token>"
                   },
                   {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f"
+                  },
+                  {
                     "key": "Accept",
                     "value": "application/json"
                   }
@@ -551,7 +581,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e8e096d6-b34a-4b84-9e11-0dbff129565f",
+              "id": "be34dbde-4e05-4818-8110-bd9821065bcb",
               "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -586,6 +616,12 @@
                     "value": "Bearer <token>"
                   },
                   {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f"
+                  },
+                  {
                     "key": "Accept",
                     "value": "application/json"
                   }
@@ -614,7 +650,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "5121548d-ecff-4ab4-9cb9-80d4b20d265b",
+              "id": "e43aac15-8e91-4fd2-9e20-395344abb577",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -646,6 +682,80 @@
                     },
                     "key": "Authorization",
                     "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"This Idempotency-Key was already used with a different request\",\n  \"code\": \"ERR_IDEMPOTENCY_CONFLICT\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ba2a4383-f519-47a6-adb8-d0acdc7fa832",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "capture"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f"
                   },
                   {
                     "key": "Accept",
@@ -676,7 +786,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c4e2036e-bd95-4e44-966e-8e963fa0cbc3",
+              "id": "f9c6bd82-a997-4cc3-9b7d-cd32a26bc52e",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -711,6 +821,12 @@
                     "value": "Bearer <token>"
                   },
                   {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f"
+                  },
+                  {
                     "key": "Accept",
                     "value": "application/json"
                   }
@@ -730,6 +846,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "9703"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9703"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -745,12 +873,12 @@
           }
         },
         {
-          "id": "62b8f2b3-17ee-4413-9c34-cecee81180b6",
+          "id": "626c94a9-493d-4ffa-983d-77a348be3e02",
           "name": "Refund Transaction",
           "request": {
             "name": "Refund Transaction",
             "description": {
-              "content": "Refund a previously captured transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations.",
+              "content": "Refund a previously captured transaction.\n\nSend an `Idempotency-Key` header to retry safely. A repeat with the same\nkey returns the original response without refunding again. The\n[API conventions](/api-basics/conventions) page has the full contract.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations.",
               "type": "text/plain"
             },
             "url": {
@@ -777,6 +905,12 @@
             },
             "header": [
               {
+                "disabled": false,
+                "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                "key": "Idempotency-Key",
+                "value": "4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f"
+              },
+              {
                 "key": "Content-Type",
                 "value": "application/json"
               },
@@ -799,7 +933,7 @@
           },
           "response": [
             {
-              "id": "ac2b3bf8-74de-4a4c-b57b-f3732e934263",
+              "id": "5efa87b8-844f-4389-bf85-ecab8d7a4e73",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -831,6 +965,12 @@
                     },
                     "key": "Authorization",
                     "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f"
                   },
                   {
                     "key": "Accept",
@@ -861,7 +1001,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "7b378aa0-cb05-434e-8e86-868e8beb356e",
+              "id": "6167dc0d-6f5a-4ead-8966-5656a518b280",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -895,6 +1035,12 @@
                     "value": "Bearer <token>"
                   },
                   {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f"
+                  },
+                  {
                     "key": "Accept",
                     "value": "application/json"
                   }
@@ -923,7 +1069,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "8aee89e8-7b4f-47a2-8f98-ef8b7b52a9c4",
+              "id": "d720c673-c917-464e-86f4-3cc3d63d835d",
               "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -958,6 +1104,12 @@
                     "value": "Bearer <token>"
                   },
                   {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f"
+                  },
+                  {
                     "key": "Accept",
                     "value": "application/json"
                   }
@@ -986,7 +1138,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "0ab9cffb-877e-4c5b-a961-1154679f6479",
+              "id": "75b73ccf-a9ca-43eb-8002-92c2094be124",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1020,6 +1172,80 @@
                     "value": "Bearer <token>"
                   },
                   {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"reason\": \"architecto\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"This Idempotency-Key was already used with a different request\",\n  \"code\": \"ERR_IDEMPOTENCY_CONFLICT\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "04e18f61-6980-451d-a101-03d833cb42df",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "refund"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f"
+                  },
+                  {
                     "key": "Accept",
                     "value": "application/json"
                   }
@@ -1048,7 +1274,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "33281653-cd54-425f-8398-62b86a3ac8f3",
+              "id": "77569652-abc9-4b7f-9197-56a8c3049248",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -1083,6 +1309,12 @@
                     "value": "Bearer <token>"
                   },
                   {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f"
+                  },
+                  {
                     "key": "Accept",
                     "value": "application/json"
                   }
@@ -1102,6 +1334,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "9703"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9703"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -1117,7 +1361,7 @@
           }
         },
         {
-          "id": "1d1d9650-6847-49d8-b5b0-bd1d639a9493",
+          "id": "1e5d6ea4-3a5b-4e85-b892-a6e04eb617ea",
           "name": "Transaction Status",
           "request": {
             "name": "Transaction Status",
@@ -1158,7 +1402,7 @@
           },
           "response": [
             {
-              "id": "e662c806-6ea5-4139-adb3-c97074a17147",
+              "id": "94978729-81f2-4ad9-964f-934832f31361",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1212,7 +1456,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "6753ee10-3e18-46c3-8074-bd58cde7ba83",
+              "id": "1c3db10c-7118-4511-9956-41f8d1274f68",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1266,7 +1510,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c58a93e3-9d0d-43b1-ae1a-e34a596953c5",
+              "id": "98070e29-5232-4e53-9a53-3e0ea5384be5",
               "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -1321,7 +1565,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e596d39a-f8dc-4191-8269-00f2dd3b7e66",
+              "id": "20ac5c99-c831-4681-849e-df793949ba7b",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -1367,6 +1611,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "9703"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9703"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -1382,12 +1638,12 @@
           }
         },
         {
-          "id": "8900e709-c4e6-425e-88bb-c43b78bb92e8",
+          "id": "c6526653-85ea-4f93-9235-edaa493cd4e6",
           "name": "Void Transaction",
           "request": {
             "name": "Void Transaction",
             "description": {
-              "content": "Void a previously initiated auth transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations.",
+              "content": "Void a previously initiated auth transaction.\n\nSend an `Idempotency-Key` header to retry safely. A repeat with the same\nkey returns the original response without voiding again. The\n[API conventions](/api-basics/conventions) page has the full contract.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations.",
               "type": "text/plain"
             },
             "url": {
@@ -1414,6 +1670,12 @@
             },
             "header": [
               {
+                "disabled": false,
+                "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                "key": "Idempotency-Key",
+                "value": "7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c"
+              },
+              {
                 "key": "Content-Type",
                 "value": "application/json"
               },
@@ -1436,7 +1698,7 @@
           },
           "response": [
             {
-              "id": "2b0e17f9-7280-444b-9531-be64329ccbea",
+              "id": "b51ef868-0804-4570-9aba-a8c7137c1b76",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1468,6 +1730,12 @@
                     },
                     "key": "Authorization",
                     "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c"
                   },
                   {
                     "key": "Accept",
@@ -1498,7 +1766,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "95fddf75-f0c7-4f8e-8657-91b4abd7cffa",
+              "id": "aec2760c-1633-469f-8b7c-a996f1a1cead",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1532,6 +1800,12 @@
                     "value": "Bearer <token>"
                   },
                   {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c"
+                  },
+                  {
                     "key": "Accept",
                     "value": "application/json"
                   }
@@ -1560,7 +1834,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "160370a7-6e04-42eb-b51a-2a1a1c234bc3",
+              "id": "90b463d6-77fb-4595-bfbe-dc005fcba8f2",
               "name": "No transaction with this id is visible to your API key. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -1595,6 +1869,12 @@
                     "value": "Bearer <token>"
                   },
                   {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c"
+                  },
+                  {
                     "key": "Accept",
                     "value": "application/json"
                   }
@@ -1623,7 +1903,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c18b1263-565f-4c2b-bbf4-7ce0071bc526",
+              "id": "b4fd8068-54aa-4e17-b7d7-8b7dd7b7e720",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1657,6 +1937,80 @@
                     "value": "Bearer <token>"
                   },
                   {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 12.5,\n  \"reason\": \"architecto\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"This Idempotency-Key was already used with a different request\",\n  \"code\": \"ERR_IDEMPOTENCY_CONFLICT\",\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f428b7c2-8746-4cb6-b724-db303a200f5e",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "transactions",
+                    ":transaction_id",
+                    "void"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "21",
+                      "key": "transaction_id",
+                      "description": "(Required) The ID of the transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c"
+                  },
+                  {
                     "key": "Accept",
                     "value": "application/json"
                   }
@@ -1685,7 +2039,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "0d6d0373-fd24-4207-ad2d-cfaff749c230",
+              "id": "6f6c96de-0ff1-47d1-80ac-c3f1b4265a62",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -1720,6 +2074,12 @@
                     "value": "Bearer <token>"
                   },
                   {
+                    "disabled": false,
+                    "description": "Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).",
+                    "key": "Idempotency-Key",
+                    "value": "7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c"
+                  },
+                  {
                     "key": "Accept",
                     "value": "application/json"
                   }
@@ -1739,6 +2099,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "9703"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9703"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -1757,7 +2129,7 @@
       "event": []
     },
     {
-      "id": "ceb35255-8972-4fa8-84fa-6f87deb71adc",
+      "id": "ef2f7d96-293e-4f0b-92e3-5cc21908fd86",
       "name": "Payment Instruments",
       "description": {
         "content": "",
@@ -1765,7 +2137,7 @@
       },
       "item": [
         {
-          "id": "c5149bbd-7272-4c49-ab49-56ac229d3fa5",
+          "id": "477a7e3f-1462-4f7f-9347-f44c1af6f9d4",
           "name": "List payment instruments",
           "request": {
             "name": "List payment instruments",
@@ -1821,7 +2193,7 @@
           },
           "response": [
             {
-              "id": "950fa7fc-4fbf-4e59-b060-14747e28a942",
+              "id": "7badddbc-412a-42ca-b332-87089fad277c",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1882,7 +2254,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "9f69780b-892c-4782-9f58-366a909b4ad1",
+              "id": "4870903c-1dd6-4c20-b169-eac79eced33b",
               "name": "A partner API key omitted `merchant_id` or referenced a merchant that is not linked to it.",
               "originalRequest": {
                 "url": {
@@ -1944,7 +2316,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e22e115f-4e5c-48a1-acce-170c1ef0c716",
+              "id": "1044c026-c06e-409f-909d-0038cf8a9af4",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2005,7 +2377,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "cbc02352-c275-4197-8d92-cf465888b0d2",
+              "id": "fa23ff5e-1368-4da6-8ee9-b7bd0f954ce6",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -2058,6 +2430,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "9703"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9703"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -2073,7 +2457,7 @@
           }
         },
         {
-          "id": "9eb7e998-4d97-4208-a505-2f51dd14c363",
+          "id": "4237dd2a-54ae-435e-bfd4-1a2300616848",
           "name": "Revoke a payment instrument",
           "request": {
             "name": "Revoke a payment instrument",
@@ -2113,7 +2497,7 @@
           },
           "response": [
             {
-              "id": "91fd85e1-f48f-41ea-96df-d42825df7a71",
+              "id": "dadf9174-df6d-46b0-825d-927704f5eb07",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2166,7 +2550,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "1f43fbcd-9f1a-4b36-bd69-e87388e39a3c",
+              "id": "705dbf91-a7d7-4948-a15d-5ab53edefd6c",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2219,7 +2603,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "fe371406-2311-4788-a48f-1bf8ab08a85b",
+              "id": "8f81a30d-bab0-4dad-b59b-2e791daa3eac",
               "name": "The instrument belongs to a merchant this API key cannot access.",
               "originalRequest": {
                 "url": {
@@ -2273,7 +2657,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "bf295120-a628-4636-9545-9a1f43fee554",
+              "id": "f8002798-5ad2-42aa-bf22-d52ceb09fe69",
               "name": "No payment instrument with this id exists. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -2327,7 +2711,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "186cd38b-0f3a-452a-b920-8056ce33de21",
+              "id": "bf3d6878-dff0-4dc5-8bb0-ef8ce3d4c68e",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -2372,6 +2756,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "9703"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9703"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -2390,7 +2786,7 @@
       "event": []
     },
     {
-      "id": "0a36c821-c4c9-4e50-ac13-49a1a6150768",
+      "id": "9f888873-993f-4f23-8875-10ad0fd4d6bc",
       "name": "Payment Sessions",
       "description": {
         "content": "",
@@ -2398,7 +2794,7 @@
       },
       "item": [
         {
-          "id": "dce6c1b8-397d-48a6-ac15-76e0d8d946d8",
+          "id": "88dde0ec-17a8-4fd7-8e40-ad969ac48635",
           "name": "Create a payment session",
           "request": {
             "name": "Create a payment session",
@@ -2442,7 +2838,7 @@
           },
           "response": [
             {
-              "id": "7df0d9df-d24a-4b6b-a7b7-caa7b362db2b",
+              "id": "211d724f-996f-413a-946a-c560a27349a1",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2494,7 +2890,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "beb379c0-446f-45a9-9160-9f0bdfbd3ed5",
+              "id": "0292d94f-676b-4989-a109-bd7b0b5e3f87",
               "name": "Session rejected. The `code` field identifies the reason, for example ERR_PAYMENT_METHOD_NOT_ENABLED when the method, currency or country is not enabled for the merchant. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -2547,7 +2943,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "5c05058a-0895-43cb-8e25-bc71db30eba5",
+              "id": "6421b251-91eb-413a-a8c0-506c0ebb3236",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2599,7 +2995,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "b778e87e-ca23-44d6-a38a-f426cf676057",
+              "id": "311e2784-cb2c-4849-bb71-6de46646f0d6",
               "name": "A session or transaction with this `reference` already exists. See the [duplicate protection guide](/guides/duplicate-protection).",
               "originalRequest": {
                 "url": {
@@ -2652,7 +3048,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "786a1266-ebe7-4e77-9cc5-175c31b0f7e3",
+              "id": "58187aea-5a4b-4109-84e3-317b90e5b873",
               "name": "Validation failed. This includes any request carrying card, token, CVV or voucher data.",
               "originalRequest": {
                 "url": {
@@ -2705,7 +3101,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "2d71934f-7949-4bdd-8b67-90c41e252b3a",
+              "id": "a1272787-7bea-4805-9c99-29afe32c1752",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -2749,6 +3145,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "9703"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9703"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -2758,7 +3166,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "f1ae5dad-9bf3-4255-a1c1-1bbed7b9909c",
+              "id": "8eebf441-f4b1-4d1e-b826-20933ef00911",
               "name": "The provider could not prepare the hosted session. The session and its transaction are marked failed. Create a new session to retry.",
               "originalRequest": {
                 "url": {
@@ -2817,7 +3225,7 @@
           }
         },
         {
-          "id": "71dfae3b-d95f-40ff-b3db-3988c7ba2769",
+          "id": "74551619-a94b-4385-b791-3694bd6f2d0a",
           "name": "Get a payment session",
           "request": {
             "name": "Get a payment session",
@@ -2857,7 +3265,7 @@
           },
           "response": [
             {
-              "id": "a62a493a-288c-46bd-8046-9685e48e7153",
+              "id": "1bffa36f-adc7-424a-a416-2cf80d66e2d7",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2910,7 +3318,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "b8864005-14d2-4469-9240-f6553a96d4c1",
+              "id": "05290b89-71d1-43c1-9c5b-9fb224546ade",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2963,7 +3371,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "6eb1ba73-7475-4a8f-9c88-a840c363539a",
+              "id": "678fd35a-e75e-451c-991f-891ce779b8ad",
               "name": "The session belongs to a merchant this API key cannot access.",
               "originalRequest": {
                 "url": {
@@ -3017,7 +3425,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "88274f4a-7072-408f-951e-d9691253a079",
+              "id": "0510d98f-34df-4395-a967-008f1e014598",
               "name": "No payment session with this id exists. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -3071,7 +3479,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "4d4a1ad9-7ce5-462b-a6e6-7ad78cdd3899",
+              "id": "8d1c0752-9b73-4f39-a9b7-60961abe699c",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -3116,6 +3524,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "9703"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9703"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -3134,7 +3554,7 @@
       "event": []
     },
     {
-      "id": "09e7e31e-82c7-44cc-9762-7804cc88cbc3",
+      "id": "b6855c91-6f12-4fc2-8009-d7bb8ec03104",
       "name": "Card Verification",
       "description": {
         "content": "",
@@ -3142,7 +3562,7 @@
       },
       "item": [
         {
-          "id": "9f8b7100-4b28-4230-964a-02cf3f509545",
+          "id": "66490df4-bb79-4ecc-9cfe-88ea74baf5b0",
           "name": "Initiate Card Verification",
           "request": {
             "name": "Initiate Card Verification",
@@ -3187,7 +3607,7 @@
           },
           "response": [
             {
-              "id": "e4bf9f05-b84a-4169-b9a1-316f7fc3b642",
+              "id": "8ef10475-7bbe-4a4c-9ee9-2e1281132033",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -3240,7 +3660,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "fa4a8970-adc0-42df-ac81-813643893d2b",
+              "id": "62b98ffa-3063-4ec7-a12c-9464a4f8de55",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -3293,7 +3713,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "d683a257-fa94-4505-ac72-9198ec9677cb",
+              "id": "9eae7e38-a2a7-419b-9c71-b634d981262a",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -3346,7 +3766,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "3aa82058-e543-46d5-bee1-25c889db953c",
+              "id": "56c02f38-5c80-40f7-b364-8682e7e7140f",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -3391,6 +3811,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "9703"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9703"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -3409,7 +3841,7 @@
       "event": []
     },
     {
-      "id": "7f87547f-ff8e-45bf-a4f6-9876d5d1d424",
+      "id": "e9e6f127-4435-462e-8616-99c6748d2f43",
       "name": "API Operations",
       "description": {
         "content": "",
@@ -3417,7 +3849,7 @@
       },
       "item": [
         {
-          "id": "025b966d-7d85-4ede-8aad-9f8974c5f512",
+          "id": "717a1eeb-e19e-4daa-be2f-4ffb81d5b1f9",
           "name": "Get API Key Information",
           "request": {
             "name": "Get API Key Information",
@@ -3448,7 +3880,7 @@
           },
           "response": [
             {
-              "id": "c6b7b158-74dc-4b09-a4aa-bc31e29d0135",
+              "id": "11eb6bdd-7707-487e-b58b-046f6a331e42",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -3492,7 +3924,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "66f83646-5a11-4385-96d7-d3cda4befad1",
+              "id": "cb09fa6b-3c90-4fe8-a2fa-f6737f4d06b8",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -3536,7 +3968,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "2a8faee3-64db-4bbc-b521-19eaea498ae8",
+              "id": "b7718c5e-bbe6-43de-a36e-87809f20d15e",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -3571,6 +4003,18 @@
               "status": "Too Many Requests",
               "code": 429,
               "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "9703"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9703"
+                },
                 {
                   "key": "Content-Type",
                   "value": "application/json"
@@ -3608,11 +4052,11 @@
     ]
   },
   "info": {
-    "_postman_id": "8fea255c-1911-4a79-887d-643e1f5a7a99",
+    "_postman_id": "c5357742-de77-4f42-bde0-18cef5bac336",
     "name": "Softlemon Merchant API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "description": {
-      "content": "Production-ready merchant integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the merchant integration surface for admin-provisioned API keys.\n\nUse these endpoints when a merchant is processing payments for its own account.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## 3D Secure Integration Flow\n\nSoftLemon uses a server-managed 3DS flow. You do **not** need to handle CAVV, ECI or DS Transaction IDs yourself.\n\n### Step 1: Initiate 3DS Verification\n\n`POST /api/v1/3ds/verify` with card details, amount, currency and `auth_url` (your frontend return URL).\n\n### Step 2: Handle the response\n\n- **Frictionless:** The response returns immediately with `status: full_auth`. Use the returned `id` in Step 4.\n- **Challenge:** The response includes a `challenge_url`. Redirect the cardholder to this URL to complete the bank challenge.\n\n### Step 3: Cardholder completes challenge (if applicable)\n\nAfter the cardholder completes the challenge, they are redirected to your `auth_url` with query parameters:\n\n`?card_verification_id={id}&status=full_auth` (or `status=failed`)\n\n### Step 4: Initiate the transaction\n\n`POST /api/v1/transactions` with `card_verification_data.id` set to the verification ID from Step 1 or the redirect.\n\n```json\n\"card_verification_data\": { \"id\": 43 }\n```\n\nThe API automatically retrieves the stored 3DS authentication data (including CAVV and ECI) and passes it to the payment gateway.\n\n## Integration guides\n\nStep-by-step walkthroughs for the most common flows, each with full requests and responses:\n\n- [Accept a card payment](/guides/accept-a-payment): 3D Secure verification, the sale and confirmation. Start here.\n- [Authorize now, capture later](/guides/authorize-and-capture): holds, full and partial captures and voids.\n- [Refund a payment](/guides/refunds): full and partial refunds and the events they emit.\n- [Charge a returning customer](/guides/returning-customers): repeat payments with a vault token.\n- [Accept an alternative payment](/guides/accept-an-alternative-payment): hosted redirect payments such as Paysafecard through payment sessions.\n- [Webhook integration](/guides/webhooks): signatures, retries, replays and keeping your system in sync.\n\nPrefer exploring in Postman? Download the [Merchant API Postman collection](/collections/softlemon-merchant-api.postman_collection.json) and set your API key as the Bearer token on the collection.\n\n## 3D Secure test cards\n\nUse these sandbox cards when testing `POST /api/v1/3ds/verify`.\n\n| Scheme | Flow | Returns method data | Card number | Expected result |\n|---|---|---|---|---|\n| Visa | Frictionless | Y | `4200000000000091` | Successful frictionless authentication. |\n| Visa | Frictionless | Y | `4200000000000109` | Attempted authentication. |\n| Visa | Frictionless | N | `4200000000000026` | Successful frictionless authentication. |\n| Visa | Frictionless | N | `4200000000000059` | Attempted authentication. |\n| Visa | Error | N | `4012001037461114` | Technical error. |\n| Visa | Error | N | `4012001037141112` | User not enrolled. |\n| Visa | Not Applicable | N/A | `4532497088771651` | Card not participating. |\n| Visa | Challenge | Y | `4200000000000042` | Challenge flow. |\n| Visa | Challenge | Y | `4200000000000067` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000018` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000075` | Challenge flow. |\n| Mastercard | Frictionless | Y | `5200000000000007` | Successful frictionless authentication. |\n| Mastercard | Frictionless | Y | `5200000000000023` | Attempted authentication. |\n| Mastercard | Frictionless | N | `5200000000000056` | Successful frictionless authentication. |\n| Mastercard | Frictionless | N | `5200000000000006` | Attempted authentication. |\n| Mastercard | Error | N | `5434580000000006` | Technical error. |\n| Mastercard | Error | N | `5457350076543210` | User not enrolled. |\n| Mastercard | Not Applicable | N/A | `5497260847316287` | Card not participating. |\n| Mastercard | Challenge | Y | `5200000000000015` | Challenge flow. |\n| Mastercard | Challenge | Y | `5200000000000049` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000064` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000072` | Challenge flow. |",
+      "content": "Production-ready merchant integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the merchant integration surface for admin-provisioned API keys.\n\nUse these endpoints when a merchant is processing payments for its own account.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## Idempotent retries\n\nNetwork failures can leave you unsure whether a capture, refund or void went through. Send an `Idempotency-Key` header (any unique string up to 255 characters, a UUID works well) on `POST /api/v1/transactions/{id}/capture`, `/refund` or `/void` to make retrying safe.\n\n- Repeating the request with the same key and body within 24 hours returns the stored original response with an `Idempotency-Replayed: true` header. The money moves once.\n- Reusing a key with a different body returns HTTP 409 with code `ERR_IDEMPOTENCY_CONFLICT`. Use a fresh key for each new request.\n- While the original request is still processing, a retry returns HTTP 409 with code `ERR_IDEMPOTENT_REQUEST_IN_PROGRESS`. Wait a moment and send it again with the same key.\n\nA stored decline replays as well, so attempting a declined capture or refund again needs a new key. On `POST /api/v1/transactions` use the `reference` field instead. The [duplicate protection guide](/guides/duplicate-protection) explains how the two mechanisms differ.\n\n## 3D Secure Integration Flow\n\nSoftLemon uses a server-managed 3DS flow. You do **not** need to handle CAVV, ECI or DS Transaction IDs yourself.\n\n### Step 1: Initiate 3DS Verification\n\n`POST /api/v1/3ds/verify` with card details, amount, currency and `auth_url` (your frontend return URL).\n\n### Step 2: Handle the response\n\n- **Frictionless:** The response returns immediately with `status: full_auth`. Use the returned `id` in Step 4.\n- **Challenge:** The response includes a `challenge_url`. Redirect the cardholder to this URL to complete the bank challenge.\n\n### Step 3: Cardholder completes challenge (if applicable)\n\nAfter the cardholder completes the challenge, they are redirected to your `auth_url` with query parameters:\n\n`?card_verification_id={id}&status=full_auth` (or `status=failed`)\n\n### Step 4: Initiate the transaction\n\n`POST /api/v1/transactions` with `card_verification_data.id` set to the verification ID from Step 1 or the redirect.\n\n```json\n\"card_verification_data\": { \"id\": 43 }\n```\n\nThe API automatically retrieves the stored 3DS authentication data (including CAVV and ECI) and passes it to the payment gateway.\n\n## Integration guides\n\nStep-by-step walkthroughs for the most common flows, each with full requests and responses:\n\n- [Accept a card payment](/guides/accept-a-payment): 3D Secure verification, the sale and confirmation. Start here.\n- [Authorize now, capture later](/guides/authorize-and-capture): holds, full and partial captures and voids.\n- [Refund a payment](/guides/refunds): full and partial refunds and the events they emit.\n- [Charge a returning customer](/guides/returning-customers): repeat payments with a vault token.\n- [Accept an alternative payment](/guides/accept-an-alternative-payment): hosted redirect payments such as Paysafecard through payment sessions.\n- [Webhook integration](/guides/webhooks): signatures, retries, replays and keeping your system in sync.\n\nPrefer exploring in Postman? Download the [Merchant API Postman collection](/collections/softlemon-merchant-api.postman_collection.json) and set your API key as the Bearer token on the collection.\n\n## 3D Secure test cards\n\nUse these sandbox cards when testing `POST /api/v1/3ds/verify`.\n\n| Scheme | Flow | Returns method data | Card number | Expected result |\n|---|---|---|---|---|\n| Visa | Frictionless | Y | `4200000000000091` | Successful frictionless authentication. |\n| Visa | Frictionless | Y | `4200000000000109` | Attempted authentication. |\n| Visa | Frictionless | N | `4200000000000026` | Successful frictionless authentication. |\n| Visa | Frictionless | N | `4200000000000059` | Attempted authentication. |\n| Visa | Error | N | `4012001037461114` | Technical error. |\n| Visa | Error | N | `4012001037141112` | User not enrolled. |\n| Visa | Not Applicable | N/A | `4532497088771651` | Card not participating. |\n| Visa | Challenge | Y | `4200000000000042` | Challenge flow. |\n| Visa | Challenge | Y | `4200000000000067` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000018` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000075` | Challenge flow. |\n| Mastercard | Frictionless | Y | `5200000000000007` | Successful frictionless authentication. |\n| Mastercard | Frictionless | Y | `5200000000000023` | Attempted authentication. |\n| Mastercard | Frictionless | N | `5200000000000056` | Successful frictionless authentication. |\n| Mastercard | Frictionless | N | `5200000000000006` | Attempted authentication. |\n| Mastercard | Error | N | `5434580000000006` | Technical error. |\n| Mastercard | Error | N | `5457350076543210` | User not enrolled. |\n| Mastercard | Not Applicable | N/A | `5497260847316287` | Card not participating. |\n| Mastercard | Challenge | Y | `5200000000000015` | Challenge flow. |\n| Mastercard | Challenge | Y | `5200000000000049` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000064` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000072` | Challenge flow. |",
       "type": "text/plain"
     }
   }

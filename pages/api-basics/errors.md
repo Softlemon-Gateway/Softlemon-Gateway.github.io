@@ -35,7 +35,7 @@ Validation failures also include an `errors` object with per-field messages:
 | `401` | The API key is missing or not recognised. |
 | `403` | The API key is valid but not allowed to do this. Inactive accounts and partner-only endpoints respond with 403. |
 | `404` | The resource does not exist or is not visible to your key. |
-| `409` | An active transaction already uses this `reference`. See the [duplicate protection guide](/guides/duplicate-protection). |
+| `409` | An active transaction already uses this `reference` or an `Idempotency-Key` collided with an earlier request. See the [duplicate protection guide](/guides/duplicate-protection) and [conventions](/api-basics/conventions). |
 | `422` | Request validation failed. The `errors` object lists each offending field. |
 | `429` | Rate limit exceeded. See [rate limits](/api-basics/rate-limits). |
 | `500` | Unexpected server error. Safe to retry with backoff. |
@@ -49,8 +49,10 @@ Validation failures also include an `errors` object with per-field messages:
 | `ERR_AUTH_REQUIRED` | 401 | The endpoint requires an authenticated user session. | Applies to dashboard endpoints, not API key integrations. Sign in and retry. |
 | `ERR_NO_PERMISSION` | 403 | The authenticated account lacks permission for this operation. | Ask your SoftLemon admin to grant the required permission. |
 | `ERR_NOT_FOUND` | 404 | The resource does not exist or your key cannot see it. Partner keys only see merchants linked to them. | Check the id. For partner keys confirm the merchant link with SoftLemon. |
-| `ERR_RATE_LIMITED` | 429 | Your key exceeded its request limit. | Back off and retry after the window clears. See [rate limits](/api-basics/rate-limits). |
+| `ERR_RATE_LIMITED` | 429 | Your key exceeded its request limit. | Wait for the number of seconds in the `Retry-After` header, then retry. See [rate limits](/api-basics/rate-limits). |
 | `ERR_DUPLICATE` | 409 | An active transaction already uses this `reference`. | Treat as confirmation the original request went through. Look up `data.transaction_id`. See the [duplicate protection guide](/guides/duplicate-protection). |
+| `ERR_IDEMPOTENCY_CONFLICT` | 409 | The `Idempotency-Key` was already used with a different request. | Do not resubmit as is. Generate a fresh key for each new request and reuse a key only for exact retries. See [conventions](/api-basics/conventions). |
+| `ERR_IDEMPOTENT_REQUEST_IN_PROGRESS` | 409 | The original request with this `Idempotency-Key` is still processing. | Wait a moment and retry with the same key. The retry returns the stored response once the original finishes. |
 | `ERR_RISK_REJECTED` | 400 | Risk rules blocked the transaction. It was cancelled and the reference released. | The reference can be reused. Review the rejection with SoftLemon support if it looks wrong. |
 | `ERR_DO_NOT_RETRY` | 400 | A previous decline marked these payment details as not retryable. | Do not resubmit the same details. Ask the customer for a different payment method. |
 | `ERR_UNEXPECTED` | 500 | An unexpected server error occurred. | Retry with exponential backoff. Contact support if it persists. |

@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: 'Softlemon Merchant API'
-  description: "Production-ready merchant integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the merchant integration surface for admin-provisioned API keys.\n\nUse these endpoints when a merchant is processing payments for its own account.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## 3D Secure Integration Flow\n\nSoftLemon uses a server-managed 3DS flow. You do **not** need to handle CAVV, ECI or DS Transaction IDs yourself.\n\n### Step 1: Initiate 3DS Verification\n\n`POST /api/v1/3ds/verify` with card details, amount, currency and `auth_url` (your frontend return URL).\n\n### Step 2: Handle the response\n\n- **Frictionless:** The response returns immediately with `status: full_auth`. Use the returned `id` in Step 4.\n- **Challenge:** The response includes a `challenge_url`. Redirect the cardholder to this URL to complete the bank challenge.\n\n### Step 3: Cardholder completes challenge (if applicable)\n\nAfter the cardholder completes the challenge, they are redirected to your `auth_url` with query parameters:\n\n`?card_verification_id={id}&status=full_auth` (or `status=failed`)\n\n### Step 4: Initiate the transaction\n\n`POST /api/v1/transactions` with `card_verification_data.id` set to the verification ID from Step 1 or the redirect.\n\n```json\n\"card_verification_data\": { \"id\": 43 }\n```\n\nThe API automatically retrieves the stored 3DS authentication data (including CAVV and ECI) and passes it to the payment gateway.\n\n## Integration guides\n\nStep-by-step walkthroughs for the most common flows, each with full requests and responses:\n\n- [Accept a card payment](/guides/accept-a-payment): 3D Secure verification, the sale and confirmation. Start here.\n- [Authorize now, capture later](/guides/authorize-and-capture): holds, full and partial captures and voids.\n- [Refund a payment](/guides/refunds): full and partial refunds and the events they emit.\n- [Charge a returning customer](/guides/returning-customers): repeat payments with a vault token.\n- [Accept an alternative payment](/guides/accept-an-alternative-payment): hosted redirect payments such as Paysafecard through payment sessions.\n- [Webhook integration](/guides/webhooks): signatures, retries, replays and keeping your system in sync.\n\nPrefer exploring in Postman? Download the [Merchant API Postman collection](/collections/softlemon-merchant-api.postman_collection.json) and set your API key as the Bearer token on the collection.\n\n## 3D Secure test cards\n\nUse these sandbox cards when testing `POST /api/v1/3ds/verify`.\n\n| Scheme | Flow | Returns method data | Card number | Expected result |\n|---|---|---|---|---|\n| Visa | Frictionless | Y | `4200000000000091` | Successful frictionless authentication. |\n| Visa | Frictionless | Y | `4200000000000109` | Attempted authentication. |\n| Visa | Frictionless | N | `4200000000000026` | Successful frictionless authentication. |\n| Visa | Frictionless | N | `4200000000000059` | Attempted authentication. |\n| Visa | Error | N | `4012001037461114` | Technical error. |\n| Visa | Error | N | `4012001037141112` | User not enrolled. |\n| Visa | Not Applicable | N/A | `4532497088771651` | Card not participating. |\n| Visa | Challenge | Y | `4200000000000042` | Challenge flow. |\n| Visa | Challenge | Y | `4200000000000067` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000018` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000075` | Challenge flow. |\n| Mastercard | Frictionless | Y | `5200000000000007` | Successful frictionless authentication. |\n| Mastercard | Frictionless | Y | `5200000000000023` | Attempted authentication. |\n| Mastercard | Frictionless | N | `5200000000000056` | Successful frictionless authentication. |\n| Mastercard | Frictionless | N | `5200000000000006` | Attempted authentication. |\n| Mastercard | Error | N | `5434580000000006` | Technical error. |\n| Mastercard | Error | N | `5457350076543210` | User not enrolled. |\n| Mastercard | Not Applicable | N/A | `5497260847316287` | Card not participating. |\n| Mastercard | Challenge | Y | `5200000000000015` | Challenge flow. |\n| Mastercard | Challenge | Y | `5200000000000049` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000064` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000072` | Challenge flow. |"
+  description: "Production-ready merchant integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the merchant integration surface for admin-provisioned API keys.\n\nUse these endpoints when a merchant is processing payments for its own account.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## Idempotent retries\n\nNetwork failures can leave you unsure whether a capture, refund or void went through. Send an `Idempotency-Key` header (any unique string up to 255 characters, a UUID works well) on `POST /api/v1/transactions/{id}/capture`, `/refund` or `/void` to make retrying safe.\n\n- Repeating the request with the same key and body within 24 hours returns the stored original response with an `Idempotency-Replayed: true` header. The money moves once.\n- Reusing a key with a different body returns HTTP 409 with code `ERR_IDEMPOTENCY_CONFLICT`. Use a fresh key for each new request.\n- While the original request is still processing, a retry returns HTTP 409 with code `ERR_IDEMPOTENT_REQUEST_IN_PROGRESS`. Wait a moment and send it again with the same key.\n\nA stored decline replays as well, so attempting a declined capture or refund again needs a new key. On `POST /api/v1/transactions` use the `reference` field instead. The [duplicate protection guide](/guides/duplicate-protection) explains how the two mechanisms differ.\n\n## 3D Secure Integration Flow\n\nSoftLemon uses a server-managed 3DS flow. You do **not** need to handle CAVV, ECI or DS Transaction IDs yourself.\n\n### Step 1: Initiate 3DS Verification\n\n`POST /api/v1/3ds/verify` with card details, amount, currency and `auth_url` (your frontend return URL).\n\n### Step 2: Handle the response\n\n- **Frictionless:** The response returns immediately with `status: full_auth`. Use the returned `id` in Step 4.\n- **Challenge:** The response includes a `challenge_url`. Redirect the cardholder to this URL to complete the bank challenge.\n\n### Step 3: Cardholder completes challenge (if applicable)\n\nAfter the cardholder completes the challenge, they are redirected to your `auth_url` with query parameters:\n\n`?card_verification_id={id}&status=full_auth` (or `status=failed`)\n\n### Step 4: Initiate the transaction\n\n`POST /api/v1/transactions` with `card_verification_data.id` set to the verification ID from Step 1 or the redirect.\n\n```json\n\"card_verification_data\": { \"id\": 43 }\n```\n\nThe API automatically retrieves the stored 3DS authentication data (including CAVV and ECI) and passes it to the payment gateway.\n\n## Integration guides\n\nStep-by-step walkthroughs for the most common flows, each with full requests and responses:\n\n- [Accept a card payment](/guides/accept-a-payment): 3D Secure verification, the sale and confirmation. Start here.\n- [Authorize now, capture later](/guides/authorize-and-capture): holds, full and partial captures and voids.\n- [Refund a payment](/guides/refunds): full and partial refunds and the events they emit.\n- [Charge a returning customer](/guides/returning-customers): repeat payments with a vault token.\n- [Accept an alternative payment](/guides/accept-an-alternative-payment): hosted redirect payments such as Paysafecard through payment sessions.\n- [Webhook integration](/guides/webhooks): signatures, retries, replays and keeping your system in sync.\n\nPrefer exploring in Postman? Download the [Merchant API Postman collection](/collections/softlemon-merchant-api.postman_collection.json) and set your API key as the Bearer token on the collection.\n\n## 3D Secure test cards\n\nUse these sandbox cards when testing `POST /api/v1/3ds/verify`.\n\n| Scheme | Flow | Returns method data | Card number | Expected result |\n|---|---|---|---|---|\n| Visa | Frictionless | Y | `4200000000000091` | Successful frictionless authentication. |\n| Visa | Frictionless | Y | `4200000000000109` | Attempted authentication. |\n| Visa | Frictionless | N | `4200000000000026` | Successful frictionless authentication. |\n| Visa | Frictionless | N | `4200000000000059` | Attempted authentication. |\n| Visa | Error | N | `4012001037461114` | Technical error. |\n| Visa | Error | N | `4012001037141112` | User not enrolled. |\n| Visa | Not Applicable | N/A | `4532497088771651` | Card not participating. |\n| Visa | Challenge | Y | `4200000000000042` | Challenge flow. |\n| Visa | Challenge | Y | `4200000000000067` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000018` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000075` | Challenge flow. |\n| Mastercard | Frictionless | Y | `5200000000000007` | Successful frictionless authentication. |\n| Mastercard | Frictionless | Y | `5200000000000023` | Attempted authentication. |\n| Mastercard | Frictionless | N | `5200000000000056` | Successful frictionless authentication. |\n| Mastercard | Frictionless | N | `5200000000000006` | Attempted authentication. |\n| Mastercard | Error | N | `5434580000000006` | Technical error. |\n| Mastercard | Error | N | `5457350076543210` | User not enrolled. |\n| Mastercard | Not Applicable | N/A | `5497260847316287` | Card not participating. |\n| Mastercard | Challenge | Y | `5200000000000015` | Challenge flow. |\n| Mastercard | Challenge | Y | `5200000000000049` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000064` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000072` | Challenge flow. |"
   version: 0.9.0
 servers:
   -
@@ -1040,6 +1040,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - Transactions
       requestBody:
@@ -1343,8 +1352,15 @@ paths:
     post:
       summary: 'Capture Transaction'
       operationId: captureTransaction
-      description: "Capture a previously authorized transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
-      parameters: []
+      description: "Capture a previously authorized transaction.\n\nSend an `Idempotency-Key` header to retry safely. A repeat with the same\nkey returns the original response without capturing again. The\n[API conventions](/api-basics/conventions) page has the full contract.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
+      parameters:
+        -
+          in: header
+          name: Idempotency-Key
+          description: 'Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).'
+          example: 9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1514,6 +1530,55 @@ paths:
                   data:
                     type: string
                     example: null
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'The Idempotency-Key was already used with a different request. See the [error catalogue](/api-basics/errors).'
+                    type: object
+                    example:
+                      success: false
+                      message: 'This Idempotency-Key was already used with a different request'
+                      code: ERR_IDEMPOTENCY_CONFLICT
+                      data: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'This Idempotency-Key was already used with a different request'
+                      code:
+                        type: string
+                        example: ERR_IDEMPOTENCY_CONFLICT
+                      data:
+                        type: string
+                        example: null
+                  -
+                    description: 'The original request with this Idempotency-Key is still processing. Retry shortly.'
+                    type: object
+                    example:
+                      success: false
+                      message: 'A request with this Idempotency-Key is still being processed. Retry shortly.'
+                      code: ERR_IDEMPOTENT_REQUEST_IN_PROGRESS
+                      data: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'A request with this Idempotency-Key is still being processed. Retry shortly.'
+                      code:
+                        type: string
+                        example: ERR_IDEMPOTENT_REQUEST_IN_PROGRESS
+                      data:
+                        type: string
+                        example: null
+                properties: null
         422:
           description: ''
           content:
@@ -1574,6 +1639,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - Transactions
       requestBody:
@@ -1602,8 +1676,15 @@ paths:
     post:
       summary: 'Refund Transaction'
       operationId: refundTransaction
-      description: "Refund a previously captured transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
-      parameters: []
+      description: "Refund a previously captured transaction.\n\nSend an `Idempotency-Key` header to retry safely. A repeat with the same\nkey returns the original response without refunding again. The\n[API conventions](/api-basics/conventions) page has the full contract.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
+      parameters:
+        -
+          in: header
+          name: Idempotency-Key
+          description: 'Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).'
+          example: 4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1769,6 +1850,55 @@ paths:
                   data:
                     type: string
                     example: null
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'The Idempotency-Key was already used with a different request. See the [error catalogue](/api-basics/errors).'
+                    type: object
+                    example:
+                      success: false
+                      message: 'This Idempotency-Key was already used with a different request'
+                      code: ERR_IDEMPOTENCY_CONFLICT
+                      data: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'This Idempotency-Key was already used with a different request'
+                      code:
+                        type: string
+                        example: ERR_IDEMPOTENCY_CONFLICT
+                      data:
+                        type: string
+                        example: null
+                  -
+                    description: 'The original request with this Idempotency-Key is still processing. Retry shortly.'
+                    type: object
+                    example:
+                      success: false
+                      message: 'A request with this Idempotency-Key is still being processed. Retry shortly.'
+                      code: ERR_IDEMPOTENT_REQUEST_IN_PROGRESS
+                      data: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'A request with this Idempotency-Key is still being processed. Retry shortly.'
+                      code:
+                        type: string
+                        example: ERR_IDEMPOTENT_REQUEST_IN_PROGRESS
+                      data:
+                        type: string
+                        example: null
+                properties: null
         422:
           description: ''
           content:
@@ -1829,6 +1959,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - Transactions
       requestBody:
@@ -2058,6 +2197,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - Transactions
     parameters:
@@ -2073,8 +2221,15 @@ paths:
     post:
       summary: 'Void Transaction'
       operationId: voidTransaction
-      description: "Void a previously initiated auth transaction.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
-      parameters: []
+      description: "Void a previously initiated auth transaction.\n\nSend an `Idempotency-Key` header to retry safely. A repeat with the same\nkey returns the original response without voiding again. The\n[API conventions](/api-basics/conventions) page has the full contract.\n\nThis endpoint is intended for merchant API keys managing their own transactions.\nDo not expose this as a partner-facing operation in external integrations."
+      parameters:
+        -
+          in: header
+          name: Idempotency-Key
+          description: 'Optional key that makes retrying this request safe. A repeat with the same key within 24 hours replays the original response instead of executing again. See [API conventions](/api-basics/conventions).'
+          example: 7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2240,6 +2395,55 @@ paths:
                   data:
                     type: string
                     example: null
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'The Idempotency-Key was already used with a different request. See the [error catalogue](/api-basics/errors).'
+                    type: object
+                    example:
+                      success: false
+                      message: 'This Idempotency-Key was already used with a different request'
+                      code: ERR_IDEMPOTENCY_CONFLICT
+                      data: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'This Idempotency-Key was already used with a different request'
+                      code:
+                        type: string
+                        example: ERR_IDEMPOTENCY_CONFLICT
+                      data:
+                        type: string
+                        example: null
+                  -
+                    description: 'The original request with this Idempotency-Key is still processing. Retry shortly.'
+                    type: object
+                    example:
+                      success: false
+                      message: 'A request with this Idempotency-Key is still being processed. Retry shortly.'
+                      code: ERR_IDEMPOTENT_REQUEST_IN_PROGRESS
+                      data: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'A request with this Idempotency-Key is still being processed. Retry shortly.'
+                      code:
+                        type: string
+                        example: ERR_IDEMPOTENT_REQUEST_IN_PROGRESS
+                      data:
+                        type: string
+                        example: null
+                properties: null
         422:
           description: ''
           content:
@@ -2300,6 +2504,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - Transactions
       requestBody:
@@ -2570,6 +2783,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - 'Payment Instruments'
   '/api/v1/payment-instruments/{paymentInstrument_public_id}':
@@ -2743,6 +2965,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - 'Payment Instruments'
     parameters:
@@ -3001,6 +3232,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
         502:
           description: 'The provider could not prepare the hosted session. The session and its transaction are marked failed. Create a new session to retry.'
           content:
@@ -3327,6 +3567,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - 'Payment Sessions'
     parameters:
@@ -3513,6 +3762,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - 'Card Verification'
       requestBody:
@@ -3731,5 +3989,14 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - 'API Operations'

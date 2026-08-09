@@ -986,6 +986,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - 'Partner API'
   '/api/v1/merchants/{merchant_id}':
@@ -1232,6 +1241,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - 'Partner API'
     parameters:
@@ -1612,6 +1630,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - 'Partner API'
     parameters:
@@ -1870,6 +1897,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
         502:
           description: 'The provider could not prepare the hosted session. The session and its transaction are marked failed. Create a new session to retry.'
           content:
@@ -2196,6 +2232,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - 'Payment Sessions'
     parameters:
@@ -2447,6 +2492,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - 'Payment Instruments'
   '/api/v1/payment-instruments/{paymentInstrument_public_id}':
@@ -2620,6 +2674,15 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - 'Payment Instruments'
     parameters:
@@ -2746,5 +2809,14 @@ paths:
                   data:
                     type: string
                     example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
       tags:
         - 'API Operations'

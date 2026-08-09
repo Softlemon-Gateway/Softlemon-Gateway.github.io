@@ -6,7 +6,9 @@ You need the gateway transaction id of the payment you are refunding (the `data.
 
 ## Step 1: Refund the full amount
 
-Call `POST /api/v1/transactions/{transaction_id}/refund` and omit `amount`:
+Call `POST /api/v1/transactions/{transaction_id}/refund` and omit `amount`.
+
+The `Idempotency-Key` header makes the refund safe to retry. If you are unsure whether a refund went through, resend the exact same request with the same key and you get the original response back instead of refunding twice. The [conventions page](/api-basics/conventions) has the full contract.
 
 {/* snippet:refunds:refund-full */}
 <CodeTabs syncKey="request-lang">
@@ -16,6 +18,7 @@ curl https://api.sandbox.softlemons.com/api/v1/transactions/2/refund \
   --request POST \
   --header 'Content-Type: application/json' \
   --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --header 'Idempotency-Key: 4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f' \
   --data '{}'
 ```
 
@@ -24,7 +27,8 @@ fetch('https://api.sandbox.softlemons.com/api/v1/transactions/2/refund', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Bearer {YOUR_API_KEY}'
+    Authorization: 'Bearer {YOUR_API_KEY}',
+    'Idempotency-Key': '4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f'
   },
   body: JSON.stringify({})
 })
@@ -35,7 +39,8 @@ requests.post(
     "https://api.sandbox.softlemons.com/api/v1/transactions/2/refund",
     headers={
       "Content-Type": "application/json",
-      "Authorization": "Bearer {YOUR_API_KEY}"
+      "Authorization": "Bearer {YOUR_API_KEY}",
+      "Idempotency-Key": "4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f"
     },
     json={}
 )
@@ -51,6 +56,7 @@ Request request = new Request.Builder()
   .post(body)
   .addHeader("Content-Type", "application/json")
   .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .addHeader("Idempotency-Key", "4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f")
   .build();
 
 Response response = client.newCall(request).execute();
@@ -75,6 +81,7 @@ func main() {
 
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+	req.Header.Add("Idempotency-Key", "4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f")
 
 	res, _ := http.DefaultClient.Do(req)
 
@@ -92,6 +99,7 @@ using var client = new HttpClient();
 
 var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/transactions/2/refund");
 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Headers.TryAddWithoutValidation("Idempotency-Key", "4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f");
 request.Content = new StringContent(
 """
 {}
@@ -111,6 +119,7 @@ val request = Request.Builder()
   .post(body)
   .addHeader("Content-Type", "application/json")
   .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .addHeader("Idempotency-Key", "4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f")
   .build()
 
 val response = client.newCall(request).execute()
@@ -120,7 +129,8 @@ val response = client.newCall(request).execute()
 #import <Foundation/Foundation.h>
 
 NSDictionary *headers = @{ @"Content-Type": @"application/json",
-                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+                           @"Authorization": @"Bearer {YOUR_API_KEY}",
+                           @"Idempotency-Key": @"4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f" };
 
 NSDictionary *parameters = @{  };
 
@@ -150,7 +160,7 @@ completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 $ch = curl_init("https://api.sandbox.softlemons.com/api/v1/transactions/2/refund");
 
 curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}', 'Idempotency-Key: 4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f']);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([]));
 
 curl_exec($ch);
@@ -170,6 +180,7 @@ http.use_ssl = true
 request = Net::HTTP::Post.new(url)
 request["Content-Type"] = 'application/json'
 request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request["Idempotency-Key"] = '4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f'
 request.body = <<~JSON
 {}
 JSON
@@ -185,6 +196,7 @@ var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/ap
 request.httpMethod = "POST"
 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+request.setValue("4c9d2e8f-6b1a-4f3c-8d7e-5a2b9c6d1e4f", forHTTPHeaderField: "Idempotency-Key")
 let jsonBody = #"""
 {}
 """#
@@ -236,6 +248,7 @@ curl https://api.sandbox.softlemons.com/api/v1/transactions/2/refund \
   --request POST \
   --header 'Content-Type: application/json' \
   --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --header 'Idempotency-Key: e5a2c8f4-9d1b-4c6e-b7a3-2f8d5c1e9b4a' \
   --data '{
   "amount": 5
 }'
@@ -246,7 +259,8 @@ fetch('https://api.sandbox.softlemons.com/api/v1/transactions/2/refund', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Bearer {YOUR_API_KEY}'
+    Authorization: 'Bearer {YOUR_API_KEY}',
+    'Idempotency-Key': 'e5a2c8f4-9d1b-4c6e-b7a3-2f8d5c1e9b4a'
   },
   body: JSON.stringify({
     amount: 5
@@ -259,7 +273,8 @@ requests.post(
     "https://api.sandbox.softlemons.com/api/v1/transactions/2/refund",
     headers={
       "Content-Type": "application/json",
-      "Authorization": "Bearer {YOUR_API_KEY}"
+      "Authorization": "Bearer {YOUR_API_KEY}",
+      "Idempotency-Key": "e5a2c8f4-9d1b-4c6e-b7a3-2f8d5c1e9b4a"
     },
     json={
       "amount": 5
@@ -277,6 +292,7 @@ Request request = new Request.Builder()
   .post(body)
   .addHeader("Content-Type", "application/json")
   .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .addHeader("Idempotency-Key", "e5a2c8f4-9d1b-4c6e-b7a3-2f8d5c1e9b4a")
   .build();
 
 Response response = client.newCall(request).execute();
@@ -303,6 +319,7 @@ func main() {
 
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+	req.Header.Add("Idempotency-Key", "e5a2c8f4-9d1b-4c6e-b7a3-2f8d5c1e9b4a")
 
 	res, _ := http.DefaultClient.Do(req)
 
@@ -320,6 +337,7 @@ using var client = new HttpClient();
 
 var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/transactions/2/refund");
 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Headers.TryAddWithoutValidation("Idempotency-Key", "e5a2c8f4-9d1b-4c6e-b7a3-2f8d5c1e9b4a");
 request.Content = new StringContent(
 """
 {
@@ -341,6 +359,7 @@ val request = Request.Builder()
   .post(body)
   .addHeader("Content-Type", "application/json")
   .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .addHeader("Idempotency-Key", "e5a2c8f4-9d1b-4c6e-b7a3-2f8d5c1e9b4a")
   .build()
 
 val response = client.newCall(request).execute()
@@ -350,7 +369,8 @@ val response = client.newCall(request).execute()
 #import <Foundation/Foundation.h>
 
 NSDictionary *headers = @{ @"Content-Type": @"application/json",
-                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+                           @"Authorization": @"Bearer {YOUR_API_KEY}",
+                           @"Idempotency-Key": @"e5a2c8f4-9d1b-4c6e-b7a3-2f8d5c1e9b4a" };
 
 NSDictionary *parameters = @{ @"amount": @5 };
 
@@ -380,7 +400,7 @@ completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 $ch = curl_init("https://api.sandbox.softlemons.com/api/v1/transactions/2/refund");
 
 curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}', 'Idempotency-Key: e5a2c8f4-9d1b-4c6e-b7a3-2f8d5c1e9b4a']);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'amount' => 5
 ]));
@@ -402,6 +422,7 @@ http.use_ssl = true
 request = Net::HTTP::Post.new(url)
 request["Content-Type"] = 'application/json'
 request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request["Idempotency-Key"] = 'e5a2c8f4-9d1b-4c6e-b7a3-2f8d5c1e9b4a'
 request.body = <<~JSON
 {
   "amount": 5
@@ -419,6 +440,7 @@ var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/ap
 request.httpMethod = "POST"
 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+request.setValue("e5a2c8f4-9d1b-4c6e-b7a3-2f8d5c1e9b4a", forHTTPHeaderField: "Idempotency-Key")
 let jsonBody = #"""
 {
   "amount": 5
@@ -612,3 +634,4 @@ The parent's `refunded_amount` field reports the cumulative refunds in minor uni
 - Amounts in refund requests are major units (`5.00`), while responses and webhooks report minor units (`500`).
 - Refund rows sharing the parent's reference is expected and correct. It is not a duplicate. See the [duplicate protection guide](/guides/duplicate-protection).
 - A fully refunded payment is terminal. Refunding a different payment for the same customer is a new operation on that payment's own transaction id.
+- A replayed request answers with the response stored at first execution and an `Idempotency-Replayed: true` header. Reusing a key with a different body returns HTTP 409 with `ERR_IDEMPOTENCY_CONFLICT`, so generate a fresh key per refund.

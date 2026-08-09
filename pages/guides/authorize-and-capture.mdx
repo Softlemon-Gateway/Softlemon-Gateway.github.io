@@ -353,7 +353,9 @@ The funds are reserved on the customer's card and the transaction reports status
 
 ## Step 2: Capture when you are ready to settle
 
-Call `POST /api/v1/transactions/{transaction_id}/capture` with the authorization's id (`2` above). Omit `amount` to capture the full authorized amount:
+Call `POST /api/v1/transactions/{transaction_id}/capture` with the authorization's id (`2` above). Omit `amount` to capture the full authorized amount.
+
+The `Idempotency-Key` header makes the capture safe to retry. If the connection drops, resend the exact same request with the same key and you get the original response back instead of capturing twice. The [conventions page](/api-basics/conventions) has the full contract. Voids and refunds accept the header too.
 
 {/* snippet:authorize-and-capture:capture-full */}
 <CodeTabs syncKey="request-lang">
@@ -363,6 +365,7 @@ curl https://api.sandbox.softlemons.com/api/v1/transactions/2/capture \
   --request POST \
   --header 'Content-Type: application/json' \
   --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --header 'Idempotency-Key: 9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f' \
   --data '{}'
 ```
 
@@ -371,7 +374,8 @@ fetch('https://api.sandbox.softlemons.com/api/v1/transactions/2/capture', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Bearer {YOUR_API_KEY}'
+    Authorization: 'Bearer {YOUR_API_KEY}',
+    'Idempotency-Key': '9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f'
   },
   body: JSON.stringify({})
 })
@@ -382,7 +386,8 @@ requests.post(
     "https://api.sandbox.softlemons.com/api/v1/transactions/2/capture",
     headers={
       "Content-Type": "application/json",
-      "Authorization": "Bearer {YOUR_API_KEY}"
+      "Authorization": "Bearer {YOUR_API_KEY}",
+      "Idempotency-Key": "9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f"
     },
     json={}
 )
@@ -398,6 +403,7 @@ Request request = new Request.Builder()
   .post(body)
   .addHeader("Content-Type", "application/json")
   .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .addHeader("Idempotency-Key", "9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f")
   .build();
 
 Response response = client.newCall(request).execute();
@@ -422,6 +428,7 @@ func main() {
 
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+	req.Header.Add("Idempotency-Key", "9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f")
 
 	res, _ := http.DefaultClient.Do(req)
 
@@ -439,6 +446,7 @@ using var client = new HttpClient();
 
 var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/transactions/2/capture");
 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Headers.TryAddWithoutValidation("Idempotency-Key", "9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f");
 request.Content = new StringContent(
 """
 {}
@@ -458,6 +466,7 @@ val request = Request.Builder()
   .post(body)
   .addHeader("Content-Type", "application/json")
   .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .addHeader("Idempotency-Key", "9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f")
   .build()
 
 val response = client.newCall(request).execute()
@@ -467,7 +476,8 @@ val response = client.newCall(request).execute()
 #import <Foundation/Foundation.h>
 
 NSDictionary *headers = @{ @"Content-Type": @"application/json",
-                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+                           @"Authorization": @"Bearer {YOUR_API_KEY}",
+                           @"Idempotency-Key": @"9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f" };
 
 NSDictionary *parameters = @{  };
 
@@ -497,7 +507,7 @@ completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 $ch = curl_init("https://api.sandbox.softlemons.com/api/v1/transactions/2/capture");
 
 curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}', 'Idempotency-Key: 9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f']);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([]));
 
 curl_exec($ch);
@@ -517,6 +527,7 @@ http.use_ssl = true
 request = Net::HTTP::Post.new(url)
 request["Content-Type"] = 'application/json'
 request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request["Idempotency-Key"] = '9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f'
 request.body = <<~JSON
 {}
 JSON
@@ -532,6 +543,7 @@ var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/ap
 request.httpMethod = "POST"
 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+request.setValue("9f2c7d3e-1a5b-4c8d-9e6f-2b7a8c1d4e5f", forHTTPHeaderField: "Idempotency-Key")
 let jsonBody = #"""
 {}
 """#
@@ -586,6 +598,7 @@ curl https://api.sandbox.softlemons.com/api/v1/transactions/2/capture \
   --request POST \
   --header 'Content-Type: application/json' \
   --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --header 'Idempotency-Key: b3e8f1a6-7c2d-4e9b-8a5f-1d6c3b9e2f7a' \
   --data '{
   "amount": 5
 }'
@@ -596,7 +609,8 @@ fetch('https://api.sandbox.softlemons.com/api/v1/transactions/2/capture', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Bearer {YOUR_API_KEY}'
+    Authorization: 'Bearer {YOUR_API_KEY}',
+    'Idempotency-Key': 'b3e8f1a6-7c2d-4e9b-8a5f-1d6c3b9e2f7a'
   },
   body: JSON.stringify({
     amount: 5
@@ -609,7 +623,8 @@ requests.post(
     "https://api.sandbox.softlemons.com/api/v1/transactions/2/capture",
     headers={
       "Content-Type": "application/json",
-      "Authorization": "Bearer {YOUR_API_KEY}"
+      "Authorization": "Bearer {YOUR_API_KEY}",
+      "Idempotency-Key": "b3e8f1a6-7c2d-4e9b-8a5f-1d6c3b9e2f7a"
     },
     json={
       "amount": 5
@@ -627,6 +642,7 @@ Request request = new Request.Builder()
   .post(body)
   .addHeader("Content-Type", "application/json")
   .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .addHeader("Idempotency-Key", "b3e8f1a6-7c2d-4e9b-8a5f-1d6c3b9e2f7a")
   .build();
 
 Response response = client.newCall(request).execute();
@@ -653,6 +669,7 @@ func main() {
 
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+	req.Header.Add("Idempotency-Key", "b3e8f1a6-7c2d-4e9b-8a5f-1d6c3b9e2f7a")
 
 	res, _ := http.DefaultClient.Do(req)
 
@@ -670,6 +687,7 @@ using var client = new HttpClient();
 
 var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/transactions/2/capture");
 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Headers.TryAddWithoutValidation("Idempotency-Key", "b3e8f1a6-7c2d-4e9b-8a5f-1d6c3b9e2f7a");
 request.Content = new StringContent(
 """
 {
@@ -691,6 +709,7 @@ val request = Request.Builder()
   .post(body)
   .addHeader("Content-Type", "application/json")
   .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .addHeader("Idempotency-Key", "b3e8f1a6-7c2d-4e9b-8a5f-1d6c3b9e2f7a")
   .build()
 
 val response = client.newCall(request).execute()
@@ -700,7 +719,8 @@ val response = client.newCall(request).execute()
 #import <Foundation/Foundation.h>
 
 NSDictionary *headers = @{ @"Content-Type": @"application/json",
-                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+                           @"Authorization": @"Bearer {YOUR_API_KEY}",
+                           @"Idempotency-Key": @"b3e8f1a6-7c2d-4e9b-8a5f-1d6c3b9e2f7a" };
 
 NSDictionary *parameters = @{ @"amount": @5 };
 
@@ -730,7 +750,7 @@ completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 $ch = curl_init("https://api.sandbox.softlemons.com/api/v1/transactions/2/capture");
 
 curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}', 'Idempotency-Key: b3e8f1a6-7c2d-4e9b-8a5f-1d6c3b9e2f7a']);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'amount' => 5
 ]));
@@ -752,6 +772,7 @@ http.use_ssl = true
 request = Net::HTTP::Post.new(url)
 request["Content-Type"] = 'application/json'
 request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request["Idempotency-Key"] = 'b3e8f1a6-7c2d-4e9b-8a5f-1d6c3b9e2f7a'
 request.body = <<~JSON
 {
   "amount": 5
@@ -769,6 +790,7 @@ var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/ap
 request.httpMethod = "POST"
 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+request.setValue("b3e8f1a6-7c2d-4e9b-8a5f-1d6c3b9e2f7a", forHTTPHeaderField: "Idempotency-Key")
 let jsonBody = #"""
 {
   "amount": 5
@@ -803,6 +825,7 @@ curl https://api.sandbox.softlemons.com/api/v1/transactions/2/void \
   --request POST \
   --header 'Content-Type: application/json' \
   --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --header 'Idempotency-Key: 7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c' \
   --data '{}'
 ```
 
@@ -811,7 +834,8 @@ fetch('https://api.sandbox.softlemons.com/api/v1/transactions/2/void', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: 'Bearer {YOUR_API_KEY}'
+    Authorization: 'Bearer {YOUR_API_KEY}',
+    'Idempotency-Key': '7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c'
   },
   body: JSON.stringify({})
 })
@@ -822,7 +846,8 @@ requests.post(
     "https://api.sandbox.softlemons.com/api/v1/transactions/2/void",
     headers={
       "Content-Type": "application/json",
-      "Authorization": "Bearer {YOUR_API_KEY}"
+      "Authorization": "Bearer {YOUR_API_KEY}",
+      "Idempotency-Key": "7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c"
     },
     json={}
 )
@@ -838,6 +863,7 @@ Request request = new Request.Builder()
   .post(body)
   .addHeader("Content-Type", "application/json")
   .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .addHeader("Idempotency-Key", "7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c")
   .build();
 
 Response response = client.newCall(request).execute();
@@ -862,6 +888,7 @@ func main() {
 
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+	req.Header.Add("Idempotency-Key", "7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c")
 
 	res, _ := http.DefaultClient.Do(req)
 
@@ -879,6 +906,7 @@ using var client = new HttpClient();
 
 var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/transactions/2/void");
 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Headers.TryAddWithoutValidation("Idempotency-Key", "7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c");
 request.Content = new StringContent(
 """
 {}
@@ -898,6 +926,7 @@ val request = Request.Builder()
   .post(body)
   .addHeader("Content-Type", "application/json")
   .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .addHeader("Idempotency-Key", "7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c")
   .build()
 
 val response = client.newCall(request).execute()
@@ -907,7 +936,8 @@ val response = client.newCall(request).execute()
 #import <Foundation/Foundation.h>
 
 NSDictionary *headers = @{ @"Content-Type": @"application/json",
-                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+                           @"Authorization": @"Bearer {YOUR_API_KEY}",
+                           @"Idempotency-Key": @"7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c" };
 
 NSDictionary *parameters = @{  };
 
@@ -937,7 +967,7 @@ completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 $ch = curl_init("https://api.sandbox.softlemons.com/api/v1/transactions/2/void");
 
 curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}', 'Idempotency-Key: 7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c']);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([]));
 
 curl_exec($ch);
@@ -957,6 +987,7 @@ http.use_ssl = true
 request = Net::HTTP::Post.new(url)
 request["Content-Type"] = 'application/json'
 request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request["Idempotency-Key"] = '7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c'
 request.body = <<~JSON
 {}
 JSON
@@ -972,6 +1003,7 @@ var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/ap
 request.httpMethod = "POST"
 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+request.setValue("7e1f4a9c-3d6b-4e2f-a8c5-9b4d7e2f6a1c", forHTTPHeaderField: "Idempotency-Key")
 let jsonBody = #"""
 {}
 """#

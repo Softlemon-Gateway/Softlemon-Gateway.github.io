@@ -1,7 +1,7 @@
 {
   "item": [
     {
-      "id": "306c77b3-d4ec-4686-9777-3f644c3374a4",
+      "id": "17c95c22-ab71-460a-8b91-30f01e765389",
       "name": "Partner API",
       "description": {
         "content": "",
@@ -9,7 +9,7 @@
       },
       "item": [
         {
-          "id": "c6c32bb0-af99-4d2b-8753-37f0979dd97c",
+          "id": "a5e7535b-8b31-46f1-9753-a16445637bd9",
           "name": "List Merchants",
           "request": {
             "name": "List Merchants",
@@ -40,7 +40,7 @@
           },
           "response": [
             {
-              "id": "d4323154-823d-4b58-bc9b-8ea66f9a7808",
+              "id": "880e9b12-1b7d-4736-8b64-03e97a8c102c",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -84,7 +84,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "ce1ea937-64d4-4386-a515-1d4d73a782ab",
+              "id": "bdad5091-165f-4f1f-9843-739b1fb3d4bb",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -128,7 +128,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "d3584746-7ed8-495c-8691-973cbfd08a63",
+              "id": "435b6ac8-fce5-41c8-9112-ca5b4dd3dd52",
               "name": "The API key is not a partner key or the partner account is not active. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -173,7 +173,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "69e22582-5dc0-4eff-931f-db56215dfea6",
+              "id": "1ae285c3-2a5c-45b2-b5c0-fa9cc0bd5adc",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -209,6 +209,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "1749"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "1749"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -224,7 +236,7 @@
           }
         },
         {
-          "id": "f9d0f8a0-b3ca-41cf-9a05-652998e324b2",
+          "id": "e3a9ec31-6b17-4b87-bad1-ab96c5831df4",
           "name": "Get Merchant",
           "request": {
             "name": "Get Merchant",
@@ -264,7 +276,7 @@
           },
           "response": [
             {
-              "id": "4a8f9d8f-9c8c-4ab1-87bf-e8a041cf6952",
+              "id": "7310eb50-7d79-48ec-9654-663d969b24f0",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -317,7 +329,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "ae7a7187-d564-4001-a625-ed50fe69fc3a",
+              "id": "63be7d5c-5f7d-49f9-a4e1-92a516a6b7fa",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -370,7 +382,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "7b2f75c9-da11-4116-9d3b-c90dbfed5ff0",
+              "id": "d13a9286-1eeb-410b-8736-14c8d7292b00",
               "name": "The API key is not a partner key or the partner account is not active. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -424,7 +436,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "507e967f-7452-44a9-aee4-a9de21e205f9",
+              "id": "09e4e994-f1bc-49a7-a982-a9d211d1c1b1",
               "name": "The merchant does not exist or is not linked to your partner account. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -478,7 +490,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "6ea51e29-3e79-4b92-8ab3-6cf4a1e1148b",
+              "id": "ed99cf91-ebee-4cae-9a5c-5596a299b20e",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -523,6 +535,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "1749"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "1749"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -538,7 +562,7 @@
           }
         },
         {
-          "id": "f157def9-a930-4248-a69d-4bef1e124b84",
+          "id": "650af280-0969-4fb4-97f7-dadf21196f4a",
           "name": "Get Merchant Transactions",
           "request": {
             "name": "Get Merchant Transactions",
@@ -604,7 +628,7 @@
           },
           "response": [
             {
-              "id": "c92308b3-5763-4e4d-87e3-d2401e141006",
+              "id": "44a0065c-fe9c-4581-a92a-74783156e358",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -675,7 +699,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "1731ac75-acdd-46c2-9735-85c68c22890b",
+              "id": "d9ef10d3-21e5-4b94-8ec4-5f09eca79928",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -746,7 +770,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c6b05282-300f-4f3d-85ef-efdb78fbfc83",
+              "id": "a1b5ddda-f6ef-426c-b073-9c1de06016d0",
               "name": "The API key is not a partner key or the partner account is not active. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -818,7 +842,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "144776cb-97b0-425f-ab11-e4d102ac759c",
+              "id": "367be07b-622d-4bd3-852a-b149256183ce",
               "name": "The merchant does not exist or is not linked to your partner account. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -890,7 +914,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "3625a16b-cabe-463d-8861-e5537cd364ab",
+              "id": "7d352bc0-4477-42b0-8b3b-71747b59e437",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -953,6 +977,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "1749"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "1749"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -971,7 +1007,7 @@
       "event": []
     },
     {
-      "id": "684c7f60-0c0e-48cf-8c92-8b340aa90c2c",
+      "id": "7a40d969-cb32-4025-a022-e285356903ab",
       "name": "Payment Sessions",
       "description": {
         "content": "",
@@ -979,7 +1015,7 @@
       },
       "item": [
         {
-          "id": "33d774dd-6bfb-4317-8b97-7e84494dc920",
+          "id": "b5fbbb9b-662b-42a2-adda-43ae5f26ed69",
           "name": "Create a payment session",
           "request": {
             "name": "Create a payment session",
@@ -1023,7 +1059,7 @@
           },
           "response": [
             {
-              "id": "2848fd93-8795-47a5-8b16-84574b006ec4",
+              "id": "64f74dfe-2e20-4df7-9175-2b681b260eb8",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1075,7 +1111,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "1a1655eb-11d3-4c31-bab3-a223a4945b3f",
+              "id": "d9c678ce-3a54-4f35-b8f5-de508105b048",
               "name": "Session rejected. The `code` field identifies the reason, for example ERR_PAYMENT_METHOD_NOT_ENABLED when the method, currency or country is not enabled for the merchant. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -1128,7 +1164,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "5a993290-d0c7-43b1-9224-18a83661ff2d",
+              "id": "08f35d1c-7dd5-45de-b80a-5b409fabbe8d",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1180,7 +1216,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e847bb8c-34a9-44cf-ae8a-ea5df33f3cde",
+              "id": "7ccb8369-241b-4ad8-8085-c48a35f223e6",
               "name": "A session or transaction with this `reference` already exists. See the [duplicate protection guide](/guides/duplicate-protection).",
               "originalRequest": {
                 "url": {
@@ -1233,7 +1269,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "6302a17a-80c3-4ff4-b120-022481751d4c",
+              "id": "3d2c1855-867a-4519-833d-84e27a85b5e0",
               "name": "Validation failed. This includes any request carrying card, token, CVV or voucher data.",
               "originalRequest": {
                 "url": {
@@ -1286,7 +1322,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "bcb299a3-cedd-4365-82ef-a48206277140",
+              "id": "e12d19b6-c2ea-41c5-a9b0-6a287d5b6abc",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -1330,6 +1366,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "1749"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "1749"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -1339,7 +1387,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "3b52029d-13f9-4a02-bff2-ae296fcdaf09",
+              "id": "dea2fe4c-d881-459a-8f62-fd0ef7869c4d",
               "name": "The provider could not prepare the hosted session. The session and its transaction are marked failed. Create a new session to retry.",
               "originalRequest": {
                 "url": {
@@ -1398,7 +1446,7 @@
           }
         },
         {
-          "id": "779789b4-0b67-4569-86df-dec647328a97",
+          "id": "9b65b9e9-b4e9-472a-a822-9af0ea36b651",
           "name": "Get a payment session",
           "request": {
             "name": "Get a payment session",
@@ -1438,7 +1486,7 @@
           },
           "response": [
             {
-              "id": "d2abd684-d1e7-4301-9dcf-c155d3c454ca",
+              "id": "d69473f7-cd8e-442c-904b-1357d6c652c0",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1491,7 +1539,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "8212374a-3542-41a8-bd2e-21e0cd75063d",
+              "id": "38816428-96a8-4d1f-be0a-46630945d1e4",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1544,7 +1592,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "d2a4b4cf-f993-42b0-9c0e-106946ee932d",
+              "id": "f221fd27-49d9-4d56-b4b8-5dadb05f2f45",
               "name": "The session belongs to a merchant this API key cannot access.",
               "originalRequest": {
                 "url": {
@@ -1598,7 +1646,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "163c320c-acdd-48f1-adb8-1d3543b1e659",
+              "id": "c5221f8f-972b-4a75-aa69-c92c4eca758f",
               "name": "No payment session with this id exists. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -1652,7 +1700,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "487b92ca-7a14-406f-a72b-d4d199926a56",
+              "id": "e1d3c164-2a08-41b2-b6a8-2ec07451d371",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -1697,6 +1745,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "1749"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "1749"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -1715,7 +1775,7 @@
       "event": []
     },
     {
-      "id": "ef5ff821-5ee5-488d-a136-6fba543da598",
+      "id": "224759a3-7b65-4c3a-ae6e-3cbb68303e0c",
       "name": "Payment Instruments",
       "description": {
         "content": "",
@@ -1723,7 +1783,7 @@
       },
       "item": [
         {
-          "id": "cd4e8caf-ea75-4ef5-a345-772e3c13ab4a",
+          "id": "72463630-7f2d-4ae5-9c0b-57f3f5215289",
           "name": "List payment instruments",
           "request": {
             "name": "List payment instruments",
@@ -1779,7 +1839,7 @@
           },
           "response": [
             {
-              "id": "feeb6442-1a48-4489-8736-6f50432785a7",
+              "id": "dc2e0e56-cc3d-4dff-acb8-941c3e2b4d95",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1840,7 +1900,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "b272763e-eed1-4d9b-880b-34c08cccba2a",
+              "id": "0b6d6288-eba3-4f0e-a1d6-a706273c00a1",
               "name": "A partner API key omitted `merchant_id` or referenced a merchant that is not linked to it.",
               "originalRequest": {
                 "url": {
@@ -1902,7 +1962,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "53908ea0-ace8-471b-82e9-95446e4a401a",
+              "id": "abd4ae8e-0139-4da5-a65c-b73c9b26da21",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -1963,7 +2023,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "2064cc45-0a50-42be-ad55-b15f96182925",
+              "id": "c5e6cce5-c618-4372-8fd5-7605c3c19d25",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -2016,6 +2076,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "1749"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "1749"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -2031,7 +2103,7 @@
           }
         },
         {
-          "id": "3d53a079-1c55-452e-9f73-017d55322c3b",
+          "id": "0358ee38-a1eb-4811-bf36-5e5c0ba141e6",
           "name": "Revoke a payment instrument",
           "request": {
             "name": "Revoke a payment instrument",
@@ -2071,7 +2143,7 @@
           },
           "response": [
             {
-              "id": "5b53c297-8454-4387-9498-866eca4022ca",
+              "id": "9738d8dc-35a5-488e-ad4c-925ae6cce3b3",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2124,7 +2196,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "fc12830c-ee70-434c-a4dd-4ec0a180077f",
+              "id": "e20e28e2-cc34-4e5b-ae42-6b006de9888c",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2177,7 +2249,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "c316a74d-697b-434c-b3a4-49cb19233662",
+              "id": "0c4e4324-ae8b-4bf5-96ae-0a39a9c8c391",
               "name": "The instrument belongs to a merchant this API key cannot access.",
               "originalRequest": {
                 "url": {
@@ -2231,7 +2303,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "35536383-da6b-46e8-86e7-f6a5c38f652f",
+              "id": "186dbaf8-fabe-43c0-8e0b-a106218ff9be",
               "name": "No payment instrument with this id exists. See the [error catalogue](/api-basics/errors).",
               "originalRequest": {
                 "url": {
@@ -2285,7 +2357,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "face040c-f82a-4811-a4a9-39d403d36d55",
+              "id": "14c187ad-af09-4d27-9b40-5f60f75ec063",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -2330,6 +2402,18 @@
               "code": 429,
               "header": [
                 {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "1749"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "1749"
+                },
+                {
                   "key": "Content-Type",
                   "value": "application/json"
                 }
@@ -2348,7 +2432,7 @@
       "event": []
     },
     {
-      "id": "d75e2b58-6575-4219-886a-b6153156b24b",
+      "id": "9e16bcf3-a024-4f36-9939-6a33def118bc",
       "name": "API Operations",
       "description": {
         "content": "",
@@ -2356,7 +2440,7 @@
       },
       "item": [
         {
-          "id": "71637beb-4dfa-4820-ab01-40498706a2c7",
+          "id": "1127de3b-2cdc-4738-9874-101e149bd4c6",
           "name": "Get API Key Information",
           "request": {
             "name": "Get API Key Information",
@@ -2387,7 +2471,7 @@
           },
           "response": [
             {
-              "id": "fd51d2a5-5440-431f-bf22-77795069d8e5",
+              "id": "75bb9fd3-137a-4573-8854-98b695666ea2",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2431,7 +2515,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "e5a1dd11-2c70-4c1b-9f8d-159e344fb8fe",
+              "id": "bc6ce6f8-5279-46c2-987d-3c446ca50410",
               "originalRequest": {
                 "url": {
                   "path": [
@@ -2475,7 +2559,7 @@
               "_postman_previewlanguage": "json"
             },
             {
-              "id": "9f447667-0c4a-4152-8399-d5ea91610716",
+              "id": "ff9d9ea6-cd42-4476-bef3-4d3baa04e6d0",
               "name": "Rate limit exceeded. See [rate limits](/api-basics/rate-limits).",
               "originalRequest": {
                 "url": {
@@ -2510,6 +2594,18 @@
               "status": "Too Many Requests",
               "code": 429,
               "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds until the current rate limit window frees up.",
+                  "key": "Retry-After",
+                  "value": "1749"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests left in the current 60 second window. Sent on every response and 0 here.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "1749"
+                },
                 {
                   "key": "Content-Type",
                   "value": "application/json"
@@ -2547,7 +2643,7 @@
     ]
   },
   "info": {
-    "_postman_id": "001a0df6-6866-4af6-ac42-ed15ffad7945",
+    "_postman_id": "a7933d78-fd82-4e84-99b6-ef0deedb3b88",
     "name": "Softlemon Partner API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "description": {
