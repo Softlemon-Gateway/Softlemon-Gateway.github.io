@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: 'Softlemon Merchant API'
-  description: "Production-ready merchant integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the merchant integration surface for admin-provisioned API keys.\n\nUse these endpoints when a merchant is processing payments for its own account.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## Idempotent retries\n\nNetwork failures can leave you unsure whether a capture, refund or void went through. Send an `Idempotency-Key` header (any unique string up to 255 characters, a UUID works well) on `POST /api/v1/transactions/{id}/capture`, `/refund` or `/void` to make retrying safe.\n\n- Repeating the request with the same key and body within 24 hours returns the stored original response with an `Idempotency-Replayed: true` header. The money moves once.\n- Reusing a key with a different body returns HTTP 409 with code `ERR_IDEMPOTENCY_CONFLICT`. Use a fresh key for each new request.\n- While the original request is still processing, a retry returns HTTP 409 with code `ERR_IDEMPOTENT_REQUEST_IN_PROGRESS`. Wait a moment and send it again with the same key.\n\nA stored decline replays as well, so attempting a declined capture or refund again needs a new key. On `POST /api/v1/transactions` use the `reference` field instead. The [duplicate protection guide](/guides/duplicate-protection) explains how the two mechanisms differ.\n\n## 3D Secure Integration Flow\n\nSoftLemon uses a server-managed 3DS flow. You do **not** need to handle CAVV, ECI or DS Transaction IDs yourself.\n\n### Step 1: Initiate 3DS Verification\n\n`POST /api/v1/3ds/verify` with card details, amount, currency and `auth_url` (your frontend return URL).\n\n### Step 2: Handle the response\n\n- **Frictionless:** The response returns immediately with `status: full_auth`. Use the returned `id` in Step 4.\n- **Challenge:** The response includes a `challenge_url`. Redirect the cardholder to this URL to complete the bank challenge.\n\n### Step 3: Cardholder completes challenge (if applicable)\n\nAfter the cardholder completes the challenge, they are redirected to your `auth_url` with query parameters:\n\n`?card_verification_id={id}&status=full_auth` (or `status=failed`)\n\n### Step 4: Initiate the transaction\n\n`POST /api/v1/transactions` with `card_verification_data.id` set to the verification ID from Step 1 or the redirect.\n\n```json\n\"card_verification_data\": { \"id\": 43 }\n```\n\nThe API automatically retrieves the stored 3DS authentication data (including CAVV and ECI) and passes it to the payment gateway.\n\n## Integration guides\n\nStep-by-step walkthroughs for the most common flows, each with full requests and responses:\n\n- [Accept a card payment](/guides/accept-a-payment): 3D Secure verification, the sale and confirmation. Start here.\n- [Authorize now, capture later](/guides/authorize-and-capture): holds, full and partial captures and voids.\n- [Refund a payment](/guides/refunds): full and partial refunds and the events they emit.\n- [Charge a returning customer](/guides/returning-customers): repeat payments with a vault token.\n- [Accept an alternative payment](/guides/accept-an-alternative-payment): hosted redirect payments such as Paysafecard through payment sessions.\n- [Webhook integration](/guides/webhooks): signatures, retries, replays and keeping your system in sync.\n\nPrefer exploring in Postman? Download the [Merchant API Postman collection](/collections/softlemon-merchant-api.postman_collection.json) and set your API key as the Bearer token on the collection.\n\n## 3D Secure test cards\n\nUse these sandbox cards when testing `POST /api/v1/3ds/verify`.\n\n| Scheme | Flow | Returns method data | Card number | Expected result |\n|---|---|---|---|---|\n| Visa | Frictionless | Y | `4200000000000091` | Successful frictionless authentication. |\n| Visa | Frictionless | Y | `4200000000000109` | Attempted authentication. |\n| Visa | Frictionless | N | `4200000000000026` | Successful frictionless authentication. |\n| Visa | Frictionless | N | `4200000000000059` | Attempted authentication. |\n| Visa | Error | N | `4012001037461114` | Technical error. |\n| Visa | Error | N | `4012001037141112` | User not enrolled. |\n| Visa | Not Applicable | N/A | `4532497088771651` | Card not participating. |\n| Visa | Challenge | Y | `4200000000000042` | Challenge flow. |\n| Visa | Challenge | Y | `4200000000000067` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000018` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000075` | Challenge flow. |\n| Mastercard | Frictionless | Y | `5200000000000007` | Successful frictionless authentication. |\n| Mastercard | Frictionless | Y | `5200000000000023` | Attempted authentication. |\n| Mastercard | Frictionless | N | `5200000000000056` | Successful frictionless authentication. |\n| Mastercard | Frictionless | N | `5200000000000006` | Attempted authentication. |\n| Mastercard | Error | N | `5434580000000006` | Technical error. |\n| Mastercard | Error | N | `5457350076543210` | User not enrolled. |\n| Mastercard | Not Applicable | N/A | `5497260847316287` | Card not participating. |\n| Mastercard | Challenge | Y | `5200000000000015` | Challenge flow. |\n| Mastercard | Challenge | Y | `5200000000000049` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000064` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000072` | Challenge flow. |"
+  description: "Production-ready merchant integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the merchant integration surface for admin-provisioned API keys.\n\nUse these endpoints when a merchant is processing payments for its own account.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. Register your endpoint, rotate its secret and replay deliveries through the Webhook Management endpoints. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## Idempotent retries\n\nNetwork failures can leave you unsure whether a capture, refund or void went through. Send an `Idempotency-Key` header (any unique string up to 255 characters, a UUID works well) on `POST /api/v1/transactions/{id}/capture`, `/refund` or `/void` to make retrying safe.\n\n- Repeating the request with the same key and body within 24 hours returns the stored original response with an `Idempotency-Replayed: true` header. The money moves once.\n- Reusing a key with a different body returns HTTP 409 with code `ERR_IDEMPOTENCY_CONFLICT`. Use a fresh key for each new request.\n- While the original request is still processing, a retry returns HTTP 409 with code `ERR_IDEMPOTENT_REQUEST_IN_PROGRESS`. Wait a moment and send it again with the same key.\n\nA stored decline replays as well, so attempting a declined capture or refund again needs a new key. On `POST /api/v1/transactions` use the `reference` field instead. The [duplicate protection guide](/guides/duplicate-protection) explains how the two mechanisms differ.\n\n## 3D Secure Integration Flow\n\nSoftLemon uses a server-managed 3DS flow. You do **not** need to handle CAVV, ECI or DS Transaction IDs yourself.\n\n### Step 1: Initiate 3DS Verification\n\n`POST /api/v1/3ds/verify` with card details, amount, currency and `auth_url` (your frontend return URL).\n\n### Step 2: Handle the response\n\n- **Frictionless:** The response returns immediately with `status: full_auth`. Use the returned `id` in Step 4.\n- **Challenge:** The response includes a `challenge_url`. Redirect the cardholder to this URL to complete the bank challenge.\n\n### Step 3: Cardholder completes challenge (if applicable)\n\nAfter the cardholder completes the challenge, they are redirected to your `auth_url` with query parameters:\n\n`?card_verification_id={id}&status=full_auth` (or `status=failed`)\n\n### Step 4: Initiate the transaction\n\n`POST /api/v1/transactions` with `card_verification_data.id` set to the verification ID from Step 1 or the redirect.\n\n```json\n\"card_verification_data\": { \"id\": 43 }\n```\n\nThe API automatically retrieves the stored 3DS authentication data (including CAVV and ECI) and passes it to the payment gateway.\n\n## Integration guides\n\nStep-by-step walkthroughs for the most common flows, each with full requests and responses:\n\n- [Accept a card payment](/guides/accept-a-payment): 3D Secure verification, the sale and confirmation. Start here.\n- [Authorize now, capture later](/guides/authorize-and-capture): holds, full and partial captures and voids.\n- [Refund a payment](/guides/refunds): full and partial refunds and the events they emit.\n- [Charge a returning customer](/guides/returning-customers): repeat payments with a vault token.\n- [Accept an alternative payment](/guides/accept-an-alternative-payment): hosted redirect payments such as Paysafecard through payment sessions.\n- [Set up webhooks](/guides/set-up-webhooks): register your endpoint, capture the signing secret, test and monitor deliveries.\n- [Webhook integration](/guides/webhooks): signatures, retries, replays and keeping your system in sync.\n\nPrefer exploring in Postman? Download the [Merchant API Postman collection](/collections/softlemon-merchant-api.postman_collection.json) and set your API key as the Bearer token on the collection.\n\n## 3D Secure test cards\n\nUse these sandbox cards when testing `POST /api/v1/3ds/verify`.\n\n| Scheme | Flow | Returns method data | Card number | Expected result |\n|---|---|---|---|---|\n| Visa | Frictionless | Y | `4200000000000091` | Successful frictionless authentication. |\n| Visa | Frictionless | Y | `4200000000000109` | Attempted authentication. |\n| Visa | Frictionless | N | `4200000000000026` | Successful frictionless authentication. |\n| Visa | Frictionless | N | `4200000000000059` | Attempted authentication. |\n| Visa | Error | N | `4012001037461114` | Technical error. |\n| Visa | Error | N | `4012001037141112` | User not enrolled. |\n| Visa | Not Applicable | N/A | `4532497088771651` | Card not participating. |\n| Visa | Challenge | Y | `4200000000000042` | Challenge flow. |\n| Visa | Challenge | Y | `4200000000000067` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000018` | Challenge flow. |\n| Visa | Challenge | N | `4200000000000075` | Challenge flow. |\n| Mastercard | Frictionless | Y | `5200000000000007` | Successful frictionless authentication. |\n| Mastercard | Frictionless | Y | `5200000000000023` | Attempted authentication. |\n| Mastercard | Frictionless | N | `5200000000000056` | Successful frictionless authentication. |\n| Mastercard | Frictionless | N | `5200000000000006` | Attempted authentication. |\n| Mastercard | Error | N | `5434580000000006` | Technical error. |\n| Mastercard | Error | N | `5457350076543210` | User not enrolled. |\n| Mastercard | Not Applicable | N/A | `5497260847316287` | Card not participating. |\n| Mastercard | Challenge | Y | `5200000000000015` | Challenge flow. |\n| Mastercard | Challenge | Y | `5200000000000049` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000064` | Challenge flow. |\n| Mastercard | Challenge | N | `5200000000000072` | Challenge flow. |"
   version: 0.9.0
 servers:
   -
@@ -18,6 +18,9 @@ tags:
     description: ''
   -
     name: 'Card Verification'
+    description: ''
+  -
+    name: 'Webhook Management'
     description: ''
   -
     name: 'API Operations'
@@ -3874,6 +3877,1731 @@ paths:
                 - currency
                 - card
                 - auth_url
+  /api/v1/webhook:
+    get:
+      summary: 'Get webhook configuration'
+      operationId: getWebhookConfiguration
+      description: "Retrieve the webhook endpoint configuration: URL, active flag, event\nsubscription and delivery health. The signing secret is never\nreturned, `has_secret` only reports that one exists. Returns 404\nuntil an endpoint is created with `PUT /api/v1/webhook`.\n\nMerchant API keys read their own configuration. Partner API keys must\ninclude `merchant_id` for a linked merchant."
+      parameters:
+        -
+          in: query
+          name: merchant_id
+          description: 'Required for partner API keys. Must be a merchant linked to the authenticated partner.'
+          example: 123
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Webhook endpoint retrieved successfully'
+                  code: ''
+                  data:
+                    id: 12
+                    merchant_id: 123
+                    url: 'https://example.com/webhooks/softlemon'
+                    is_active: true
+                    events: null
+                    has_secret: true
+                    last_success_at: '2026-08-09T14:12:03.000000Z'
+                    last_failure_at: null
+                    consecutive_failures: 0
+                    created_at: '2026-08-01T10:00:00.000000Z'
+                    updated_at: '2026-08-09T14:12:03.000000Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Webhook endpoint retrieved successfully'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 12
+                      merchant_id:
+                        type: integer
+                        example: 123
+                      url:
+                        type: string
+                        example: 'https://example.com/webhooks/softlemon'
+                      is_active:
+                        type: boolean
+                        example: true
+                      events:
+                        type: string
+                        example: null
+                      has_secret:
+                        type: boolean
+                        example: true
+                      last_success_at:
+                        type: string
+                        example: '2026-08-09T14:12:03.000000Z'
+                      last_failure_at:
+                        type: string
+                        example: null
+                      consecutive_failures:
+                        type: integer
+                        example: 0
+                      created_at:
+                        type: string
+                        example: '2026-08-01T10:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2026-08-09T14:12:03.000000Z'
+        400:
+          description: 'A partner API key omitted `merchant_id` or referenced a merchant that is not linked to it.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        404:
+          description: 'No webhook endpoint is configured yet.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Webhook endpoint not found for this merchant.'
+                  code: ERR_NOT_FOUND
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Webhook endpoint not found for this merchant.'
+                  code:
+                    type: string
+                    example: ERR_NOT_FOUND
+                  data:
+                    type: string
+                    example: null
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
+      tags:
+        - 'Webhook Management'
+    put:
+      summary: 'Create or update the webhook endpoint'
+      operationId: createOrUpdateTheWebhookEndpoint
+      description: "Register the HTTPS endpoint that receives signed webhook events, or\nupdate it in place. On first creation the response includes the\nplaintext signing secret exactly once. The secret is stored encrypted\nand can never be read back, so capture it from that response and\nstore it securely. Updates never return or regenerate the secret.\n\nThe URL must use HTTPS on a publicly resolvable host. URLs with\nembedded credentials, localhost style hosts or private IP addresses\nare rejected. See the [set up webhooks guide](/guides/set-up-webhooks)\nfor the full walkthrough.\n\nMerchant API keys manage their own endpoint (one per merchant).\nPartner API keys must include `merchant_id` for a linked merchant."
+      parameters: []
+      responses:
+        200:
+          description: 'Endpoint updated. The secret is never returned again.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Webhook endpoint updated successfully'
+                  code: ''
+                  data:
+                    id: 12
+                    merchant_id: 123
+                    url: 'https://example.com/webhooks/softlemon'
+                    is_active: true
+                    events:
+                      - transaction.captured
+                      - transaction.refunded
+                      - transaction.failed
+                    has_secret: true
+                    last_success_at: '2026-08-09T14:12:03.000000Z'
+                    last_failure_at: null
+                    consecutive_failures: 0
+                    created_at: '2026-08-01T10:00:00.000000Z'
+                    updated_at: '2026-08-10T09:30:12.000000Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Webhook endpoint updated successfully'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 12
+                      merchant_id:
+                        type: integer
+                        example: 123
+                      url:
+                        type: string
+                        example: 'https://example.com/webhooks/softlemon'
+                      is_active:
+                        type: boolean
+                        example: true
+                      events:
+                        type: array
+                        example:
+                          - transaction.captured
+                          - transaction.refunded
+                          - transaction.failed
+                        items:
+                          type: string
+                      has_secret:
+                        type: boolean
+                        example: true
+                      last_success_at:
+                        type: string
+                        example: '2026-08-09T14:12:03.000000Z'
+                      last_failure_at:
+                        type: string
+                        example: null
+                      consecutive_failures:
+                        type: integer
+                        example: 0
+                      created_at:
+                        type: string
+                        example: '2026-08-01T10:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2026-08-10T09:30:12.000000Z'
+        201:
+          description: 'Endpoint created. The signing secret appears only in this response.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Webhook endpoint created successfully'
+                  code: ''
+                  data:
+                    endpoint:
+                      id: 12
+                      merchant_id: 123
+                      url: 'https://example.com/webhooks/softlemon'
+                      is_active: true
+                      events: null
+                      has_secret: true
+                      last_success_at: null
+                      last_failure_at: null
+                      consecutive_failures: 0
+                      created_at: '2026-08-01T10:00:00.000000Z'
+                      updated_at: '2026-08-01T10:00:00.000000Z'
+                    secret: whsec_9f8e7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a0
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Webhook endpoint created successfully'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      endpoint:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 12
+                          merchant_id:
+                            type: integer
+                            example: 123
+                          url:
+                            type: string
+                            example: 'https://example.com/webhooks/softlemon'
+                          is_active:
+                            type: boolean
+                            example: true
+                          events:
+                            type: string
+                            example: null
+                          has_secret:
+                            type: boolean
+                            example: true
+                          last_success_at:
+                            type: string
+                            example: null
+                          last_failure_at:
+                            type: string
+                            example: null
+                          consecutive_failures:
+                            type: integer
+                            example: 0
+                          created_at:
+                            type: string
+                            example: '2026-08-01T10:00:00.000000Z'
+                          updated_at:
+                            type: string
+                            example: '2026-08-01T10:00:00.000000Z'
+                      secret:
+                        type: string
+                        example: whsec_9f8e7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a0
+        400:
+          description: 'A partner API key omitted `merchant_id` or referenced a merchant that is not linked to it.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        422:
+          description: 'The URL or event list failed validation. See the [error catalogue](/api-basics/errors).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Validation errors'
+                  code: ERR_VALIDATION_FAILED
+                  data: null
+                  errors:
+                    url:
+                      - 'The url must use HTTPS.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  code:
+                    type: string
+                    example: ERR_VALIDATION_FAILED
+                  data:
+                    type: string
+                    example: null
+                  errors:
+                    type: object
+                    properties:
+                      url:
+                        type: array
+                        example:
+                          - 'The url must use HTTPS.'
+                        items:
+                          type: string
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
+      tags:
+        - 'Webhook Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  description: 'The HTTPS endpoint that receives webhook events. Maximum 2048 characters.'
+                  example: 'https://example.com/webhooks/softlemon'
+                is_active:
+                  type: boolean
+                  description: 'Pause or resume deliveries without losing the configuration. Defaults to true.'
+                  example: true
+                events:
+                  type: array
+                  description: 'Event types to deliver. Omit to keep the stored subscription. Send null to reset to the default set (every type except transaction.pending). An empty list is rejected.'
+                  example:
+                    - transaction.captured
+                    - transaction.refunded
+                  items:
+                    type: string
+                merchant_id:
+                  type:
+                    - integer
+                    - 'null'
+                  description: 'Required for partner API keys. Must be a merchant linked to the authenticated partner.'
+                  example: 123
+              required:
+                - url
+  /api/v1/webhook/rotate-secret:
+    post:
+      summary: 'Rotate the webhook signing secret'
+      operationId: rotateTheWebhookSigningSecret
+      description: "Generate a new signing secret for the endpoint. Rotation is a hard\ncutover: the old secret stops signing immediately and the new one is\nreturned exactly once in this response, so update your verifier right\naway. Deliveries retried after rotation are signed with the new\nsecret.\n\nMerchant API keys rotate their own secret. Partner API keys must\ninclude `merchant_id` for a linked merchant."
+      parameters: []
+      responses:
+        200:
+          description: 'Secret rotated. The new signing secret appears only in this response.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Webhook secret rotated successfully'
+                  code: ''
+                  data:
+                    endpoint:
+                      id: 12
+                      merchant_id: 123
+                      url: 'https://example.com/webhooks/softlemon'
+                      is_active: true
+                      events: null
+                      has_secret: true
+                      last_success_at: '2026-08-09T14:12:03.000000Z'
+                      last_failure_at: null
+                      consecutive_failures: 0
+                      created_at: '2026-08-01T10:00:00.000000Z'
+                      updated_at: '2026-08-10T09:30:12.000000Z'
+                    secret: whsec_0a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f9
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Webhook secret rotated successfully'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      endpoint:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 12
+                          merchant_id:
+                            type: integer
+                            example: 123
+                          url:
+                            type: string
+                            example: 'https://example.com/webhooks/softlemon'
+                          is_active:
+                            type: boolean
+                            example: true
+                          events:
+                            type: string
+                            example: null
+                          has_secret:
+                            type: boolean
+                            example: true
+                          last_success_at:
+                            type: string
+                            example: '2026-08-09T14:12:03.000000Z'
+                          last_failure_at:
+                            type: string
+                            example: null
+                          consecutive_failures:
+                            type: integer
+                            example: 0
+                          created_at:
+                            type: string
+                            example: '2026-08-01T10:00:00.000000Z'
+                          updated_at:
+                            type: string
+                            example: '2026-08-10T09:30:12.000000Z'
+                      secret:
+                        type: string
+                        example: whsec_0a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f9
+        400:
+          description: 'A partner API key omitted `merchant_id` or referenced a merchant that is not linked to it.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        404:
+          description: 'No webhook endpoint is configured yet.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Webhook endpoint not found for this merchant.'
+                  code: ERR_NOT_FOUND
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Webhook endpoint not found for this merchant.'
+                  code:
+                    type: string
+                    example: ERR_NOT_FOUND
+                  data:
+                    type: string
+                    example: null
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
+      tags:
+        - 'Webhook Management'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                merchant_id:
+                  type: integer
+                  description: 'Required for partner API keys. Must be a merchant linked to the authenticated partner.'
+                  example: 123
+  /api/v1/webhook/test:
+    post:
+      summary: 'Send a test ping'
+      operationId: sendATestPing
+      description: "Send a signed `ping` event to the endpoint synchronously and report\nwhether the receiver answered with a 2xx status. Use it to verify\nreachability and signature handling before real events flow. The ping\nis ephemeral: it never appears in delivery history and the endpoint's\ndelivery health is untouched. A failing receiver still returns HTTP\n200 here, check `data.success` for the outcome. Limited to 10 pings\nper minute per API key.\n\nMerchant API keys ping their own endpoint. Partner API keys must\ninclude `merchant_id` for a linked merchant."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Ping sent'
+                  code: ''
+                  data:
+                    success: true
+                    status_code: 200
+                    duration_ms: 184
+                    error: null
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Ping sent'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      status_code:
+                        type: integer
+                        example: 200
+                      duration_ms:
+                        type: integer
+                        example: 184
+                      error:
+                        type: string
+                        example: null
+        400:
+          description: 'A partner API key omitted `merchant_id` or referenced a merchant that is not linked to it.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        422:
+          description: 'No active webhook endpoint is configured.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'An active webhook endpoint is required to send a test ping.'
+                  code: ERR_VALIDATION_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'An active webhook endpoint is required to send a test ping.'
+                  code:
+                    type: string
+                    example: ERR_VALIDATION_FAILED
+                  data:
+                    type: string
+                    example: null
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
+      tags:
+        - 'Webhook Management'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                merchant_id:
+                  type: integer
+                  description: 'Required for partner API keys. Must be a merchant linked to the authenticated partner.'
+                  example: 123
+  /api/v1/webhook/events:
+    get:
+      summary: 'List webhook events'
+      operationId: listWebhookEvents
+      description: "List recorded webhook events newest first (delivery history). List\nrows never include the payload snapshot, fetch a single event for\nthat. History depth equals the 30 day retention window, older events\nare pruned and cannot be listed or replayed.\n\nMerchant API keys list their own events. Partner API keys must\ninclude `merchant_id` for a linked merchant."
+      parameters:
+        -
+          in: query
+          name: status
+          description: 'Filter by delivery status (pending, delivered, failed).'
+          example: failed
+          required: false
+          schema:
+            type: string
+        -
+          in: query
+          name: event_type
+          description: 'Filter by event type.'
+          example: transaction.captured
+          required: false
+          schema:
+            type: string
+        -
+          in: query
+          name: from
+          description: 'Filter events created on or after this date.'
+          example: '2026-08-01'
+          required: false
+          schema:
+            type: string
+        -
+          in: query
+          name: to
+          description: 'Filter events created on or before this date.'
+          example: '2026-08-31'
+          required: false
+          schema:
+            type: string
+        -
+          in: query
+          name: transaction_id
+          description: 'Filter to events for one transaction id.'
+          example: 123456
+          required: false
+          schema:
+            type: integer
+        -
+          in: query
+          name: merchant_id
+          description: 'Required for partner API keys. Must be a merchant linked to the authenticated partner.'
+          example: 123
+          required: false
+          schema:
+            type: integer
+        -
+          in: query
+          name: per_page
+          description: 'Number of events per page (1-100, default 25).'
+          example: 25
+          required: false
+          schema:
+            type: integer
+        -
+          in: query
+          name: page
+          description: 'Page number (1+).'
+          example: 1
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Webhook events retrieved successfully'
+                  code: ''
+                  data:
+                    events:
+                      -
+                        id: evt_01k20c4x9y5r08qwj6dfhm3bzt
+                        event_type: transaction.captured
+                        transaction_id: 123456
+                        merchant_trans_id: ORDER-2041
+                        status: delivered
+                        attempts: 1
+                        created_at: '2026-08-09T14:11:58.000000Z'
+                        delivered_at: '2026-08-09T14:12:03.000000Z'
+                        failed_at: null
+                        last_attempt:
+                          delivery_id: whd_01k20c4xa2b3c4d5e6f7g8h9j0
+                          attempt: 1
+                          status_code: 200
+                          error_reason: null
+                          response_excerpt: null
+                          duration_ms: 184
+                          is_replay: false
+                          created_at: '2026-08-09T14:12:03.000000Z'
+                      -
+                        id: evt_01k20c1w8x4q07pvj5cehm2azs
+                        event_type: transaction.refunded
+                        transaction_id: 123401
+                        merchant_trans_id: ORDER-2038
+                        status: pending
+                        attempts: 2
+                        created_at: '2026-08-09T13:55:10.000000Z'
+                        delivered_at: null
+                        failed_at: null
+                        last_attempt:
+                          delivery_id: whd_01k20c1wa9t8s7r6q5p4n3m2k1
+                          attempt: 2
+                          status_code: 503
+                          error_reason: 'HTTP 503'
+                          response_excerpt: 'Service Unavailable'
+                          duration_ms: 912
+                          is_replay: false
+                          created_at: '2026-08-09T14:10:11.000000Z'
+                    pagination:
+                      current_page: 1
+                      last_page: 1
+                      per_page: 25
+                      total: 2
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Webhook events retrieved successfully'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      events:
+                        type: array
+                        example:
+                          -
+                            id: evt_01k20c4x9y5r08qwj6dfhm3bzt
+                            event_type: transaction.captured
+                            transaction_id: 123456
+                            merchant_trans_id: ORDER-2041
+                            status: delivered
+                            attempts: 1
+                            created_at: '2026-08-09T14:11:58.000000Z'
+                            delivered_at: '2026-08-09T14:12:03.000000Z'
+                            failed_at: null
+                            last_attempt:
+                              delivery_id: whd_01k20c4xa2b3c4d5e6f7g8h9j0
+                              attempt: 1
+                              status_code: 200
+                              error_reason: null
+                              response_excerpt: null
+                              duration_ms: 184
+                              is_replay: false
+                              created_at: '2026-08-09T14:12:03.000000Z'
+                          -
+                            id: evt_01k20c1w8x4q07pvj5cehm2azs
+                            event_type: transaction.refunded
+                            transaction_id: 123401
+                            merchant_trans_id: ORDER-2038
+                            status: pending
+                            attempts: 2
+                            created_at: '2026-08-09T13:55:10.000000Z'
+                            delivered_at: null
+                            failed_at: null
+                            last_attempt:
+                              delivery_id: whd_01k20c1wa9t8s7r6q5p4n3m2k1
+                              attempt: 2
+                              status_code: 503
+                              error_reason: 'HTTP 503'
+                              response_excerpt: 'Service Unavailable'
+                              duration_ms: 912
+                              is_replay: false
+                              created_at: '2026-08-09T14:10:11.000000Z'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: evt_01k20c4x9y5r08qwj6dfhm3bzt
+                            event_type:
+                              type: string
+                              example: transaction.captured
+                            transaction_id:
+                              type: integer
+                              example: 123456
+                            merchant_trans_id:
+                              type: string
+                              example: ORDER-2041
+                            status:
+                              type: string
+                              example: delivered
+                            attempts:
+                              type: integer
+                              example: 1
+                            created_at:
+                              type: string
+                              example: '2026-08-09T14:11:58.000000Z'
+                            delivered_at:
+                              type: string
+                              example: '2026-08-09T14:12:03.000000Z'
+                            failed_at:
+                              type: string
+                              example: null
+                            last_attempt:
+                              type: object
+                              properties:
+                                delivery_id:
+                                  type: string
+                                  example: whd_01k20c4xa2b3c4d5e6f7g8h9j0
+                                attempt:
+                                  type: integer
+                                  example: 1
+                                status_code:
+                                  type: integer
+                                  example: 200
+                                error_reason:
+                                  type: string
+                                  example: null
+                                response_excerpt:
+                                  type: string
+                                  example: null
+                                duration_ms:
+                                  type: integer
+                                  example: 184
+                                is_replay:
+                                  type: boolean
+                                  example: false
+                                created_at:
+                                  type: string
+                                  example: '2026-08-09T14:12:03.000000Z'
+                      pagination:
+                        type: object
+                        properties:
+                          current_page:
+                            type: integer
+                            example: 1
+                          last_page:
+                            type: integer
+                            example: 1
+                          per_page:
+                            type: integer
+                            example: 25
+                          total:
+                            type: integer
+                            example: 2
+        400:
+          description: 'A partner API key omitted `merchant_id` or referenced a merchant that is not linked to it.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
+      tags:
+        - 'Webhook Management'
+  '/api/v1/webhook/events/{webhookEvent_public_id}':
+    get:
+      summary: 'Get a webhook event'
+      operationId: getAWebhookEvent
+      description: "Retrieve one event with the stored payload snapshot (exactly what was\nsigned and sent, card data free by construction) and the full\ndelivery attempt trail in chronological order. An event that is not\nvisible to this API key returns 404."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Webhook event retrieved successfully'
+                  code: ''
+                  data:
+                    id: evt_01k20c4x9y5r08qwj6dfhm3bzt
+                    event_type: transaction.captured
+                    transaction_id: 123456
+                    merchant_trans_id: ORDER-2041
+                    status: delivered
+                    attempts: 2
+                    payload:
+                      id: evt_01k20c4x9y5r08qwj6dfhm3bzt
+                      type: transaction.captured
+                      created_at: '2026-08-09T14:11:58Z'
+                      api_version: '2026-08-01'
+                      data:
+                        transaction:
+                          id: 123456
+                          merchant_trans_id: ORDER-2041
+                          related_trans_id: null
+                          transaction_type: sale
+                          status: captured
+                          amount: 5000
+                          currency: EUR
+                          acquirer_provider: qashpay
+                          acquirer_trans_id: 8ac7a4a2985300a1
+                          acquirer_auth_code: AUTH01
+                          description: null
+                          created_at: '2026-08-09T14:11:52Z'
+                          updated_at: '2026-08-09T14:11:58Z'
+                          refunded_amount: 0
+                    created_at: '2026-08-09T14:11:58.000000Z'
+                    delivered_at: '2026-08-09T14:12:03.000000Z'
+                    failed_at: null
+                    delivery_attempts:
+                      -
+                        delivery_id: whd_01k20c1wa9t8s7r6q5p4n3m2k1
+                        attempt: 1
+                        status_code: 503
+                        error_reason: 'HTTP 503'
+                        response_excerpt: 'Service Unavailable'
+                        duration_ms: 912
+                        is_replay: false
+                        created_at: '2026-08-09T14:11:59.000000Z'
+                      -
+                        delivery_id: whd_01k20c4xa2b3c4d5e6f7g8h9j0
+                        attempt: 2
+                        status_code: 200
+                        error_reason: null
+                        response_excerpt: null
+                        duration_ms: 184
+                        is_replay: false
+                        created_at: '2026-08-09T14:12:03.000000Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Webhook event retrieved successfully'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: evt_01k20c4x9y5r08qwj6dfhm3bzt
+                      event_type:
+                        type: string
+                        example: transaction.captured
+                      transaction_id:
+                        type: integer
+                        example: 123456
+                      merchant_trans_id:
+                        type: string
+                        example: ORDER-2041
+                      status:
+                        type: string
+                        example: delivered
+                      attempts:
+                        type: integer
+                        example: 2
+                      payload:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: evt_01k20c4x9y5r08qwj6dfhm3bzt
+                          type:
+                            type: string
+                            example: transaction.captured
+                          created_at:
+                            type: string
+                            example: '2026-08-09T14:11:58Z'
+                          api_version:
+                            type: string
+                            example: '2026-08-01'
+                          data:
+                            type: object
+                            properties:
+                              transaction:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 123456
+                                  merchant_trans_id:
+                                    type: string
+                                    example: ORDER-2041
+                                  related_trans_id:
+                                    type: string
+                                    example: null
+                                  transaction_type:
+                                    type: string
+                                    example: sale
+                                  status:
+                                    type: string
+                                    example: captured
+                                  amount:
+                                    type: integer
+                                    example: 5000
+                                  currency:
+                                    type: string
+                                    example: EUR
+                                  acquirer_provider:
+                                    type: string
+                                    example: qashpay
+                                  acquirer_trans_id:
+                                    type: string
+                                    example: 8ac7a4a2985300a1
+                                  acquirer_auth_code:
+                                    type: string
+                                    example: AUTH01
+                                  description:
+                                    type: string
+                                    example: null
+                                  created_at:
+                                    type: string
+                                    example: '2026-08-09T14:11:52Z'
+                                  updated_at:
+                                    type: string
+                                    example: '2026-08-09T14:11:58Z'
+                                  refunded_amount:
+                                    type: integer
+                                    example: 0
+                      created_at:
+                        type: string
+                        example: '2026-08-09T14:11:58.000000Z'
+                      delivered_at:
+                        type: string
+                        example: '2026-08-09T14:12:03.000000Z'
+                      failed_at:
+                        type: string
+                        example: null
+                      delivery_attempts:
+                        type: array
+                        example:
+                          -
+                            delivery_id: whd_01k20c1wa9t8s7r6q5p4n3m2k1
+                            attempt: 1
+                            status_code: 503
+                            error_reason: 'HTTP 503'
+                            response_excerpt: 'Service Unavailable'
+                            duration_ms: 912
+                            is_replay: false
+                            created_at: '2026-08-09T14:11:59.000000Z'
+                          -
+                            delivery_id: whd_01k20c4xa2b3c4d5e6f7g8h9j0
+                            attempt: 2
+                            status_code: 200
+                            error_reason: null
+                            response_excerpt: null
+                            duration_ms: 184
+                            is_replay: false
+                            created_at: '2026-08-09T14:12:03.000000Z'
+                        items:
+                          type: object
+                          properties:
+                            delivery_id:
+                              type: string
+                              example: whd_01k20c1wa9t8s7r6q5p4n3m2k1
+                            attempt:
+                              type: integer
+                              example: 1
+                            status_code:
+                              type: integer
+                              example: 503
+                            error_reason:
+                              type: string
+                              example: 'HTTP 503'
+                            response_excerpt:
+                              type: string
+                              example: 'Service Unavailable'
+                            duration_ms:
+                              type: integer
+                              example: 912
+                            is_replay:
+                              type: boolean
+                              example: false
+                            created_at:
+                              type: string
+                              example: '2026-08-09T14:11:59.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        404:
+          description: 'No webhook event with this id is visible to this API key.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Webhook event not found for this merchant.'
+                  code: ERR_NOT_FOUND
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Webhook event not found for this merchant.'
+                  code:
+                    type: string
+                    example: ERR_NOT_FOUND
+                  data:
+                    type: string
+                    example: null
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
+      tags:
+        - 'Webhook Management'
+    parameters:
+      -
+        in: path
+        name: webhookEvent_public_id
+        description: 'The event public id.'
+        example: evt_01k20c4x9y5r08qwj6dfhm3bzt
+        required: true
+        schema:
+          type: string
+  '/api/v1/webhook/events/{webhookEvent_public_id}/replay':
+    post:
+      summary: 'Replay a webhook event'
+      operationId: replayAWebhookEvent
+      description: "Queue a fresh delivery of the stored event: same event id and\npayload, a fresh delivery id and an `X-Softlemon-Replay: true` header\nso receivers can tell replays from originals. Replaying an already\ndelivered event is allowed, for example when the original was lost. A\nfailing replay never demotes a delivered event. Events older than the\n30 day retention window are pruned and cannot be replayed. Limited to\n30 replays per minute per API key."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Webhook event replay queued'
+                  code: ''
+                  data:
+                    event:
+                      id: evt_01k20c4x9y5r08qwj6dfhm3bzt
+                      event_type: transaction.captured
+                      transaction_id: 123456
+                      merchant_trans_id: ORDER-2041
+                      status: delivered
+                      attempts: 2
+                      created_at: '2026-08-09T14:11:58.000000Z'
+                      delivered_at: '2026-08-09T14:12:03.000000Z'
+                      failed_at: null
+                      last_attempt: null
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Webhook event replay queued'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      event:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: evt_01k20c4x9y5r08qwj6dfhm3bzt
+                          event_type:
+                            type: string
+                            example: transaction.captured
+                          transaction_id:
+                            type: integer
+                            example: 123456
+                          merchant_trans_id:
+                            type: string
+                            example: ORDER-2041
+                          status:
+                            type: string
+                            example: delivered
+                          attempts:
+                            type: integer
+                            example: 2
+                          created_at:
+                            type: string
+                            example: '2026-08-09T14:11:58.000000Z'
+                          delivered_at:
+                            type: string
+                            example: '2026-08-09T14:12:03.000000Z'
+                          failed_at:
+                            type: string
+                            example: null
+                          last_attempt:
+                            type: string
+                            example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        404:
+          description: 'No webhook event with this id is visible to this API key.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Webhook event not found for this merchant.'
+                  code: ERR_NOT_FOUND
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Webhook event not found for this merchant.'
+                  code:
+                    type: string
+                    example: ERR_NOT_FOUND
+                  data:
+                    type: string
+                    example: null
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Webhook delivery is disabled platform wide.'
+                    type: object
+                    example:
+                      success: false
+                      message: 'Webhook delivery is currently disabled.'
+                      code: ERR_VALIDATION_FAILED
+                      data: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'Webhook delivery is currently disabled.'
+                      code:
+                        type: string
+                        example: ERR_VALIDATION_FAILED
+                      data:
+                        type: string
+                        example: null
+                  -
+                    description: 'No active webhook endpoint is configured.'
+                    type: object
+                    example:
+                      success: false
+                      message: 'An active webhook endpoint is required to replay an event.'
+                      code: ERR_VALIDATION_FAILED
+                      data: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'An active webhook endpoint is required to replay an event.'
+                      code:
+                        type: string
+                        example: ERR_VALIDATION_FAILED
+                      data:
+                        type: string
+                        example: null
+                properties: null
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
+      tags:
+        - 'Webhook Management'
+    parameters:
+      -
+        in: path
+        name: webhookEvent_public_id
+        description: 'The event public id.'
+        example: evt_01k20c4x9y5r08qwj6dfhm3bzt
+        required: true
+        schema:
+          type: string
   /api/v1/key-info:
     get:
       summary: 'Get API Key Information'
