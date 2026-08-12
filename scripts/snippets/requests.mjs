@@ -158,6 +158,54 @@ export const guides = {
     },
   },
 
+  "set-up-webhooks": {
+    "register-endpoint": {
+      method: "PUT",
+      path: "/api/v1/webhook",
+      body: { url: "https://example.com/webhooks/softlemon" },
+    },
+    "test-ping": {
+      method: "POST",
+      path: "/api/v1/webhook/test",
+      body: {},
+    },
+    "choose-events": {
+      method: "PUT",
+      path: "/api/v1/webhook",
+      body: {
+        url: "https://example.com/webhooks/softlemon",
+        events: [
+          "transaction.captured",
+          "transaction.refunded",
+          "transaction.failed",
+        ],
+      },
+    },
+    "show-config": {
+      method: "GET",
+      path: "/api/v1/webhook",
+    },
+    "list-events": {
+      method: "GET",
+      path: "/api/v1/webhook/events",
+      query: { status: "failed" },
+    },
+    "get-event": {
+      method: "GET",
+      path: "/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt",
+    },
+    "replay-event": {
+      method: "POST",
+      path: "/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt/replay",
+      body: {},
+    },
+    "rotate-secret": {
+      method: "POST",
+      path: "/api/v1/webhook/rotate-secret",
+      body: {},
+    },
+  },
+
   "accept-an-alternative-payment": {
     "create-session": {
       method: "POST",

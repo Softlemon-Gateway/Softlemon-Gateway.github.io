@@ -1,0 +1,1718 @@
+# Set Up Webhooks
+
+This guide takes you from no webhook configuration to a verified endpoint receiving signed events: register your URL, capture the signing secret, send a test ping, choose your events and keep an eye on deliveries. For payload shapes, signature verification code and retry semantics, see the [webhook integration guide](/guides/webhooks).
+
+Every request below authenticates with your API key as a Bearer token and requires the `webhooks:manage` scope. Merchant keys manage their own endpoint (one per merchant). Partner keys manage a linked merchant's endpoint by adding `merchant_id`: a query parameter on GET requests and a body field on writes.
+
+## Step 1: Register your endpoint
+
+Call `PUT /api/v1/webhook` with the HTTPS URL that should receive events. The same call creates the endpoint on first use and updates it in place afterwards.
+
+{/* snippet:set-up-webhooks:register-endpoint */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/webhook \
+  --request PUT \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --data '{
+  "url": "https://example.com/webhooks/softlemon"
+}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/webhook', {
+  method: 'PUT',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  },
+  body: JSON.stringify({
+    url: 'https://example.com/webhooks/softlemon'
+  })
+})
+```
+
+```python title="Python"
+requests.put(
+    "https://api.sandbox.softlemons.com/api/v1/webhook",
+    headers={
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    },
+    json={
+      "url": "https://example.com/webhooks/softlemon"
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{\n  \"url\": \"https://example.com/webhooks/softlemon\"\n}");
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook")
+  .put(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/webhook"
+
+	payload := strings.NewReader(`{
+  "url": "https://example.com/webhooks/softlemon"
+}`)
+
+	req, _ := http.NewRequest("PUT", requestUrl, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Put, "https://api.sandbox.softlemons.com/api/v1/webhook");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Content = new StringContent(
+"""
+{
+  "url": "https://example.com/webhooks/softlemon"
+}
+""",
+System.Text.Encoding.UTF8, "application/json");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val mediaType = MediaType.parse("application/json")
+val body = RequestBody.create(mediaType, "{\n  \"url\": \"https://example.com/webhooks/softlemon\"\n}")
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook")
+  .put(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Content-Type": @"application/json",
+                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSDictionary *parameters = @{ @"url": @"https://example.com/webhooks/softlemon" };
+
+NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/webhook"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"PUT"];
+[request setAllHTTPHeaderFields:headers];
+[request setHTTPBody:postData];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/webhook");
+
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'url' => 'https://example.com/webhooks/softlemon'
+]));
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/webhook")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Put.new(url)
+request["Content-Type"] = 'application/json'
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request.body = <<~JSON
+{
+  "url": "https://example.com/webhooks/softlemon"
+}
+JSON
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/webhook")!)
+request.httpMethod = "PUT"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+let jsonBody = #"""
+{
+  "url": "https://example.com/webhooks/softlemon"
+}
+"""#
+request.httpBody = jsonBody.data(using: .utf8)
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+```json
+{
+  "success": true,
+  "message": "Webhook endpoint created successfully",
+  "code": "",
+  "data": {
+    "endpoint": {
+      "id": 12,
+      "merchant_id": 123,
+      "url": "https://example.com/webhooks/softlemon",
+      "is_active": true,
+      "events": null,
+      "has_secret": true,
+      "last_success_at": null,
+      "last_failure_at": null,
+      "consecutive_failures": 0,
+      "created_at": "2026-08-01T10:00:00.000000Z",
+      "updated_at": "2026-08-01T10:00:00.000000Z"
+    },
+    "secret": "whsec_9f8e7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a0"
+  }
+}
+```
+
+**The `secret` in this response is shown exactly once.** It is stored encrypted and can never be read back, so capture it now and store it in your secret manager. You need it to verify the `X-Softlemon-Signature` header on every delivery. Later updates respond with HTTP 200 and never include the secret. If you lose it, [rotate](#step-6-rotate-the-secret) to get a new one.
+
+The URL must use HTTPS on a publicly resolvable host. URLs with embedded credentials, `localhost` style hosts or private IP addresses are rejected with HTTP 422.
+
+## Step 2: Send a test ping
+
+Confirm reachability and your signature verification before real events flow. The ping is delivered synchronously, signed with your secret and structured like a real event. It never appears in delivery history and does not touch delivery health.
+
+{/* snippet:set-up-webhooks:test-ping */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/webhook/test \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --data '{}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/webhook/test', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  },
+  body: JSON.stringify({})
+})
+```
+
+```python title="Python"
+requests.post(
+    "https://api.sandbox.softlemons.com/api/v1/webhook/test",
+    headers={
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    },
+    json={}
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{}");
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook/test")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/webhook/test"
+
+	payload := strings.NewReader(`{}`)
+
+	req, _ := http.NewRequest("POST", requestUrl, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/webhook/test");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Content = new StringContent(
+"""
+{}
+""",
+System.Text.Encoding.UTF8, "application/json");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val mediaType = MediaType.parse("application/json")
+val body = RequestBody.create(mediaType, "{}")
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook/test")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Content-Type": @"application/json",
+                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSDictionary *parameters = @{  };
+
+NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/webhook/test"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"POST"];
+[request setAllHTTPHeaderFields:headers];
+[request setHTTPBody:postData];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/webhook/test");
+
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([]));
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/webhook/test")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(url)
+request["Content-Type"] = 'application/json'
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request.body = <<~JSON
+{}
+JSON
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/webhook/test")!)
+request.httpMethod = "POST"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+let jsonBody = #"""
+{}
+"""#
+request.httpBody = jsonBody.data(using: .utf8)
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+```json
+{
+  "success": true,
+  "message": "Ping sent",
+  "code": "",
+  "data": {
+    "success": true,
+    "status_code": 200,
+    "duration_ms": 184,
+    "error": null
+  }
+}
+```
+
+The HTTP status of this response is 200 whether or not your receiver answered. Check `data.success` for the outcome: `true` means your endpoint answered with a 2xx status. Pings are limited to 10 per minute per API key.
+
+## Step 3: Choose your events
+
+By default the endpoint receives every event type except `transaction.pending` (opt in by listing it explicitly). Send an `events` list to narrow the subscription:
+
+{/* snippet:set-up-webhooks:choose-events */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/webhook \
+  --request PUT \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --data '{
+  "url": "https://example.com/webhooks/softlemon",
+  "events": [
+    "transaction.captured",
+    "transaction.refunded",
+    "transaction.failed"
+  ]
+}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/webhook', {
+  method: 'PUT',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  },
+  body: JSON.stringify({
+    url: 'https://example.com/webhooks/softlemon',
+    events: ['transaction.captured', 'transaction.refunded', 'transaction.failed']
+  })
+})
+```
+
+```python title="Python"
+requests.put(
+    "https://api.sandbox.softlemons.com/api/v1/webhook",
+    headers={
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    },
+    json={
+      "url": "https://example.com/webhooks/softlemon",
+      "events": [
+        "transaction.captured",
+        "transaction.refunded",
+        "transaction.failed"
+      ]
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{\n  \"url\": \"https://example.com/webhooks/softlemon\",\n  \"events\": [\n    \"transaction.captured\",\n    \"transaction.refunded\",\n    \"transaction.failed\"\n  ]\n}");
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook")
+  .put(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/webhook"
+
+	payload := strings.NewReader(`{
+  "url": "https://example.com/webhooks/softlemon",
+  "events": [
+    "transaction.captured",
+    "transaction.refunded",
+    "transaction.failed"
+  ]
+}`)
+
+	req, _ := http.NewRequest("PUT", requestUrl, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Put, "https://api.sandbox.softlemons.com/api/v1/webhook");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Content = new StringContent(
+"""
+{
+  "url": "https://example.com/webhooks/softlemon",
+  "events": [
+    "transaction.captured",
+    "transaction.refunded",
+    "transaction.failed"
+  ]
+}
+""",
+System.Text.Encoding.UTF8, "application/json");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val mediaType = MediaType.parse("application/json")
+val body = RequestBody.create(mediaType, "{\n  \"url\": \"https://example.com/webhooks/softlemon\",\n  \"events\": [\n    \"transaction.captured\",\n    \"transaction.refunded\",\n    \"transaction.failed\"\n  ]\n}")
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook")
+  .put(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Content-Type": @"application/json",
+                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSDictionary *parameters = @{ @"url": @"https://example.com/webhooks/softlemon",
+                              @"events": @[ @"transaction.captured", @"transaction.refunded", @"transaction.failed" ] };
+
+NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/webhook"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"PUT"];
+[request setAllHTTPHeaderFields:headers];
+[request setHTTPBody:postData];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/webhook");
+
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'url' => 'https://example.com/webhooks/softlemon',
+  'events' => [
+    'transaction.captured',
+    'transaction.refunded',
+    'transaction.failed'
+  ]
+]));
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/webhook")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Put.new(url)
+request["Content-Type"] = 'application/json'
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request.body = <<~JSON
+{
+  "url": "https://example.com/webhooks/softlemon",
+  "events": [
+    "transaction.captured",
+    "transaction.refunded",
+    "transaction.failed"
+  ]
+}
+JSON
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/webhook")!)
+request.httpMethod = "PUT"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+let jsonBody = #"""
+{
+  "url": "https://example.com/webhooks/softlemon",
+  "events": [
+    "transaction.captured",
+    "transaction.refunded",
+    "transaction.failed"
+  ]
+}
+"""#
+request.httpBody = jsonBody.data(using: .utf8)
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+```json
+{
+  "success": true,
+  "message": "Webhook endpoint updated successfully",
+  "code": "",
+  "data": {
+    "id": 12,
+    "merchant_id": 123,
+    "url": "https://example.com/webhooks/softlemon",
+    "is_active": true,
+    "events": [
+      "transaction.captured",
+      "transaction.refunded",
+      "transaction.failed"
+    ],
+    "has_secret": true,
+    "last_success_at": "2026-08-09T14:12:03.000000Z",
+    "last_failure_at": null,
+    "consecutive_failures": 0,
+    "created_at": "2026-08-01T10:00:00.000000Z",
+    "updated_at": "2026-08-10T09:30:12.000000Z"
+  }
+}
+```
+
+Subscription rules:
+
+- Omit `events` to keep the stored subscription unchanged.
+- Send `"events": null` to reset to the default set.
+- An empty list is rejected. To pause deliveries entirely, send `"is_active": false` instead. The configuration and secret survive a pause.
+- Unsubscribed event types are not recorded at all, so they never appear in delivery history.
+
+The full event catalogue is in the [webhook integration guide](/guides/webhooks#event-catalogue).
+
+## Step 4: Watch your deliveries
+
+`GET /api/v1/webhook` returns the configuration together with delivery health: `last_success_at`, `last_failure_at` and `consecutive_failures`.
+
+{/* snippet:set-up-webhooks:show-config */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/webhook \
+  --header 'Authorization: Bearer {YOUR_API_KEY}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/webhook', {
+  headers: {
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  }
+})
+```
+
+```python title="Python"
+requests.get(
+    "https://api.sandbox.softlemons.com/api/v1/webhook",
+    headers={
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/webhook"
+
+	req, _ := http.NewRequest("GET", requestUrl, nil)
+
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Get, "https://api.sandbox.softlemons.com/api/v1/webhook");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/webhook"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"GET"];
+[request setAllHTTPHeaderFields:headers];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/webhook");
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer {YOUR_API_KEY}']);
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/webhook")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Get.new(url)
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/webhook")!)
+request.httpMethod = "GET"
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+For per-event detail, list the delivery history. Filters cover `status` (pending, delivered, failed), `event_type`, `transaction_id` and a `from`/`to` date range:
+
+{/* snippet:set-up-webhooks:list-events */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl 'https://api.sandbox.softlemons.com/api/v1/webhook/events?status=failed' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/webhook/events?status=failed', {
+  headers: {
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  }
+})
+```
+
+```python title="Python"
+requests.get(
+    "https://api.sandbox.softlemons.com/api/v1/webhook/events?status=failed",
+    headers={
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook/events?status=failed")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/webhook/events?status=failed"
+
+	req, _ := http.NewRequest("GET", requestUrl, nil)
+
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Get, "https://api.sandbox.softlemons.com/api/v1/webhook/events?status=failed");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook/events?status=failed")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/webhook/events?status=failed"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"GET"];
+[request setAllHTTPHeaderFields:headers];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/webhook/events?status=failed");
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer {YOUR_API_KEY}']);
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/webhook/events?status=failed")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Get.new(url)
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/webhook/events?status=failed")!)
+request.httpMethod = "GET"
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+```json
+{
+  "success": true,
+  "message": "Webhook events retrieved successfully",
+  "code": "",
+  "data": {
+    "events": [
+      {
+        "id": "evt_01k20c1w8x4q07pvj5cehm2azs",
+        "event_type": "transaction.refunded",
+        "transaction_id": 123401,
+        "merchant_trans_id": "ORDER-2038",
+        "status": "pending",
+        "attempts": 2,
+        "created_at": "2026-08-09T13:55:10.000000Z",
+        "delivered_at": null,
+        "failed_at": null,
+        "last_attempt": {
+          "delivery_id": "whd_01k20c1wa9t8s7r6q5p4n3m2k1",
+          "attempt": 2,
+          "status_code": 503,
+          "error_reason": "HTTP 503",
+          "response_excerpt": "Service Unavailable",
+          "duration_ms": 912,
+          "is_replay": false,
+          "created_at": "2026-08-09T14:10:11.000000Z"
+        }
+      }
+    ],
+    "pagination": {
+      "current_page": 1,
+      "last_page": 1,
+      "per_page": 25,
+      "total": 1
+    }
+  }
+}
+```
+
+List rows never include the payload snapshot. History depth equals the 30 day retention window, older events are pruned.
+
+## Step 5: Inspect and replay an event
+
+Fetch a single event to see the stored payload (exactly what was signed and sent) and the full delivery attempt trail:
+
+{/* snippet:set-up-webhooks:get-event */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt \
+  --header 'Authorization: Bearer {YOUR_API_KEY}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt', {
+  headers: {
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  }
+})
+```
+
+```python title="Python"
+requests.get(
+    "https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt",
+    headers={
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt"
+
+	req, _ := http.NewRequest("GET", requestUrl, nil)
+
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Get, "https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"GET"];
+[request setAllHTTPHeaderFields:headers];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt");
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer {YOUR_API_KEY}']);
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Get.new(url)
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt")!)
+request.httpMethod = "GET"
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+If your system missed or lost an event, replay it. The replay reuses the same event id and payload, carries a fresh delivery id and adds an `X-Softlemon-Replay: true` header so your receiver can tell it apart from the original:
+
+{/* snippet:set-up-webhooks:replay-event */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt/replay \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --data '{}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt/replay', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  },
+  body: JSON.stringify({})
+})
+```
+
+```python title="Python"
+requests.post(
+    "https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt/replay",
+    headers={
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    },
+    json={}
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{}");
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt/replay")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt/replay"
+
+	payload := strings.NewReader(`{}`)
+
+	req, _ := http.NewRequest("POST", requestUrl, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt/replay");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Content = new StringContent(
+"""
+{}
+""",
+System.Text.Encoding.UTF8, "application/json");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val mediaType = MediaType.parse("application/json")
+val body = RequestBody.create(mediaType, "{}")
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt/replay")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Content-Type": @"application/json",
+                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSDictionary *parameters = @{  };
+
+NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt/replay"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"POST"];
+[request setAllHTTPHeaderFields:headers];
+[request setHTTPBody:postData];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt/replay");
+
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([]));
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt/replay")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(url)
+request["Content-Type"] = 'application/json'
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request.body = <<~JSON
+{}
+JSON
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/webhook/events/evt_01k20c4x9y5r08qwj6dfhm3bzt/replay")!)
+request.httpMethod = "POST"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+let jsonBody = #"""
+{}
+"""#
+request.httpBody = jsonBody.data(using: .utf8)
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+```json
+{
+  "success": true,
+  "message": "Webhook event replay queued",
+  "code": "",
+  "data": {
+    "event": {
+      "id": "evt_01k20c4x9y5r08qwj6dfhm3bzt",
+      "event_type": "transaction.captured",
+      "transaction_id": 123456,
+      "merchant_trans_id": "ORDER-2041",
+      "status": "delivered",
+      "attempts": 2,
+      "created_at": "2026-08-09T14:11:58.000000Z",
+      "delivered_at": "2026-08-09T14:12:03.000000Z",
+      "failed_at": null,
+      "last_attempt": null
+    }
+  }
+}
+```
+
+Replaying an already delivered event is allowed, for example when the original was lost downstream. A failing replay never demotes a delivered event. Events older than the 30 day retention window cannot be replayed. Replays are limited to 30 per minute per API key.
+
+## Step 6: Rotate the secret
+
+Rotate when the secret may have been exposed or on your own schedule:
+
+{/* snippet:set-up-webhooks:rotate-secret */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/webhook/rotate-secret \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}' \
+  --data '{}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/webhook/rotate-secret', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  },
+  body: JSON.stringify({})
+})
+```
+
+```python title="Python"
+requests.post(
+    "https://api.sandbox.softlemons.com/api/v1/webhook/rotate-secret",
+    headers={
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    },
+    json={}
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+MediaType mediaType = MediaType.parse("application/json");
+RequestBody body = RequestBody.create(mediaType, "{}");
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook/rotate-secret")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/webhook/rotate-secret"
+
+	payload := strings.NewReader(`{}`)
+
+	req, _ := http.NewRequest("POST", requestUrl, payload)
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Post, "https://api.sandbox.softlemons.com/api/v1/webhook/rotate-secret");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+request.Content = new StringContent(
+"""
+{}
+""",
+System.Text.Encoding.UTF8, "application/json");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val mediaType = MediaType.parse("application/json")
+val body = RequestBody.create(mediaType, "{}")
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook/rotate-secret")
+  .post(body)
+  .addHeader("Content-Type", "application/json")
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Content-Type": @"application/json",
+                           @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSDictionary *parameters = @{  };
+
+NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/webhook/rotate-secret"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"POST"];
+[request setAllHTTPHeaderFields:headers];
+[request setHTTPBody:postData];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/webhook/rotate-secret");
+
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer {YOUR_API_KEY}']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([]));
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/webhook/rotate-secret")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(url)
+request["Content-Type"] = 'application/json'
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+request.body = <<~JSON
+{}
+JSON
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/webhook/rotate-secret")!)
+request.httpMethod = "POST"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+let jsonBody = #"""
+{}
+"""#
+request.httpBody = jsonBody.data(using: .utf8)
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+```json
+{
+  "success": true,
+  "message": "Webhook secret rotated successfully",
+  "code": "",
+  "data": {
+    "endpoint": {
+      "id": 12,
+      "merchant_id": 123,
+      "url": "https://example.com/webhooks/softlemon",
+      "is_active": true,
+      "events": null,
+      "has_secret": true,
+      "last_success_at": "2026-08-09T14:12:03.000000Z",
+      "last_failure_at": null,
+      "consecutive_failures": 0,
+      "created_at": "2026-08-01T10:00:00.000000Z",
+      "updated_at": "2026-08-10T09:30:12.000000Z"
+    },
+    "secret": "whsec_0a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f9"
+  }
+}
+```
+
+Rotation is a **hard cutover**: the old secret stops signing immediately and the new one appears exactly once in this response. Update your verifier right away. Deliveries retried after the rotation are signed with the new secret, including retries of events first attempted before it.
+
+## Good to know
+
+- `GET /api/v1/webhook` returns HTTP 404 until the endpoint is first created. `has_secret` only ever reports that a secret exists, never its value.
+- There is no delete operation. Pause with `"is_active": false` to stop deliveries while keeping the configuration.
+- Partner keys must send `merchant_id` on every request in this guide. A missing or unlinked `merchant_id` returns HTTP 400.
+- Build the receiver before you register: verify signatures on the raw request body, answer 2xx within 10 seconds and deduplicate on the event id. Working verification code in five languages is in the [webhook integration guide](/guides/webhooks#verifying-signatures).

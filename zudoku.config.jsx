@@ -101,6 +101,7 @@ const config = {
             "/guides/refunds",
             "/guides/returning-customers",
             "/guides/accept-an-alternative-payment",
+            "/guides/set-up-webhooks",
             "/guides/partner-integration",
           ],
         },
