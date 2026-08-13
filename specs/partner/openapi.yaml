@@ -1260,7 +1260,7 @@ paths:
         in: path
         name: merchant_id
         description: 'The ID of the merchant.'
-        example: 1
+        example: 16
         required: true
         schema:
           type: integer
@@ -1649,7 +1649,7 @@ paths:
         in: path
         name: merchant_id
         description: 'The ID of the merchant.'
-        example: 1
+        example: 16
         required: true
         schema:
           type: integer
@@ -1817,15 +1817,15 @@ paths:
                     type: string
                     example: null
         409:
-          description: 'A session or transaction with this `reference` already exists. See the [duplicate protection guide](/guides/duplicate-protection).'
+          description: 'The `reference` was already used for a different request (ERR_IDEMPOTENCY_CONFLICT), or an identical create is still being processed (ERR_IDEMPOTENT_REQUEST_IN_PROGRESS — retry shortly). See the [duplicate protection guide](/guides/duplicate-protection).'
           content:
             application/json:
               schema:
                 type: object
                 example:
                   success: false
-                  message: 'A payment session with this reference already exists.'
-                  code: ERR_DUPLICATE
+                  message: 'This reference was already used for a different request.'
+                  code: ERR_IDEMPOTENCY_CONFLICT
                   data: null
                 properties:
                   success:
@@ -1833,10 +1833,10 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: 'A payment session with this reference already exists.'
+                    example: 'This reference was already used for a different request.'
                   code:
                     type: string
-                    example: ERR_DUPLICATE
+                    example: ERR_IDEMPOTENCY_CONFLICT
                   data:
                     type: string
                     example: null
