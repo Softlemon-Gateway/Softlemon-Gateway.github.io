@@ -915,22 +915,26 @@ paths:
                 type: object
                 example:
                   success: false
-                  message: 'Rejected because transaction is marked for no retries'
-                  code: ERR_DO_NOT_RETRY
-                  data: null
+                  message: 'Transaction rejected by risk checks.'
+                  code: ERR_RISK_REJECTED
+                  data:
+                    transaction_id: 185
                 properties:
                   success:
                     type: boolean
                     example: false
                   message:
                     type: string
-                    example: 'Rejected because transaction is marked for no retries'
+                    example: 'Transaction rejected by risk checks.'
                   code:
                     type: string
-                    example: ERR_DO_NOT_RETRY
+                    example: ERR_RISK_REJECTED
                   data:
-                    type: string
-                    example: null
+                    type: object
+                    properties:
+                      transaction_id:
+                        type: integer
+                        example: 185
         401:
           description: ''
           content:
