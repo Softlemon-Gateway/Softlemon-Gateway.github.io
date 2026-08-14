@@ -1841,41 +1841,66 @@ paths:
                     type: string
                     example: null
         422:
-          description: 'Validation failed. This includes any request carrying card, token, CVV or voucher data.'
+          description: ''
           content:
             application/json:
               schema:
-                type: object
-                example:
-                  success: false
-                  message: 'Validation errors'
-                  code: ERR_VALIDATION_FAILED
-                  data: null
-                  errors:
-                    card:
-                      - 'Card, token, CVV and voucher data are not accepted on redirect payment sessions.'
-                properties:
-                  success:
-                    type: boolean
-                    example: false
-                  message:
-                    type: string
-                    example: 'Validation errors'
-                  code:
-                    type: string
-                    example: ERR_VALIDATION_FAILED
-                  data:
-                    type: string
-                    example: null
-                  errors:
+                oneOf:
+                  -
+                    description: 'Validation failed. This includes any request carrying card, token, CVV or voucher data.'
                     type: object
-                    properties:
-                      card:
-                        type: array
-                        example:
+                    example:
+                      success: false
+                      message: 'Validation errors'
+                      code: ERR_VALIDATION_FAILED
+                      data: null
+                      errors:
+                        card:
                           - 'Card, token, CVV and voucher data are not accepted on redirect payment sessions.'
-                        items:
-                          type: string
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'Validation errors'
+                      code:
+                        type: string
+                        example: ERR_VALIDATION_FAILED
+                      data:
+                        type: string
+                        example: null
+                      errors:
+                        type: object
+                        properties:
+                          card:
+                            type: array
+                            example:
+                              - 'Card, token, CVV and voucher data are not accepted on redirect payment sessions.'
+                            items:
+                              type: string
+                  -
+                    description: "Webhook setup required (ERR_WEBHOOK_SETUP_REQUIRED): the merchant's webhook endpoint must be configured, active and verified by a successful test ping before payment sessions can be created. See the [webhooks guide](/guides/webhooks)."
+                    type: object
+                    example:
+                      success: false
+                      message: 'Webhook setup needed before use: configure a webhook endpoint via PUT /v1/webhook, then run POST /v1/webhook/test until it reports success.'
+                      code: ERR_WEBHOOK_SETUP_REQUIRED
+                      data: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'Webhook setup needed before use: configure a webhook endpoint via PUT /v1/webhook, then run POST /v1/webhook/test until it reports success.'
+                      code:
+                        type: string
+                        example: ERR_WEBHOOK_SETUP_REQUIRED
+                      data:
+                        type: string
+                        example: null
+                properties: null
         429:
           description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
           content:
@@ -1960,10 +1985,18 @@ paths:
                   example: psc
                   enum:
                     - psc
+                    - ideal
+                    - giropay
                 customer:
                   type: object
                   description: 'Customer details.'
                   properties:
+                    email:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Customer email (required by some providers e.g. Paycent).'
+                      example: jane@example.com
                     first_name:
                       type:
                         - string
@@ -1988,6 +2021,62 @@ paths:
                         - 'null'
                       description: 'Your id for this customer.'
                       example: player-981
+                    phone:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Must not be greater than 64 characters.'
+                      example: l
+                    city:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Must not be greater than 255 characters.'
+                      example: j
+                    postal_code:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Must not be greater than 64 characters.'
+                      example: 'n'
+                    address:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Must not be greater than 255 characters.'
+                      example: i
+                method_data:
+                  type:
+                    - object
+                    - 'null'
+                  description: 'optional Provider-neutral extra fields for the selected method (allowlisted keys only).'
+                  example:
+                    bic: DEUTDEFF
+                  properties:
+                    bic:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Must not be greater than 64 characters.'
+                      example: k
+                    iban:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Must not be greater than 64 characters.'
+                      example: h
+                    account_holder_name:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Must not be greater than 255 characters.'
+                      example: w
+                    identity:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'Must not be greater than 255 characters.'
+                      example: a
                 customer_reference:
                   type:
                     - string
@@ -2732,6 +2821,8 @@ paths:
                     last_success_at: '2026-08-09T14:12:03.000000Z'
                     last_failure_at: null
                     consecutive_failures: 0
+                    delivery_status: healthy
+                    status_message: 'Webhook deliveries are healthy.'
                     created_at: '2026-08-01T10:00:00.000000Z'
                     updated_at: '2026-08-09T14:12:03.000000Z'
                 properties:
@@ -2774,6 +2865,12 @@ paths:
                       consecutive_failures:
                         type: integer
                         example: 0
+                      delivery_status:
+                        type: string
+                        example: healthy
+                      status_message:
+                        type: string
+                        example: 'Webhook deliveries are healthy.'
                       created_at:
                         type: string
                         example: '2026-08-01T10:00:00.000000Z'
@@ -2916,6 +3013,8 @@ paths:
                     last_success_at: '2026-08-09T14:12:03.000000Z'
                     last_failure_at: null
                     consecutive_failures: 0
+                    delivery_status: healthy
+                    status_message: 'Webhook deliveries are healthy.'
                     created_at: '2026-08-01T10:00:00.000000Z'
                     updated_at: '2026-08-10T09:30:12.000000Z'
                 properties:
@@ -2963,6 +3062,12 @@ paths:
                       consecutive_failures:
                         type: integer
                         example: 0
+                      delivery_status:
+                        type: string
+                        example: healthy
+                      status_message:
+                        type: string
+                        example: 'Webhook deliveries are healthy.'
                       created_at:
                         type: string
                         example: '2026-08-01T10:00:00.000000Z'
@@ -2990,6 +3095,8 @@ paths:
                       last_success_at: null
                       last_failure_at: null
                       consecutive_failures: 0
+                      delivery_status: setup_needed
+                      status_message: 'Webhook setup needed: this endpoint has not accepted a signed delivery yet. Run POST /v1/webhook/test until it succeeds.'
                       created_at: '2026-08-01T10:00:00.000000Z'
                       updated_at: '2026-08-01T10:00:00.000000Z'
                     secret: whsec_9f8e7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a0
@@ -3036,6 +3143,12 @@ paths:
                           consecutive_failures:
                             type: integer
                             example: 0
+                          delivery_status:
+                            type: string
+                            example: setup_needed
+                          status_message:
+                            type: string
+                            example: 'Webhook setup needed: this endpoint has not accepted a signed delivery yet. Run POST /v1/webhook/test until it succeeds.'
                           created_at:
                             type: string
                             example: '2026-08-01T10:00:00.000000Z'
@@ -3223,6 +3336,8 @@ paths:
                       last_success_at: '2026-08-09T14:12:03.000000Z'
                       last_failure_at: null
                       consecutive_failures: 0
+                      delivery_status: healthy
+                      status_message: 'Webhook deliveries are healthy.'
                       created_at: '2026-08-01T10:00:00.000000Z'
                       updated_at: '2026-08-10T09:30:12.000000Z'
                     secret: whsec_0a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f9
@@ -3269,6 +3384,12 @@ paths:
                           consecutive_failures:
                             type: integer
                             example: 0
+                          delivery_status:
+                            type: string
+                            example: healthy
+                          status_message:
+                            type: string
+                            example: 'Webhook deliveries are healthy.'
                           created_at:
                             type: string
                             example: '2026-08-01T10:00:00.000000Z'
@@ -3400,7 +3521,7 @@ paths:
     post:
       summary: 'Send a test ping'
       operationId: sendATestPing
-      description: "Send a signed `ping` event to the endpoint synchronously and report\nwhether the receiver answered with a 2xx status. Use it to verify\nreachability and signature handling before real events flow. The ping\nis ephemeral: it never appears in delivery history and the endpoint's\ndelivery health is untouched. A failing receiver still returns HTTP\n200 here, check `data.success` for the outcome. Limited to 10 pings\nper minute per API key.\n\nMerchant API keys ping their own endpoint. Partner API keys must\ninclude `merchant_id` for a linked merchant."
+      description: "Send a signed `ping` event to the endpoint synchronously and report\nwhether the receiver answered with a 2xx status. Use it to verify\nreachability and signature handling before real events flow. A\nsuccessful ping verifies the endpoint (it stamps `last_success_at` and\nresets the failure streak), which is what unlocks payment-session\ncreation when the webhook readiness gate is enabled. The ping never\nappears in delivery history and a failed ping persists nothing. A\nfailing receiver still returns HTTP 200 here, check `data.success`\nfor the outcome. Limited to 10 pings per minute per API key.\n\nMerchant API keys ping their own endpoint. Partner API keys must\ninclude `merchant_id` for a linked merchant."
       parameters: []
       responses:
         200:
@@ -3418,6 +3539,7 @@ paths:
                     status_code: 200
                     duration_ms: 184
                     error: null
+                    delivery_status: healthy
                 properties:
                   success:
                     type: boolean
@@ -3443,6 +3565,9 @@ paths:
                       error:
                         type: string
                         example: null
+                      delivery_status:
+                        type: string
+                        example: healthy
         400:
           description: 'A partner API key omitted `merchant_id` or referenced a merchant that is not linked to it.'
           content:
