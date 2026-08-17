@@ -1320,7 +1320,7 @@ paths:
                         merchant_id: 1
                         merchant_trans_id: ORDER-100045
                         amount: 5000
-                        amount_formatted: '50 EUR'
+                        amount_formatted: '50.00 EUR'
                         currency: EUR
                         status: success
                         transaction_type: sale
@@ -1378,7 +1378,7 @@ paths:
                             merchant_id: 1
                             merchant_trans_id: ORDER-100045
                             amount: 5000
-                            amount_formatted: '50 EUR'
+                            amount_formatted: '50.00 EUR'
                             currency: EUR
                             status: success
                             transaction_type: sale
@@ -1427,7 +1427,7 @@ paths:
                               example: 5000
                             amount_formatted:
                               type: string
-                              example: '50 EUR'
+                              example: '50.00 EUR'
                             currency:
                               type: string
                               example: EUR
@@ -1680,7 +1680,7 @@ paths:
                       payment_method: psc
                       status: pending_redirect
                       amount: 2500
-                      amount_formatted: '25.00'
+                      amount_formatted: '25.00 EUR'
                       currency: EUR
                       checkout_url: 'https://pay.skrill.com/app/?sid=a1b2c3d4e5'
                       return_url: 'https://merchant.example.com/deposit/complete'
@@ -1734,7 +1734,7 @@ paths:
                             example: 2500
                           amount_formatted:
                             type: string
-                            example: '25.00'
+                            example: '25.00 EUR'
                           currency:
                             type: string
                             example: EUR
@@ -2140,7 +2140,7 @@ paths:
                       payment_method: psc
                       status: paid
                       amount: 2500
-                      amount_formatted: '25.00'
+                      amount_formatted: '25.00 EUR'
                       currency: EUR
                       checkout_url: 'https://pay.skrill.com/app/?sid=a1b2c3d4e5'
                       return_url: 'https://merchant.example.com/deposit/complete'
@@ -2194,7 +2194,7 @@ paths:
                             example: 2500
                           amount_formatted:
                             type: string
-                            example: '25.00'
+                            example: '25.00 EUR'
                           currency:
                             type: string
                             example: EUR
