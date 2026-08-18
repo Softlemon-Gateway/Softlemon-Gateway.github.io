@@ -13,13 +13,13 @@ SCA applies when the customer actively initiates a payment and both the card iss
 SoftLemon runs a server-managed 3D Secure flow, so you never integrate an SDK or handle authentication data such as CAVV or ECI yourself:
 
 1. Call `POST /api/v1/3ds/verify` with the card details and your return URL before creating the payment.
-2. If the issuer authenticates silently, the response comes back immediately with `auth_type: frictionless` and no customer interaction.
+2. If the issuer answers without a challenge, the response comes back immediately with `auth_type: frictionless` and the outcome in `status`: `full_auth` (authenticated), `attempt` (attempt proof only), `unavailable` (card not enrolled or authentication not possible, no authentication data) or `failed`.
 3. If the issuer requires a challenge, redirect the customer to the returned `challenge_url`. After they complete it, the customer returns to your `auth_url`.
 4. Create the sale or authorization with `POST /api/v1/transactions`, passing the verification id. The gateway attaches the stored authentication data to the payment.
 
 The [accept a payment guide](/guides/accept-a-payment) walks through this end to end with test cards for each outcome.
 
-Card payments on SoftLemon must be authenticated before they are charged. A payment attempted without authentication where it is required fails with code `ERR_3DS_REQUIRED`.
+Card payments on SoftLemon must be authenticated before they are charged. A payment attempted without authentication where it is required fails with code `ERR_3DS_REQUIRED`. A payment that references a verification which ended in `failed`, or has not finished, is refused with HTTP 422; one that references an `unavailable` verification is processed without 3DS.
 
 ## Exemptions
 

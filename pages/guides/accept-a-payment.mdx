@@ -323,15 +323,24 @@ With the test card `4200000000000091` the issuer does not require a challenge an
 
 `status: full_auth` means authentication succeeded. Keep `data.id` (166 here). You will pass it when creating the sale in Step 3.
 
+The immediate response is not always a full authentication. Read `status`, not just the HTTP code:
+
+| `status` | Meaning | What to do |
+|---|---|---|
+| `full_auth` | The issuer authenticated the cardholder. | Continue to Step 3. |
+| `attempt` | The issuer could not fully authenticate the cardholder but returned an attempt proof (ECI 06 or 01). | Continue to Step 3. The attempt proof is forwarded with the payment. |
+| `unavailable` | The card is not enrolled for 3DS or authentication could not be performed. No authentication data exists and the `message` says so. | You may still create the sale. It is processed without 3DS and can be soft-declined with `ERR_3DS_REQUIRED` where SCA is mandatory. |
+| `failed` | The issuer refused the authentication. Returned as HTTP 400 with code `ERR_3DS_FAILED`. | Do not create the sale. Ask for another card. |
+
 ## Step 2: Handle the challenge when the issuer requires one
 
 Some cards trigger a bank challenge instead (test with `4200000000000042`). In that case the response carries a `challenge_url` and no final status yet:
 
 1. Redirect the cardholder to `challenge_url`. The bank runs its own verification there (a code, an app approval or similar).
-2. When the cardholder finishes, the gateway redirects them back to your `auth_url` with query parameters: `?card_verification_id={id}&status=full_auth` on success or `status=failed` on failure.
-3. On `full_auth`, use the `card_verification_id` value exactly like the `id` from the frictionless case. On `failed`, show the customer a payment failure and let them try another card.
+2. When the cardholder finishes, the gateway redirects them back to your `auth_url` with query parameters: `?card_verification_id={id}&status={outcome}`, where the outcome is one of the statuses in the table above (`full_auth`, `attempt`, `unavailable` or `failed`).
+3. On `full_auth` or `attempt`, use the `card_verification_id` value exactly like the `id` from the frictionless case. On `unavailable`, decide whether to charge without 3DS. On `failed`, show the customer a payment failure and let them try another card.
 
-Your return page should handle both outcomes. Nothing has been charged at this point in either flow.
+Your return page should handle every outcome. Nothing has been charged at this point in either flow, and a sale that references a `failed` or unfinished verification is refused with HTTP 422.
 
 ## Step 3: Create the sale
 
