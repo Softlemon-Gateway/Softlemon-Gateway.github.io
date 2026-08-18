@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: 'Softlemon Partner API'
-  description: "Production-ready partner integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the partner integration surface for admin-provisioned API keys.\n\nUse these endpoints when a partner is managing linked merchants and accessing partner-facing operational resources.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. Partners can manage a linked merchant's endpoint, secret and deliveries through the Webhook Management endpoints with `merchant_id`. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n## Integration guides\n\nThe [partner integration guide](/guides/partner-integration) walks through the full flow step by step: confirming your key's scope, listing linked merchants, reviewing their transactions and processing payments on a merchant's behalf with `merchant_id`. The same `merchant_id` rules apply to [alternative payments](/guides/accept-an-alternative-payment) through payment sessions and to the stored cards covered in the [returning customers guide](/guides/returning-customers). The [set up webhooks guide](/guides/set-up-webhooks) covers registering a merchant's endpoint and monitoring deliveries and the [webhook integration guide](/guides/webhooks) covers event delivery and signature verification.\n\nPrefer exploring in Postman? Download the [Partner API Postman collection](/collections/softlemon-partner-api.postman_collection.json) and set your API key as the Bearer token on the collection."
+  description: "Production-ready partner integration endpoints for admin-provisioned API keys.\n\n**Base URL:** `https://api.sandbox.softlemons.com/`\n\nThis documentation covers the partner integration surface for admin-provisioned API keys.\n\nUse these endpoints when a partner is managing linked merchants and accessing partner-facing operational resources.\n\nAPI keys are created by your SoftLemon admin team and delivered securely. Self-service onboarding and API key generation are not currently available.\n\nThe gateway also sends signed outbound webhooks on transaction state changes. Partners can manage a linked merchant's endpoint, secret and deliveries through the Webhook Management endpoints with `merchant_id`. See the Webhooks section below and the [webhook integration guide](/guides/webhooks) for signature verification examples and retry semantics.\n\n## Authenticating requests\n\nTo authenticate requests, include an **`Authorization`** header with the value **`Bearer {YOUR_API_KEY}`**. Use the API key provisioned by your SoftLemon admin team.\n\n### Key scopes\n\nEvery key carries a list of scopes that limits what it may do. The scopes are `transactions:read` (transaction status, payment sessions and stored cards), `transactions:write` (sales, authorizations, captures, voids, 3D Secure verification, payment sessions and stored-card removal), `refunds:write` (refunds) and `webhooks:manage` (a linked merchant's webhook endpoint, secret rotation, test pings and delivery history). Listing linked merchants and their transactions needs no scope beyond a valid partner key. A key is issued with the full set unless a subset is requested when it is created, so a reconciliation integration can be given a `transactions:read` key that cannot move money or change webhook settings. A request outside the key's scopes is refused with HTTP 403 and code `ERR_AUTH_FAILED`, and the message names the missing scope. `GET /api/v1/key-info` returns the scopes of the key you are calling with.\n\n## Integration guides\n\nThe [partner integration guide](/guides/partner-integration) walks through the full flow step by step: confirming your key's scope, listing linked merchants, reviewing their transactions and processing payments on a merchant's behalf with `merchant_id`. The same `merchant_id` rules apply to [alternative payments](/guides/accept-an-alternative-payment) through payment sessions and to the stored cards covered in the [returning customers guide](/guides/returning-customers). The [set up webhooks guide](/guides/set-up-webhooks) covers registering a merchant's endpoint and monitoring deliveries and the [webhook integration guide](/guides/webhooks) covers event delivery and signature verification.\n\nPrefer exploring in Postman? Download the [Partner API Postman collection](/collections/softlemon-partner-api.postman_collection.json) and set your API key as the Bearer token on the collection."
   version: 0.9.0
 servers:
   -
@@ -4568,6 +4568,11 @@ paths:
                     key_identifier: sl_20250411105714_TTwbAVtw
                     name: 'Partner production key'
                     status: active
+                    scopes:
+                      - 'transactions:read'
+                      - 'transactions:write'
+                      - 'refunds:write'
+                      - 'webhooks:manage'
                     entity_type: partner
                     entity_id: 7
                     entity_name: 'Acme Payments Partner'
@@ -4596,6 +4601,15 @@ paths:
                       status:
                         type: string
                         example: active
+                      scopes:
+                        type: array
+                        example:
+                          - 'transactions:read'
+                          - 'transactions:write'
+                          - 'refunds:write'
+                          - 'webhooks:manage'
+                        items:
+                          type: string
                       entity_type:
                         type: string
                         example: partner
