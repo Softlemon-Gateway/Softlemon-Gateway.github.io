@@ -908,7 +908,7 @@ paths:
                             type: string
                             example: '2025-05-20T09:18:48.000000Z'
         400:
-          description: 'Transaction rejected. The `code` field identifies the reason. See the [error catalogue](/api-basics/errors).'
+          description: 'Transaction rejected. The `code` field identifies the reason, for example ERR_PAYMENT_METHOD_NOT_ENABLED when the merchant has no acquirer assigned or its acquirer does not process card payments. See the [error catalogue](/api-basics/errors).'
           content:
             application/json:
               schema:
