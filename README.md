@@ -29,8 +29,9 @@ https://softlemon-gateway.github.io/.
 - `scripts/generate-postman.mjs`: regenerates the Postman collections from the
   specs (`npm run postman`). Rerun after any spec change.
 - `diagrams/`: hand-maintained diagrams (not rendered on the site).
-- `.github/workflows/deploy-pages.yml`: builds and deploys on push to main.
-  **Inert until go-live** (see the checklist below).
+- `.github/workflows/deploy-pages.yml`: builds and deploys on push to main. It
+  checks the Pages source setting before building and smoke tests the live
+  site after deploying (see Deployment below).
 
 ## Local development
 
@@ -69,10 +70,28 @@ The guide pages under `pages/guides/` are authored here for a public audience
 api repository keeps its own internal copies under `docs/guides/`, which are
 no longer published anywhere.
 
-## Go-live checklist
+## Deployment
 
-1. Switch this repository's Settings > Pages > Source to "GitHub Actions".
-2. Push to main. The deploy workflow builds and publishes the site.
-3. Spot-check https://softlemon-gateway.github.io/: root redirect, both API docs,
-   `/guides/webhooks`, legacy URLs (`/merchant.html`, `/partner.html`,
-   `/guides/webhooks.html`) and the raw spec URLs under `/specs/`.
+The site is published only by `deploy-pages.yml`, which runs on every push to
+main and can be run by hand from the Actions tab. It has four jobs:
+
+1. `preflight` reads the repository's Pages settings and fails if the source is
+   not "GitHub Actions" (`build_type: workflow`).
+2. `build` runs `npm ci` and `npm run build` and uploads `dist/`.
+3. `deploy` publishes the artifact.
+4. `verify` polls the live site for up to twelve minutes until `/`,
+   `/merchant/`, `/partner/`, `/guides/webhooks`, `/merchant.html` and
+   `/specs/merchant/openapi.yaml` all return 200.
+
+The Pages source must stay on "GitHub Actions" (Settings > Pages > Build and
+deployment > Source). If it is switched back to "Deploy from a branch", GitHub
+runs its own build of the raw main branch alongside this workflow. That build
+has no `index.html` at the root, it races the workflow deploy and whichever
+finishes last is what gets served, so the site can 404 while every run shows
+green. That is exactly what happened on 2026-08-18. The preflight job now turns
+it into a red run with the fix in the error message:
+
+```sh
+gh api -X PUT repos/Softlemon-Gateway/Softlemon-Gateway.github.io/pages -f build_type=workflow
+gh workflow run deploy-pages.yml --ref main
+```
