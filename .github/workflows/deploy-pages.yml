@@ -1,9 +1,14 @@
 # Builds the Zudoku docs site and deploys it to GitHub Pages.
 #
-# INERT UNTIL GO-LIVE. Before this can take effect, repository Settings >
-# Pages > Source must be switched to "GitHub Actions". See README.md for the
-# go-live checklist. The api repository's publish-docs.yml only refreshes
-# specs/ here, so both workflows can coexist.
+# This workflow is the only publisher of the site. It needs the repository's
+# Pages source (Settings > Pages > Build and deployment > Source) to be
+# "GitHub Actions". With the source set to "Deploy from a branch", GitHub also
+# runs its own build of the raw main branch, which has no index.html at the
+# root. That build races this one and whichever finishes last wins, so the
+# site can 404 while every workflow run stays green. The preflight job fails
+# loudly in that case and the verify job checks what the live site actually
+# serves. The api repository's publish-docs.yml only refreshes specs/ here,
+# so both workflows coexist.
 name: Deploy docs site
 
 on:
@@ -21,7 +26,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  preflight:
+    name: Check Pages source
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require the Pages source to be GitHub Actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          build_type="$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq .build_type)"
+          echo "Pages build_type is '${build_type}'"
+          if [ "${build_type}" != "workflow" ]; then
+            echo "::error::Pages source is '${build_type}', not 'workflow'. GitHub is publishing the raw main branch (no index.html) instead of this workflow's build, so the site 404s. Fix it in Settings > Pages > Source > GitHub Actions, or run: gh api -X PUT repos/${GITHUB_REPOSITORY}/pages -f build_type=workflow"
+            exit 1
+          fi
+
   build:
+    needs: preflight
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -41,6 +62,41 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  verify:
+    name: Smoke test the live site
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for the live site to serve the built pages
+        env:
+          BASE_URL: ${{ needs.deploy.outputs.page_url }}
+        run: |
+          # The Pages CDN can keep serving the previous deployment for up to
+          # ten minutes, so poll instead of checking once. Every path below is
+          # produced by the build and none exists in the raw branch, so a 200
+          # on all of them proves this workflow's artifact is what is live.
+          paths="/ /merchant/ /partner/ /guides/webhooks /merchant.html /specs/merchant/openapi.yaml"
+          deadline=$((SECONDS + 720))
+          while :; do
+            failed=""
+            for p in $paths; do
+              code="$(curl -s -o /dev/null -w '%{http_code}' "${BASE_URL%/}$p")"
+              [ "$code" = "200" ] || failed="$failed $p=$code"
+            done
+            if [ -z "$failed" ]; then
+              echo "All paths return 200 at ${BASE_URL}"
+              exit 0
+            fi
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              echo "::error::Live site is still not serving the built pages after 12 minutes:$failed"
+              exit 1
+            fi
+            echo "Not ready yet:$failed (retrying in 30s)"
+            sleep 30
+          done
