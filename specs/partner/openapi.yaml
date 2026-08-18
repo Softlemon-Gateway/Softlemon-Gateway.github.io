@@ -2252,32 +2252,8 @@ paths:
                   data:
                     type: string
                     example: null
-        403:
-          description: 'The session belongs to a merchant this API key cannot access.'
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  success: false
-                  message: 'Access denied: Resource not accessible'
-                  code: ERR_AUTH_FAILED
-                  data: null
-                properties:
-                  success:
-                    type: boolean
-                    example: false
-                  message:
-                    type: string
-                    example: 'Access denied: Resource not accessible'
-                  code:
-                    type: string
-                    example: ERR_AUTH_FAILED
-                  data:
-                    type: string
-                    example: null
         404:
-          description: 'No payment session with this id exists. See the [error catalogue](/api-basics/errors).'
+          description: 'No payment session with this id is visible to your API key. See the [error catalogue](/api-basics/errors).'
           content:
             application/json:
               schema:
@@ -2694,32 +2670,8 @@ paths:
                   data:
                     type: string
                     example: null
-        403:
-          description: 'The instrument belongs to a merchant this API key cannot access.'
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  success: false
-                  message: 'Access denied: Resource not accessible'
-                  code: ERR_AUTH_FAILED
-                  data: null
-                properties:
-                  success:
-                    type: boolean
-                    example: false
-                  message:
-                    type: string
-                    example: 'Access denied: Resource not accessible'
-                  code:
-                    type: string
-                    example: ERR_AUTH_FAILED
-                  data:
-                    type: string
-                    example: null
         404:
-          description: 'No payment instrument with this id exists. See the [error catalogue](/api-basics/errors).'
+          description: 'No payment instrument with this id is visible to your API key. See the [error catalogue](/api-basics/errors).'
           content:
             application/json:
               schema:
@@ -4271,7 +4223,7 @@ paths:
                 type: object
                 example:
                   success: false
-                  message: 'Webhook event not found for this merchant.'
+                  message: 'WebhookEvent not found'
                   code: ERR_NOT_FOUND
                   data: null
                 properties:
@@ -4280,7 +4232,7 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: 'Webhook event not found for this merchant.'
+                    example: 'WebhookEvent not found'
                   code:
                     type: string
                     example: ERR_NOT_FOUND
@@ -4438,7 +4390,7 @@ paths:
                 type: object
                 example:
                   success: false
-                  message: 'Webhook event not found for this merchant.'
+                  message: 'WebhookEvent not found'
                   code: ERR_NOT_FOUND
                   data: null
                 properties:
@@ -4447,7 +4399,7 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: 'Webhook event not found for this merchant.'
+                    example: 'WebhookEvent not found'
                   code:
                     type: string
                     example: ERR_NOT_FOUND
