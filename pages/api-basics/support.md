@@ -2,9 +2,7 @@
 
 ## Contact
 
-- Email: TODO-FACT support email address
-- Status page: TODO-FACT status page URL
-- Response times: TODO-FACT support SLA
+Use the support contact and status page details the SoftLemon team gives you during onboarding. If you do not have them, ask your SoftLemon account manager. Response times are agreed per account.
 
 ## Reporting an API problem
 

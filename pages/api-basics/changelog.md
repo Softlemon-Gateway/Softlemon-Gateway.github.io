@@ -2,6 +2,12 @@
 
 Notable changes to the SoftLemon API and this documentation, newest first.
 
+## 2026-08-19
+
+- `POST /api/v1/3ds/verify` identifies a verification by `public_id` (`tds_...`). Store that value and send it as `card_verification_data.id`; the `card_verification_id` on the post-challenge redirect is the same `tds_...` string. The numeric `id` in the response is **deprecated** and will be removed on a date announced here; numeric ids stay accepted on input. See [Initiate Card Verification](/merchant/card-verification#initiate-card-verification).
+- Published the [versioning and deprecation policy](/api-basics/conventions#deprecation): the API is additive within a version, clients must ignore unknown fields and treat ids as opaque strings, and removals follow a mark, announce, notice period, remove sequence.
+- Guides now use the `tds_...` public id in every 3DS example.
+
 ## 2026-08-09
 
 - Added `Idempotency-Key` support on capture, refund and void for safe retries. See [conventions](/api-basics/conventions).

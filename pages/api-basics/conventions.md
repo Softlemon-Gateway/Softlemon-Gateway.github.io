@@ -6,7 +6,27 @@ The rules on this page apply to every SoftLemon API endpoint.
 
 All endpoints live under the `/api/v1` prefix on the environment base URL, for example `https://api.sandbox.softlemons.com/api/v1/transactions`. The version is part of the path. Breaking changes will only ship under a new version prefix.
 
-TODO-FACT: formal versioning and deprecation policy.
+Within a version the API is additive. The following can appear at any time without a version change and are not considered breaking:
+
+- New fields in response bodies and webhook payloads.
+- New endpoints.
+- New optional request parameters.
+- New error codes in the [error catalogue](/api-basics/errors).
+
+Build your integration to tolerate this: ignore fields you do not recognise rather than rejecting the response, and treat every identifier as an opaque string. Do not assume an id is numeric or parse anything out of it. Webhook payloads carry their own dated `api_version`, described in the [webhooks guide](/guides/webhooks).
+
+## Deprecation
+
+When a field or behaviour is going to be removed within a version, it follows the same path every time:
+
+1. It is marked **deprecated** in the API reference, with a pointer to what replaces it.
+2. The deprecation is announced in the [changelog](/api-basics/changelog).
+3. It keeps working for a notice period announced in advance. The removal date is published in the changelog when it is set, and nothing is removed before that date.
+4. Where it is safe to do so, deprecated values stay accepted on input after they leave responses, so data you have already stored keeps working.
+
+Current deprecations:
+
+- `POST /api/v1/3ds/verify` returns both a numeric `id` and a `public_id` (`tds_...`) for the verification. The numeric `id` is deprecated. Store `public_id` and send it as `card_verification_data.id`; the `card_verification_id` on the post-challenge redirect is the same `tds_...` value. Numeric ids remain accepted on input. See [Initiate Card Verification](/merchant/card-verification#initiate-card-verification).
 
 ## Requests
 
