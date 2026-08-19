@@ -88,13 +88,16 @@ The acquirer call happens only after all three layers pass. A rejected duplicate
 
 Every rejection persists a record of the attempt: a transaction row with status `cancelled`, a `status_reason` of `duplicate`, the original reference and `related_trans_id` pointing at the original transaction (null when the original is not saved yet). Recorded attempts sit outside the unique index predicate, so they can never block a legitimate retry.
 
-The `status_reason` field explains why a row was cancelled without reaching the acquirer:
+The `status_reason` field explains why a row was cancelled without reaching the acquirer, or why a row the acquirer refused failed. It is returned on the transaction resource, so it reads the same on the status endpoint and in the dashboard:
 
 | `status_reason` | Meaning |
 |---|---|
 | `duplicate` | Rejected duplicate attempt (this document) |
 | `risk_rejected` | Blocked by a transaction rule (`ERR_RISK_REJECTED`) |
 | `do_not_retry` | Blocked by the decline cooldown (`ERR_DO_NOT_RETRY`) |
+| `session_expired` | Redirect session expired before the provider confirmed |
+| `card_insufficient_funds`, `card_do_not_honor`, `expired_card`, `3ds_required`, ... | The acquirer refused the operation; the error code you received at the time, in snake case without the `ERR_` prefix |
+| `gateway_error` | The acquirer could not be reached or answered unexpectedly |
 
 ### Not to be confused with the decline cooldown
 
