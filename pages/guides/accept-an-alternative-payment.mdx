@@ -617,6 +617,200 @@ Alternative payment methods are not available everywhere. Two checks decide whet
 
 To avoid surprises, always send both `customer.country_code` and `customer.ip_address`, and offer the customer another method when you receive either code. Neither check creates a provider payment, so they are safe to hit as often as your checkout needs.
 
+### Ask before you show a method
+
+`GET /api/v1/payment-methods` answers the same questions ahead of time so your checkout only shows methods that can actually be opened. Pass the customer's `country` and the payment `currency`; partner keys add `merchant_id`.
+
+{/* snippet:accept-an-alternative-payment:list-methods */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl 'https://api.sandbox.softlemons.com/api/v1/payment-methods?country=GB&currency=EUR' \
+  --header 'Authorization: Bearer {YOUR_API_KEY}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/payment-methods?country=GB&currency=EUR', {
+  headers: {
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  }
+})
+```
+
+```python title="Python"
+requests.get(
+    "https://api.sandbox.softlemons.com/api/v1/payment-methods?country=GB&currency=EUR",
+    headers={
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/payment-methods?country=GB&currency=EUR")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/payment-methods?country=GB&currency=EUR"
+
+	req, _ := http.NewRequest("GET", requestUrl, nil)
+
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Get, "https://api.sandbox.softlemons.com/api/v1/payment-methods?country=GB&currency=EUR");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/payment-methods?country=GB&currency=EUR")
+  .get()
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/payment-methods?country=GB&currency=EUR"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"GET"];
+[request setAllHTTPHeaderFields:headers];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/payment-methods?country=GB&currency=EUR");
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer {YOUR_API_KEY}']);
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/payment-methods?country=GB&currency=EUR")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Get.new(url)
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/payment-methods?country=GB&currency=EUR")!)
+request.httpMethod = "GET"
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+```json
+{
+  "success": true,
+  "message": "Payment methods retrieved",
+  "code": "",
+  "data": {
+    "merchant_id": 123,
+    "country": "GB",
+    "currency": "EUR",
+    "payment_methods": [
+      {
+        "payment_method": "psc",
+        "label": "Paysafecard",
+        "provider": "paycent",
+        "available": true,
+        "unavailable_reasons": [],
+        "supported_countries": ["AR", "AT", "AU", "BE", "BG", "CA", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "GE", "DE", "GI", "GR", "HU", "IS", "IE", "IT", "KW", "LV", "LI", "LT", "LU", "MT", "MX", "MD", "ME", "NL", "NZ", "NO", "PY", "PE", "PL", "PT", "RO", "SA", "SK", "SI", "ES", "SE", "CH", "TR", "AE", "GB", "US", "UY"],
+        "supported_currencies": ["EUR", "GBP", "USD"]
+      },
+      {
+        "payment_method": "ideal",
+        "label": "iDEAL",
+        "provider": "paycent",
+        "available": false,
+        "unavailable_reasons": ["country_not_supported"],
+        "supported_countries": ["NL"],
+        "supported_currencies": ["EUR"]
+      }
+    ]
+  }
+}
+```
+
+Each row is a redirect method enabled for the account. `supported_countries` and `supported_currencies` are the restrictions in force for it (an empty list means no restriction is known), and when you pass filters `available` tells you whether a session for that customer would be accepted, with `unavailable_reasons` being one or more of `country_not_supported`, `currency_not_supported` and `provider_not_offering`. A method that is `available: false` here would be refused by `POST /api/v1/payment-sessions` with the matching error. The endpoint reads configuration and the provider's published catalogue only; it never opens a provider payment, so call it per checkout if you like. It is advisory: the session create still runs the full provider checks, and card payments are not listed because they are governed by your acquirer routing rather than by this list.
+
 ## Errors you should handle
 
 | Response | Meaning | What to do |

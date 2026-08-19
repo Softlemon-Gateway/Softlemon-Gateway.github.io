@@ -211,6 +211,10 @@ export const guides = {
   },
 
   "accept-an-alternative-payment": {
+    "list-methods": {
+      method: "GET",
+      path: "/api/v1/payment-methods?country=GB&currency=EUR",
+    },
     "create-session": {
       method: "POST",
       path: "/api/v1/payment-sessions",
