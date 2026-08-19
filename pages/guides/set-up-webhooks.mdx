@@ -1710,9 +1710,182 @@ print(String(data: data, encoding: .utf8) ?? "")
 
 Rotation is a **hard cutover**: the old secret stops signing immediately and the new one appears exactly once in this response. Update your verifier right away. Deliveries retried after the rotation are signed with the new secret, including retries of events first attempted before it.
 
+## Step 7: Delete the endpoint
+
+To stop receiving webhooks for good, delete the endpoint. To pause instead, send `"is_active": false` with `PUT /api/v1/webhook`: the configuration and secret survive a pause, and nothing is delivered or retried while it lasts.
+
+{/* snippet:set-up-webhooks:delete-endpoint */}
+<CodeTabs syncKey="request-lang">
+
+```shell title="cURL"
+curl https://api.sandbox.softlemons.com/api/v1/webhook \
+  --request DELETE \
+  --header 'Authorization: Bearer {YOUR_API_KEY}'
+```
+
+```js title="JavaScript"
+fetch('https://api.sandbox.softlemons.com/api/v1/webhook', {
+  method: 'DELETE',
+  headers: {
+    Authorization: 'Bearer {YOUR_API_KEY}'
+  }
+})
+```
+
+```python title="Python"
+requests.delete(
+    "https://api.sandbox.softlemons.com/api/v1/webhook",
+    headers={
+      "Authorization": "Bearer {YOUR_API_KEY}"
+    }
+)
+```
+
+```java title="Java"
+OkHttpClient client = new OkHttpClient();
+
+Request request = new Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook")
+  .delete(null)
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build();
+
+Response response = client.newCall(request).execute();
+```
+
+```go title="Go"
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+)
+
+func main() {
+	requestUrl := "https://api.sandbox.softlemons.com/api/v1/webhook"
+
+	req, _ := http.NewRequest("DELETE", requestUrl, nil)
+
+	req.Header.Add("Authorization", "Bearer {YOUR_API_KEY}")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
+
+}
+```
+
+```csharp title="C#"
+using var client = new HttpClient();
+
+var request = new HttpRequestMessage(HttpMethod.Delete, "https://api.sandbox.softlemons.com/api/v1/webhook");
+request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "{YOUR_API_KEY}");
+
+using var response = await client.SendAsync(request);
+```
+
+```kotlin title="Kotlin"
+val client = OkHttpClient()
+
+val request = Request.Builder()
+  .url("https://api.sandbox.softlemons.com/api/v1/webhook")
+  .delete(null)
+  .addHeader("Authorization", "Bearer {YOUR_API_KEY}")
+  .build()
+
+val response = client.newCall(request).execute()
+```
+
+```objc title="Objective-C"
+#import <Foundation/Foundation.h>
+
+NSDictionary *headers = @{ @"Authorization": @"Bearer {YOUR_API_KEY}" };
+
+NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://api.sandbox.softlemons.com/api/v1/webhook"]
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:10.0];
+[request setHTTPMethod:@"DELETE"];
+[request setAllHTTPHeaderFields:headers];
+
+NSURLSession *session = [NSURLSession sharedSession];
+NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
+completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  if (error) {
+    NSLog(@"%@", error);
+  } else {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    NSLog(@"%@", httpResponse);
+  }
+}];
+[dataTask resume];
+```
+
+```php title="PHP"
+$ch = curl_init("https://api.sandbox.softlemons.com/api/v1/webhook");
+
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer {YOUR_API_KEY}']);
+
+curl_exec($ch);
+
+curl_close($ch);
+```
+
+```ruby title="Ruby"
+require 'uri'
+require 'net/http'
+
+url = URI("https://api.sandbox.softlemons.com/api/v1/webhook")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+
+request = Net::HTTP::Delete.new(url)
+request["Authorization"] = 'Bearer {YOUR_API_KEY}'
+
+response = http.request(request)
+puts response.read_body
+```
+
+```swift title="Swift"
+import Foundation
+
+var request = URLRequest(url: URL(string: "https://api.sandbox.softlemons.com/api/v1/webhook")!)
+request.httpMethod = "DELETE"
+request.setValue("Bearer {YOUR_API_KEY}", forHTTPHeaderField: "Authorization")
+
+let (data, response) = try await URLSession.shared.data(for: request)
+
+guard let httpResponse = response as? HTTPURLResponse,
+      200..<300 ~= httpResponse.statusCode else {
+  throw URLError(.badServerResponse)
+}
+
+print(String(data: data, encoding: .utf8) ?? "")
+```
+
+</CodeTabs>
+{/* /snippet */}
+
+```json
+{
+  "success": true,
+  "message": "Webhook endpoint deleted successfully",
+  "code": "",
+  "data": null
+}
+```
+
+Deliveries stop immediately. Events still queued for the endpoint are marked failed, and the stored URL and signing secret are erased. Your delivery history stays readable through `GET /api/v1/webhook/events`. Registering again with `PUT /api/v1/webhook` creates a new endpoint with a new secret, and a replay of an older event is then delivered to the new endpoint. `GET /api/v1/webhook` returns HTTP 404 once the endpoint is deleted, and deleting when there is no endpoint returns HTTP 404 as well.
+
 ## Good to know
 
 - `GET /api/v1/webhook` returns HTTP 404 until the endpoint is first created. `has_secret` only ever reports that a secret exists, never its value.
-- There is no delete operation. Pause with `"is_active": false` to stop deliveries while keeping the configuration.
+- Pause with `"is_active": false` to stop deliveries while keeping the configuration; `DELETE /api/v1/webhook` removes the endpoint for good (see [Step 7](#step-7-delete-the-endpoint)).
 - Partner keys must send `merchant_id` on every request in this guide. A missing or unlinked `merchant_id` returns HTTP 400.
 - Build the receiver before you register: verify signatures on the raw request body, answer 2xx within 10 seconds and deduplicate on the event id. Working verification code in five languages is in the [webhook integration guide](/guides/webhooks#verifying-signatures).
