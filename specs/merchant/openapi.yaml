@@ -3169,7 +3169,7 @@ paths:
     post:
       summary: 'Create a payment session'
       operationId: createAPaymentSession
-      description: "Create a redirect payment session and return the provider `checkout_url` to send\nthe customer to. The session expires 15 minutes after creation if the customer\ndoes not complete the hosted payment page.\n\nMerchant API keys act on their own account. Partner API keys must include\n`merchant_id` for a linked merchant.\n\nSessions never accept card data. Requests carrying card, token, CVV or voucher\nfields are rejected with HTTP 422. Duplicate requests reusing an active\n`reference` are rejected with HTTP 409. See the [duplicate protection guide](/guides/duplicate-protection).\n\nFollow the [alternative payment guide](/guides/accept-an-alternative-payment) for the full flow."
+      description: "Create a redirect payment session and return the provider `checkout_url` to send\nthe customer to. The session expires 15 minutes after creation if the customer\ndoes not complete the hosted payment page.\n\nMerchant API keys act on their own account. Partner API keys must include\n`merchant_id` for a linked merchant.\n\nSessions never accept card data. Requests carrying card, token, CVV or voucher\nfields are rejected with HTTP 422. Duplicate requests reusing an active\n`reference` are rejected with HTTP 409. See the [duplicate protection guide](/guides/duplicate-protection).\n\nSend `customer.country_code` and `customer.ip_address` (the shopper's IP as seen by\nyour server). The provider risk-checks the shopper's IP; without `customer.ip_address`\nit receives the IP of the server calling this API, which can get every payment\nrefused when that server is in a country the method does not serve. Country\navailability is checked before the provider is called.\n\nFollow the [alternative payment guide](/guides/accept-an-alternative-payment) for the full flow."
       parameters: []
       responses:
         200:
@@ -3281,29 +3281,75 @@ paths:
                             type: string
                             example: '2026-08-08T10:15:00.000000Z'
         400:
-          description: 'Session rejected. The `code` field identifies the reason, for example ERR_PAYMENT_METHOD_NOT_ENABLED when the method, currency or country is not enabled for the merchant. See the [error catalogue](/api-basics/errors).'
+          description: ''
           content:
             application/json:
               schema:
-                type: object
-                example:
-                  success: false
-                  message: 'This payment method is not enabled for the merchant.'
-                  code: ERR_PAYMENT_METHOD_NOT_ENABLED
-                  data: null
-                properties:
-                  success:
-                    type: boolean
-                    example: false
-                  message:
-                    type: string
-                    example: 'This payment method is not enabled for the merchant.'
-                  code:
-                    type: string
-                    example: ERR_PAYMENT_METHOD_NOT_ENABLED
-                  data:
-                    type: string
-                    example: null
+                oneOf:
+                  -
+                    description: 'Session rejected. The `code` field identifies the reason, for example ERR_PAYMENT_METHOD_NOT_ENABLED when the method or currency is not enabled for the merchant. See the [error catalogue](/api-basics/errors).'
+                    type: object
+                    example:
+                      success: false
+                      message: 'This payment method is not enabled for the merchant.'
+                      code: ERR_PAYMENT_METHOD_NOT_ENABLED
+                      data: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'This payment method is not enabled for the merchant.'
+                      code:
+                        type: string
+                        example: ERR_PAYMENT_METHOD_NOT_ENABLED
+                      data:
+                        type: string
+                        example: null
+                  -
+                    description: 'Country not served (ERR_PAYMENT_METHOD_NOT_AVAILABLE_IN_COUNTRY): the method is not available for `customer.country_code`. Checked before the provider is called; nothing is created. Offer another method for that country.'
+                    type: object
+                    example:
+                      success: false
+                      message: 'Payment method psc is not available for customers in ZA.'
+                      code: ERR_PAYMENT_METHOD_NOT_AVAILABLE_IN_COUNTRY
+                      data: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'Payment method psc is not available for customers in ZA.'
+                      code:
+                        type: string
+                        example: ERR_PAYMENT_METHOD_NOT_AVAILABLE_IN_COUNTRY
+                      data:
+                        type: string
+                        example: null
+                  -
+                    description: "Provider refused the payment (ERR_PROVIDER_REJECTED): the provider's risk or availability rules declined to open a checkout for this customer, typically because of the shopper's country or IP. `message` carries the provider's reason. The session and its transaction are marked failed and the `reference` is released. Send the real `customer.ip_address` and `customer.country_code`; do not retry the same data blindly."
+                    type: object
+                    example:
+                      success: false
+                      message: 'The payment provider refused to open this payment: The transaction has been blocked'
+                      code: ERR_PROVIDER_REJECTED
+                      data: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'The payment provider refused to open this payment: The transaction has been blocked'
+                      code:
+                        type: string
+                        example: ERR_PROVIDER_REJECTED
+                      data:
+                        type: string
+                        example: null
+                properties: null
         401:
           description: ''
           content:
@@ -3525,8 +3571,14 @@ paths:
                       type:
                         - string
                         - 'null'
-                      description: 'Customer country as a 2-letter ISO code.'
+                      description: "Customer country as a 2-letter ISO code. Strongly recommended: the method's country availability is checked before the provider is called and a country the method does not serve is refused with `ERR_PAYMENT_METHOD_NOT_AVAILABLE_IN_COUNTRY`."
                       example: GB
+                    ip_address:
+                      type:
+                        - string
+                        - 'null'
+                      description: "The customer's IP address as seen by your server (IPv4 or IPv6). Strongly recommended for server-to-server integrations: the provider risk-checks the shopper's IP, and without this field it receives the IP of the server calling this API instead. Send the real value you observed; never a substitute."
+                      example: 198.51.100.5
                     merchant_customer_id:
                       type:
                         - string
@@ -3538,25 +3590,25 @@ paths:
                         - string
                         - 'null'
                       description: 'Must not be greater than 64 characters.'
-                      example: l
+                      example: z
                     city:
                       type:
                         - string
                         - 'null'
                       description: 'Must not be greater than 255 characters.'
-                      example: j
+                      example: m
                     postal_code:
                       type:
                         - string
                         - 'null'
                       description: 'Must not be greater than 64 characters.'
-                      example: 'n'
+                      example: i
                     address:
                       type:
                         - string
                         - 'null'
                       description: 'Must not be greater than 255 characters.'
-                      example: i
+                      example: 'y'
                 method_data:
                   type:
                     - object
@@ -3570,25 +3622,25 @@ paths:
                         - string
                         - 'null'
                       description: 'Must not be greater than 64 characters.'
-                      example: k
+                      example: v
                     iban:
                       type:
                         - string
                         - 'null'
                       description: 'Must not be greater than 64 characters.'
-                      example: h
+                      example: d
                     account_holder_name:
                       type:
                         - string
                         - 'null'
                       description: 'Must not be greater than 255 characters.'
-                      example: w
+                      example: l
                     identity:
                       type:
                         - string
                         - 'null'
                       description: 'Must not be greater than 255 characters.'
-                      example: a
+                      example: j
                 customer_reference:
                   type:
                     - string
@@ -3832,6 +3884,418 @@ paths:
         required: true
         schema:
           type: string
+  /api/v1/payment-methods:
+    get:
+      summary: 'List available payment methods'
+      operationId: listAvailablePaymentMethods
+      description: "List the alternative (redirect) payment methods enabled for a merchant and, when\n`country` and/or `currency` are given, whether each one can be offered to that\nshopper. Use it to decide which methods to show at checkout before calling\n`POST /api/v1/payment-sessions`: a method with `available: false` would be refused\nthere with the matching error (`ERR_PAYMENT_METHOD_NOT_AVAILABLE_IN_COUNTRY`,\n`ERR_PAYMENT_METHOD_NOT_ENABLED`).\n\nThe answer is computed from your enablement and the provider's published\navailability; it never contacts the provider to open a payment and has no side\neffects, so it is safe to call per checkout. It is advisory: the create call still\nruns the full provider preflight. Card payments are not listed; they are routed by\nyour acquirer configuration and accepted on `POST /api/v1/transactions`.\n\n`supported_countries` and `supported_currencies` are the restrictions in force for\neach method; an empty list means no restriction is known. `unavailable_reasons`\nis one or more of `country_not_supported`, `currency_not_supported`,\n`provider_not_offering`.\n\nMerchant API keys list their own methods. Partner API keys must include\n`merchant_id` for a linked merchant."
+      parameters:
+        -
+          in: query
+          name: country
+          description: 'Two-letter ISO 3166-1 alpha-2 country of the shopper. When given, each method reports whether it is available there.'
+          example: DE
+          required: false
+          schema:
+            type: string
+        -
+          in: query
+          name: currency
+          description: 'Three-letter ISO 4217 currency of the intended payment. When given, each method reports whether it can be paid in it.'
+          example: EUR
+          required: false
+          schema:
+            type: string
+        -
+          in: query
+          name: merchant_id
+          description: 'Required for partner API keys. Must be a merchant linked to the authenticated partner.'
+          example: 123
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Payment methods retrieved'
+                  code: ''
+                  data:
+                    merchant_id: 123
+                    country: DE
+                    currency: EUR
+                    payment_methods:
+                      -
+                        payment_method: psc
+                        label: Paysafecard
+                        provider: paycent
+                        available: true
+                        unavailable_reasons: []
+                        supported_countries:
+                          - AR
+                          - AT
+                          - AU
+                          - BE
+                          - BG
+                          - CA
+                          - HR
+                          - CY
+                          - CZ
+                          - DK
+                          - EE
+                          - FI
+                          - FR
+                          - GE
+                          - DE
+                          - GI
+                          - GR
+                          - HU
+                          - IS
+                          - IE
+                          - IT
+                          - KW
+                          - LV
+                          - LI
+                          - LT
+                          - LU
+                          - MT
+                          - MX
+                          - MD
+                          - ME
+                          - NL
+                          - NZ
+                          - 'NO'
+                          - PY
+                          - PE
+                          - PL
+                          - PT
+                          - RO
+                          - SA
+                          - SK
+                          - SI
+                          - ES
+                          - SE
+                          - CH
+                          - TR
+                          - AE
+                          - GB
+                          - US
+                          - UY
+                        supported_currencies:
+                          - EUR
+                          - GBP
+                          - USD
+                      -
+                        payment_method: ideal
+                        label: iDEAL
+                        provider: paycent
+                        available: false
+                        unavailable_reasons:
+                          - country_not_supported
+                        supported_countries:
+                          - NL
+                        supported_currencies:
+                          - EUR
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Payment methods retrieved'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: object
+                    properties:
+                      merchant_id:
+                        type: integer
+                        example: 123
+                      country:
+                        type: string
+                        example: DE
+                      currency:
+                        type: string
+                        example: EUR
+                      payment_methods:
+                        type: array
+                        example:
+                          -
+                            payment_method: psc
+                            label: Paysafecard
+                            provider: paycent
+                            available: true
+                            unavailable_reasons: []
+                            supported_countries:
+                              - AR
+                              - AT
+                              - AU
+                              - BE
+                              - BG
+                              - CA
+                              - HR
+                              - CY
+                              - CZ
+                              - DK
+                              - EE
+                              - FI
+                              - FR
+                              - GE
+                              - DE
+                              - GI
+                              - GR
+                              - HU
+                              - IS
+                              - IE
+                              - IT
+                              - KW
+                              - LV
+                              - LI
+                              - LT
+                              - LU
+                              - MT
+                              - MX
+                              - MD
+                              - ME
+                              - NL
+                              - NZ
+                              - 'NO'
+                              - PY
+                              - PE
+                              - PL
+                              - PT
+                              - RO
+                              - SA
+                              - SK
+                              - SI
+                              - ES
+                              - SE
+                              - CH
+                              - TR
+                              - AE
+                              - GB
+                              - US
+                              - UY
+                            supported_currencies:
+                              - EUR
+                              - GBP
+                              - USD
+                          -
+                            payment_method: ideal
+                            label: iDEAL
+                            provider: paycent
+                            available: false
+                            unavailable_reasons:
+                              - country_not_supported
+                            supported_countries:
+                              - NL
+                            supported_currencies:
+                              - EUR
+                        items:
+                          type: object
+                          properties:
+                            payment_method:
+                              type: string
+                              example: psc
+                            label:
+                              type: string
+                              example: Paysafecard
+                            provider:
+                              type: string
+                              example: paycent
+                            available:
+                              type: boolean
+                              example: true
+                            unavailable_reasons:
+                              type: array
+                              example: []
+                            supported_countries:
+                              type: array
+                              example:
+                                - AR
+                                - AT
+                                - AU
+                                - BE
+                                - BG
+                                - CA
+                                - HR
+                                - CY
+                                - CZ
+                                - DK
+                                - EE
+                                - FI
+                                - FR
+                                - GE
+                                - DE
+                                - GI
+                                - GR
+                                - HU
+                                - IS
+                                - IE
+                                - IT
+                                - KW
+                                - LV
+                                - LI
+                                - LT
+                                - LU
+                                - MT
+                                - MX
+                                - MD
+                                - ME
+                                - NL
+                                - NZ
+                                - 'NO'
+                                - PY
+                                - PE
+                                - PL
+                                - PT
+                                - RO
+                                - SA
+                                - SK
+                                - SI
+                                - ES
+                                - SE
+                                - CH
+                                - TR
+                                - AE
+                                - GB
+                                - US
+                                - UY
+                              items:
+                                type: string
+                            supported_currencies:
+                              type: array
+                              example:
+                                - EUR
+                                - GBP
+                                - USD
+                              items:
+                                type: string
+        400:
+          description: 'A partner API key omitted `merchant_id` or referenced a merchant that is not linked to it.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        422:
+          description: 'Validation failed: `country` is not a known ISO 3166-1 alpha-2 code or `currency` is not a supported ISO 4217 code.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Validation errors'
+                  code: ERR_VALIDATION_FAILED
+                  data: null
+                  errors:
+                    country:
+                      - 'The selected country is not recognised.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  code:
+                    type: string
+                    example: ERR_VALIDATION_FAILED
+                  data:
+                    type: string
+                    example: null
+                  errors:
+                    type: object
+                    properties:
+                      country:
+                        type: array
+                        example:
+                          - 'The selected country is not recognised.'
+                        items:
+                          type: string
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
+      tags:
+        - 'Payment Sessions'
   /api/v1/3ds/verify:
     post:
       summary: 'Initiate Card Verification'
