@@ -309,6 +309,7 @@ With the test card `4200000000000091` the issuer does not require a challenge an
   "code": "",
   "data": {
     "id": 166,
+    "public_id": "tds_01k2h4x9m3n5p7q9r1s3t5v7w9",
     "amount": 1250,
     "currency": "EUR",
     "version": "2.2.0",
@@ -321,7 +322,7 @@ With the test card `4200000000000091` the issuer does not require a challenge an
 }
 ```
 
-`status: full_auth` means authentication succeeded. Keep `data.id` (166 here). You will pass it when creating the sale in Step 3.
+`status: full_auth` means authentication succeeded. Keep `data.public_id` (`tds_01k2h4x9m3n5p7q9r1s3t5v7w9` here). It is the verification's identifier and you will pass it when creating the sale in Step 3. Treat it as an opaque string. The numeric `id` next to it is deprecated and will leave the response on a date announced in the [changelog](/api-basics/changelog); see [conventions](/api-basics/conventions#deprecation).
 
 The immediate response is not always a full authentication. Read `status`, not just the HTTP code:
 
@@ -337,8 +338,8 @@ The immediate response is not always a full authentication. Read `status`, not j
 Some cards trigger a bank challenge instead (test with `4200000000000042`). In that case the response carries a `challenge_url` and no final status yet:
 
 1. Redirect the cardholder to `challenge_url`. The bank runs its own verification there (a code, an app approval or similar).
-2. When the cardholder finishes, the gateway redirects them back to your `auth_url` with query parameters: `?card_verification_id={id}&status={outcome}`, where the outcome is one of the statuses in the table above (`full_auth`, `attempt`, `unavailable` or `failed`).
-3. On `full_auth` or `attempt`, use the `card_verification_id` value exactly like the `id` from the frictionless case. On `unavailable`, decide whether to charge without 3DS. On `failed`, show the customer a payment failure and let them try another card.
+2. When the cardholder finishes, the gateway redirects them back to your `auth_url` with query parameters: `?card_verification_id={public_id}&status={outcome}`, where `card_verification_id` is the verification's `tds_...` public id and the outcome is one of the statuses in the table above (`full_auth`, `attempt`, `unavailable` or `failed`).
+3. On `full_auth` or `attempt`, use the `card_verification_id` value exactly like the `public_id` from the frictionless case, passed through unchanged. On `unavailable`, decide whether to charge without 3DS. On `failed`, show the customer a payment failure and let them try another card.
 
 Your return page should handle every outcome. Nothing has been charged at this point in either flow, and a sale that references a `failed` or unfinished verification is refused with HTTP 422.
 
@@ -347,7 +348,7 @@ Your return page should handle every outcome. Nothing has been charged at this p
 Now charge the card with `POST /api/v1/transactions`. Three fields matter beyond the card details:
 
 - `transaction_type: "sale"` charges immediately with no separate capture step. (Use `auth` instead when you want to reserve funds first. See [Authorize now, capture later](/guides/authorize-and-capture).)
-- `card_verification_data.id` links the 3DS verification from Step 1 or 2. The stored CAVV, ECI and DS Transaction ID are attached automatically.
+- `card_verification_data.id` links the 3DS verification from Step 1 or 2: the `public_id` from the verify response or the `card_verification_id` from the redirect. The stored CAVV, ECI and DS Transaction ID are attached automatically.
 - `reference` is your own id for this payment. The gateway allows only one active payment per reference, which protects your customer from double charges. See the [duplicate protection guide](/guides/duplicate-protection).
 
 {/* snippet:accept-a-payment:create-sale */}
@@ -371,7 +372,7 @@ curl https://api.sandbox.softlemons.com/api/v1/transactions \
     "cvv": "123"
   },
   "card_verification_data": {
-    "id": 166
+    "id": "tds_01k2h4x9m3n5p7q9r1s3t5v7w9"
   }
 }'
 ```
@@ -396,7 +397,7 @@ fetch('https://api.sandbox.softlemons.com/api/v1/transactions', {
       cvv: '123'
     },
     card_verification_data: {
-      id: 166
+      id: 'tds_01k2h4x9m3n5p7q9r1s3t5v7w9'
     }
   })
 })
@@ -422,7 +423,7 @@ requests.post(
         "cvv": "123"
       },
       "card_verification_data": {
-        "id": 166
+        "id": "tds_01k2h4x9m3n5p7q9r1s3t5v7w9"
       }
     }
 )
@@ -432,7 +433,7 @@ requests.post(
 OkHttpClient client = new OkHttpClient();
 
 MediaType mediaType = MediaType.parse("application/json");
-RequestBody body = RequestBody.create(mediaType, "{\n  \"transaction_type\": \"sale\",\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"reference\": \"ORDER-912346\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"card_verification_data\": {\n    \"id\": 166\n  }\n}");
+RequestBody body = RequestBody.create(mediaType, "{\n  \"transaction_type\": \"sale\",\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"reference\": \"ORDER-912346\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"card_verification_data\": {\n    \"id\": \"tds_01k2h4x9m3n5p7q9r1s3t5v7w9\"\n  }\n}");
 Request request = new Request.Builder()
   .url("https://api.sandbox.softlemons.com/api/v1/transactions")
   .post(body)
@@ -469,7 +470,7 @@ func main() {
     "cvv": "123"
   },
   "card_verification_data": {
-    "id": 166
+    "id": "tds_01k2h4x9m3n5p7q9r1s3t5v7w9"
   }
 }`)
 
@@ -509,7 +510,7 @@ request.Content = new StringContent(
     "cvv": "123"
   },
   "card_verification_data": {
-    "id": 166
+    "id": "tds_01k2h4x9m3n5p7q9r1s3t5v7w9"
   }
 }
 """,
@@ -522,7 +523,7 @@ using var response = await client.SendAsync(request);
 val client = OkHttpClient()
 
 val mediaType = MediaType.parse("application/json")
-val body = RequestBody.create(mediaType, "{\n  \"transaction_type\": \"sale\",\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"reference\": \"ORDER-912346\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"card_verification_data\": {\n    \"id\": 166\n  }\n}")
+val body = RequestBody.create(mediaType, "{\n  \"transaction_type\": \"sale\",\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"reference\": \"ORDER-912346\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"card_verification_data\": {\n    \"id\": \"tds_01k2h4x9m3n5p7q9r1s3t5v7w9\"\n  }\n}")
 val request = Request.Builder()
   .url("https://api.sandbox.softlemons.com/api/v1/transactions")
   .post(body)
@@ -544,7 +545,7 @@ NSDictionary *parameters = @{ @"transaction_type": @"sale",
                               @"currency": @"EUR",
                               @"reference": @"ORDER-912346",
                               @"card": @{ @"number": @"4200000000000091", @"exp_month": @12, @"exp_year": @2030, @"name": @"John Doe", @"cvv": @"123" },
-                              @"card_verification_data": @{ @"id": @166 } };
+                              @"card_verification_data": @{ @"id": @"tds_01k2h4x9m3n5p7q9r1s3t5v7w9" } };
 
 NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
 
@@ -586,7 +587,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
     'cvv' => '123'
   ],
   'card_verification_data' => [
-    'id' => 166
+    'id' => 'tds_01k2h4x9m3n5p7q9r1s3t5v7w9'
   ]
 ]));
 
@@ -621,7 +622,7 @@ request.body = <<~JSON
     "cvv": "123"
   },
   "card_verification_data": {
-    "id": 166
+    "id": "tds_01k2h4x9m3n5p7q9r1s3t5v7w9"
   }
 }
 JSON
@@ -651,7 +652,7 @@ let jsonBody = #"""
     "cvv": "123"
   },
   "card_verification_data": {
-    "id": 166
+    "id": "tds_01k2h4x9m3n5p7q9r1s3t5v7w9"
   }
 }
 """#

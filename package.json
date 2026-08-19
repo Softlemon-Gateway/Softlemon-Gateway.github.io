@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "zudoku dev",
-    "prebuild": "rm -rf public/specs && cp -R specs public/specs",
+    "prebuild": "node scripts/check-placeholders.mjs && rm -rf public/specs && cp -R specs public/specs",
     "build": "zudoku build",
     "postbuild": "node scripts/strip-preconnect.mjs",
     "preview": "zudoku preview",

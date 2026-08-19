@@ -29,7 +29,7 @@ curl https://api.sandbox.softlemons.com/api/v1/transactions \
     "cvv": "123"
   },
   "card_verification_data": {
-    "id": 166
+    "id": "tds_01k2h4x9m3n5p7q9r1s3t5v7w9"
   }
 }'
 ```
@@ -54,7 +54,7 @@ fetch('https://api.sandbox.softlemons.com/api/v1/transactions', {
       cvv: '123'
     },
     card_verification_data: {
-      id: 166
+      id: 'tds_01k2h4x9m3n5p7q9r1s3t5v7w9'
     }
   })
 })
@@ -80,7 +80,7 @@ requests.post(
         "cvv": "123"
       },
       "card_verification_data": {
-        "id": 166
+        "id": "tds_01k2h4x9m3n5p7q9r1s3t5v7w9"
       }
     }
 )
@@ -90,7 +90,7 @@ requests.post(
 OkHttpClient client = new OkHttpClient();
 
 MediaType mediaType = MediaType.parse("application/json");
-RequestBody body = RequestBody.create(mediaType, "{\n  \"transaction_type\": \"auth\",\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"reference\": \"ORDER-912346\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"card_verification_data\": {\n    \"id\": 166\n  }\n}");
+RequestBody body = RequestBody.create(mediaType, "{\n  \"transaction_type\": \"auth\",\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"reference\": \"ORDER-912346\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"card_verification_data\": {\n    \"id\": \"tds_01k2h4x9m3n5p7q9r1s3t5v7w9\"\n  }\n}");
 Request request = new Request.Builder()
   .url("https://api.sandbox.softlemons.com/api/v1/transactions")
   .post(body)
@@ -127,7 +127,7 @@ func main() {
     "cvv": "123"
   },
   "card_verification_data": {
-    "id": 166
+    "id": "tds_01k2h4x9m3n5p7q9r1s3t5v7w9"
   }
 }`)
 
@@ -167,7 +167,7 @@ request.Content = new StringContent(
     "cvv": "123"
   },
   "card_verification_data": {
-    "id": 166
+    "id": "tds_01k2h4x9m3n5p7q9r1s3t5v7w9"
   }
 }
 """,
@@ -180,7 +180,7 @@ using var response = await client.SendAsync(request);
 val client = OkHttpClient()
 
 val mediaType = MediaType.parse("application/json")
-val body = RequestBody.create(mediaType, "{\n  \"transaction_type\": \"auth\",\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"reference\": \"ORDER-912346\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"card_verification_data\": {\n    \"id\": 166\n  }\n}")
+val body = RequestBody.create(mediaType, "{\n  \"transaction_type\": \"auth\",\n  \"amount\": 12.5,\n  \"currency\": \"EUR\",\n  \"reference\": \"ORDER-912346\",\n  \"card\": {\n    \"number\": \"4200000000000091\",\n    \"exp_month\": 12,\n    \"exp_year\": 2030,\n    \"name\": \"John Doe\",\n    \"cvv\": \"123\"\n  },\n  \"card_verification_data\": {\n    \"id\": \"tds_01k2h4x9m3n5p7q9r1s3t5v7w9\"\n  }\n}")
 val request = Request.Builder()
   .url("https://api.sandbox.softlemons.com/api/v1/transactions")
   .post(body)
@@ -202,7 +202,7 @@ NSDictionary *parameters = @{ @"transaction_type": @"auth",
                               @"currency": @"EUR",
                               @"reference": @"ORDER-912346",
                               @"card": @{ @"number": @"4200000000000091", @"exp_month": @12, @"exp_year": @2030, @"name": @"John Doe", @"cvv": @"123" },
-                              @"card_verification_data": @{ @"id": @166 } };
+                              @"card_verification_data": @{ @"id": @"tds_01k2h4x9m3n5p7q9r1s3t5v7w9" } };
 
 NSData *postData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
 
@@ -244,7 +244,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
     'cvv' => '123'
   ],
   'card_verification_data' => [
-    'id' => 166
+    'id' => 'tds_01k2h4x9m3n5p7q9r1s3t5v7w9'
   ]
 ]));
 
@@ -279,7 +279,7 @@ request.body = <<~JSON
     "cvv": "123"
   },
   "card_verification_data": {
-    "id": 166
+    "id": "tds_01k2h4x9m3n5p7q9r1s3t5v7w9"
   }
 }
 JSON
@@ -309,7 +309,7 @@ let jsonBody = #"""
     "cvv": "123"
   },
   "card_verification_data": {
-    "id": 166
+    "id": "tds_01k2h4x9m3n5p7q9r1s3t5v7w9"
   }
 }
 """#

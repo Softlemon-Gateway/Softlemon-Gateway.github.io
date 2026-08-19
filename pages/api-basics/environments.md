@@ -5,7 +5,7 @@ SoftLemon provides a sandbox for development and testing and a production enviro
 | Environment | Base URL | Purpose |
 |---|---|---|
 | Sandbox | `https://api.sandbox.softlemons.com` | Integration development and testing. No real money moves. |
-| Production | TODO-FACT production base URL | Live traffic. |
+| Production | Provided by the SoftLemon team together with your production keys. | Live traffic. |
 
 Both environments expose the same API surface. All examples in this documentation run against the sandbox.
 
@@ -44,4 +44,4 @@ Before switching live traffic on:
 5. Review the [rate limits](/api-basics/rate-limits) against your expected peak volume.
 6. Run one low-value live transaction end to end, including capture and refund, before opening real traffic.
 
-TODO-FACT: production onboarding steps and any compliance checks required before go-live.
+Production onboarding, including any compliance checks required before go-live, is walked through with the SoftLemon team. Contact [support](/api-basics/support) to start it.

@@ -33,7 +33,7 @@ export const guides = {
         currency: "EUR",
         reference: "ORDER-912346",
         card: CARD,
-        card_verification_data: { id: 166 },
+        card_verification_data: { id: "tds_01k2h4x9m3n5p7q9r1s3t5v7w9" },
       },
     },
     "poll-status": {
@@ -52,7 +52,7 @@ export const guides = {
         currency: "EUR",
         reference: "ORDER-912346",
         card: CARD,
-        card_verification_data: { id: 166 },
+        card_verification_data: { id: "tds_01k2h4x9m3n5p7q9r1s3t5v7w9" },
       },
     },
     "capture-full": {
@@ -153,7 +153,7 @@ export const guides = {
         currency: "EUR",
         reference: "ORDER-912346",
         card: CARD,
-        card_verification_data: { id: 166 },
+        card_verification_data: { id: "tds_01k2h4x9m3n5p7q9r1s3t5v7w9" },
       },
     },
   },
