@@ -864,3 +864,5 @@ print(String(data: data, encoding: .utf8) ?? "")
 | `409` with `ERR_DUPLICATE` | The `reference` already has an active payment. `data.transaction_id` is the original. | Treat the payment as already made. Do not retry with the same reference. |
 | `422` | Validation failed. The response lists the field errors. | Fix the request. Nothing was charged. |
 | `400` with `ERR_DO_NOT_RETRY` | The same declined card was retried within the cooldown window. | Wait or ask the customer for another card. |
+| `400` with `ERR_3DS_REQUIRED` | The sale was sent without `card_verification_data` and the issuer requires authentication. The transaction is recorded as `failed` with `status_reason` `3ds_required`; `data.transaction` is that row and `data.next_action` points at `POST /api/v1/3ds/verify`. | Go back to Step 1, run the verification, then create a new sale with `card_verification_data.id`. The refused sale cannot be continued. |
+| `422` with `ERR_3DS_REQUIRED` or `ERR_3DS_FAILED` | The `card_verification_data.id` you sent belongs to a verification that has not finished, or that ended in `failed`. | Wait for the outcome, or run a new verification. Nothing was charged. |

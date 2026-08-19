@@ -19,7 +19,7 @@ SoftLemon runs a server-managed 3D Secure flow, so you never integrate an SDK or
 
 The [accept a payment guide](/guides/accept-a-payment) walks through this end to end with test cards for each outcome.
 
-Card payments on SoftLemon must be authenticated before they are charged. A payment attempted without authentication where it is required fails with code `ERR_3DS_REQUIRED`. A payment that references a verification which ended in `failed`, or has not finished, is refused with HTTP 422; one that references an `unavailable` verification is processed without 3DS.
+Card payments on SoftLemon must be authenticated before they are charged. A payment attempted without authentication where it is required is refused with HTTP 400 and code `ERR_3DS_REQUIRED`; the response carries the refused transaction (recorded as `failed`, `status_reason` `3ds_required`) and a `next_action` pointing at `POST /api/v1/3ds/verify`. The payment endpoint never starts a challenge itself. A payment that references a verification which ended in `failed`, or has not finished, is refused with HTTP 422; one that references an `unavailable` verification is processed without 3DS.
 
 ## Exemptions
 
