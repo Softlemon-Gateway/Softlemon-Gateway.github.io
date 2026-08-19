@@ -204,6 +204,10 @@ export const guides = {
       path: "/api/v1/webhook/rotate-secret",
       body: {},
     },
+    "delete-endpoint": {
+      method: "DELETE",
+      path: "/api/v1/webhook",
+    },
   },
 
   "accept-an-alternative-payment": {

@@ -35,6 +35,8 @@ Each failed delivery is retried after 1, 5, 15 and 30 minutes (five attempts in 
 
 A Softlemon administrator registers the merchant's endpoint URL. At creation (and on every rotation) the endpoint's signing secret is returned **exactly once**. It is stored encrypted and can never be read back afterwards, so it must be captured at that moment and stored securely on the merchant side.
 
+An endpoint can be disabled (deliveries pause, the configuration and secret are kept) or deleted. Deleting stops deliveries immediately, fails any event still queued for it and erases the stored URL and secret; the delivery history stays readable, and a new endpoint can be registered afterwards with a fresh secret. The [set up webhooks guide](/guides/set-up-webhooks) walks through both.
+
 ---
 
 ## Part 2: Integration reference (technical)
@@ -91,10 +93,12 @@ A completed sale:
     "data": {
         "transaction": {
             "id": 123456,
+            "public_id": "txn_01k20b9v6ye2ttfvghw2hcaa8q",
             "merchant_trans_id": "ORDER-100045",
             "related_trans_id": null,
             "transaction_type": "sale",
             "status": "success",
+            "payment_method": "card",
             "amount": 5000,
             "currency": "EUR",
             "refunded_amount": 0,
@@ -120,10 +124,12 @@ A partial refund (child transaction plus parent summary):
     "data": {
         "transaction": {
             "id": 123460,
+            "public_id": "txn_01k20bt64k2c14n5xw8ahb62pe",
             "merchant_trans_id": "ORDER-100045",
             "related_trans_id": 123456,
             "transaction_type": "refund",
             "status": "refunded",
+            "payment_method": "card",
             "amount": 2000,
             "currency": "EUR",
             "acquirer_provider": "qashpay",
@@ -135,6 +141,7 @@ A partial refund (child transaction plus parent summary):
         },
         "parent_transaction": {
             "id": 123456,
+            "public_id": "txn_01k20b9v6ye2ttfvghw2hcaa8q",
             "status": "success",
             "amount": 5000,
             "captured_amount": 5000,
@@ -150,11 +157,15 @@ Field notes:
 |---|---|
 | `id` | Event id (`evt_` + 26-char ULID). Identical across every retry and replay of this event. This is the idempotency key. |
 | `api_version` | Payload schema version, also sent as `X-Softlemon-Webhook-Version`. |
-| `data.transaction.id` | The gateway transaction id, the unique identifier to reconcile on. |
+| `data.transaction.id` | The gateway transaction id, the value the transaction endpoints currently take. |
+| `data.transaction.public_id` | The transaction's opaque `txn_` public id, the stable Softlemon reference to store. The integer `id` and `related_trans_id` leave the payload on a future `api_version` once the transaction endpoints accept public ids. |
+| `data.transaction.payment_method` | Always present: `card` for card payments, otherwise the alternative payment method code (`psc`, ...). |
+| `data.transaction.payment_session_id` | Present on redirect/APM transactions: the `ps_*` payment session public id, for reconciling against the payment sessions API. |
+| `data.transaction.provider_transaction_id` | Present on redirect/APM transactions: the provider's own transaction id. |
 | `data.transaction.merchant_trans_id` | The merchant's own reference. Shared by captures, refunds and voids of the same payment. It is not unique on its own. |
 | `data.transaction.captured_amount` | Present only on authorization rows (`transaction_type: "auth"`). |
 | `data.transaction.refunded_amount` | Present only on `sale` and `capture` rows. |
-| `data.parent_transaction` | Present only on child-row events (captures, refunds, voids): id, status and amount totals of the parent. |
+| `data.parent_transaction` | Present only on child-row events (captures, refunds, voids): id, public id, status and amount totals of the parent. |
 
 **The contract is additive-by-default: new fields may appear at any time without a version bump. Receivers must ignore unknown fields.** Payloads never contain cardholder data, payment instrument details, PAN, CVV or IP addresses.
 
@@ -316,7 +327,7 @@ Only a **2xx response is success**. Redirects are never followed. A 3xx counts a
 | 4 | 15 minutes | ~21 min |
 | 5 | 30 minutes | ~51 min |
 
-If the fifth attempt fails, the event is marked **permanently failed**. It remains in the delivery history and can be replayed manually within the retention window. Deliveries to an endpoint that has been deactivated are abandoned immediately without retries.
+If the fifth attempt fails, the event is marked **permanently failed**. It remains in the delivery history and can be replayed manually within the retention window. Deliveries to an endpoint that has been deactivated are abandoned immediately without retries. Attempts in the delivery history are numbered from the event's own counter, so a replay continues the sequence: a replayed event that was delivered first time shows attempts 1 and 2.
 
 Delivery is at-least-once: a recorded event whose delivery was interrupted (for example by a process crash) is re-dispatched by a background sweeper, so an occasional duplicate delivery of the same event id is possible even without replays.
 
