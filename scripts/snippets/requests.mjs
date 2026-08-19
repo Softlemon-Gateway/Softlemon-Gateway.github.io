@@ -222,7 +222,9 @@ export const guides = {
         customer: {
           first_name: "Jane",
           last_name: "Doe",
+          email: "jane@example.com",
           country_code: "GB",
+          ip_address: "198.51.100.5",
           merchant_customer_id: "player-981",
         },
         customer_reference: "player-981",
