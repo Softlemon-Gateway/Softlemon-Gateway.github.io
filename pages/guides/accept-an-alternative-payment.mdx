@@ -9,6 +9,7 @@ Creating a session also creates a linked transaction. The transaction follows th
 - You need an API key. Send it on every request as `Authorization: Bearer {YOUR_API_KEY}`.
 - All examples use the sandbox base URL `https://api.sandbox.softlemons.com`.
 - Redirect payments and the specific payment method must be enabled for your account. Requests for a method that is not enabled fail with `ERR_PAYMENT_METHOD_NOT_ENABLED`. Contact [support](/api-basics/support) to get a method enabled.
+- Each method is only available in certain countries, and the provider risk-checks the customer's IP. Send `customer.country_code` and `customer.ip_address` on every session. See [Availability](#availability) below.
 - You need two browser URLs on your site: a success URL and a cancel URL for the customer's return.
 - Amounts are major units in requests (`25.00`) and minor units in responses (`2500`). See [conventions](/api-basics/conventions).
 - Never send card fields. A session request carrying card, token, CVV or voucher data is rejected with HTTP 422 regardless of where the field appears in the payload.
@@ -33,7 +34,9 @@ curl https://api.sandbox.softlemons.com/api/v1/payment-sessions \
   "customer": {
     "first_name": "Jane",
     "last_name": "Doe",
+    "email": "jane@example.com",
     "country_code": "GB",
+    "ip_address": "198.51.100.5",
     "merchant_customer_id": "player-981"
   },
   "customer_reference": "player-981",
@@ -57,7 +60,9 @@ fetch('https://api.sandbox.softlemons.com/api/v1/payment-sessions', {
     customer: {
       first_name: 'Jane',
       last_name: 'Doe',
+      email: 'jane@example.com',
       country_code: 'GB',
+      ip_address: '198.51.100.5',
       merchant_customer_id: 'player-981'
     },
     customer_reference: 'player-981',
@@ -82,7 +87,9 @@ requests.post(
       "customer": {
         "first_name": "Jane",
         "last_name": "Doe",
+        "email": "jane@example.com",
         "country_code": "GB",
+        "ip_address": "198.51.100.5",
         "merchant_customer_id": "player-981"
       },
       "customer_reference": "player-981",
@@ -96,7 +103,7 @@ requests.post(
 OkHttpClient client = new OkHttpClient();
 
 MediaType mediaType = MediaType.parse("application/json");
-RequestBody body = RequestBody.create(mediaType, "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"customer_reference\": \"player-981\",\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\"\n}");
+RequestBody body = RequestBody.create(mediaType, "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"email\": \"jane@example.com\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"customer_reference\": \"player-981\",\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\"\n}");
 Request request = new Request.Builder()
   .url("https://api.sandbox.softlemons.com/api/v1/payment-sessions")
   .post(body)
@@ -128,7 +135,9 @@ func main() {
   "customer": {
     "first_name": "Jane",
     "last_name": "Doe",
+    "email": "jane@example.com",
     "country_code": "GB",
+    "ip_address": "198.51.100.5",
     "merchant_customer_id": "player-981"
   },
   "customer_reference": "player-981",
@@ -167,7 +176,9 @@ request.Content = new StringContent(
   "customer": {
     "first_name": "Jane",
     "last_name": "Doe",
+    "email": "jane@example.com",
     "country_code": "GB",
+    "ip_address": "198.51.100.5",
     "merchant_customer_id": "player-981"
   },
   "customer_reference": "player-981",
@@ -184,7 +195,7 @@ using var response = await client.SendAsync(request);
 val client = OkHttpClient()
 
 val mediaType = MediaType.parse("application/json")
-val body = RequestBody.create(mediaType, "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"country_code\": \"GB\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"customer_reference\": \"player-981\",\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\"\n}")
+val body = RequestBody.create(mediaType, "{\n  \"amount\": 25,\n  \"currency\": \"EUR\",\n  \"reference\": \"DEP-2048\",\n  \"payment_method\": \"psc\",\n  \"customer\": {\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\",\n    \"email\": \"jane@example.com\",\n    \"country_code\": \"GB\",\n    \"ip_address\": \"198.51.100.5\",\n    \"merchant_customer_id\": \"player-981\"\n  },\n  \"customer_reference\": \"player-981\",\n  \"success_url\": \"https://merchant.example.com/deposit/complete\",\n  \"cancel_url\": \"https://merchant.example.com/deposit/cancelled\"\n}")
 val request = Request.Builder()
   .url("https://api.sandbox.softlemons.com/api/v1/payment-sessions")
   .post(body)
@@ -205,7 +216,7 @@ NSDictionary *parameters = @{ @"amount": @25,
                               @"currency": @"EUR",
                               @"reference": @"DEP-2048",
                               @"payment_method": @"psc",
-                              @"customer": @{ @"first_name": @"Jane", @"last_name": @"Doe", @"country_code": @"GB", @"merchant_customer_id": @"player-981" },
+                              @"customer": @{ @"first_name": @"Jane", @"last_name": @"Doe", @"email": @"jane@example.com", @"country_code": @"GB", @"ip_address": @"198.51.100.5", @"merchant_customer_id": @"player-981" },
                               @"customer_reference": @"player-981",
                               @"success_url": @"https://merchant.example.com/deposit/complete",
                               @"cancel_url": @"https://merchant.example.com/deposit/cancelled" };
@@ -245,7 +256,9 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'customer' => [
     'first_name' => 'Jane',
     'last_name' => 'Doe',
+    'email' => 'jane@example.com',
     'country_code' => 'GB',
+    'ip_address' => '198.51.100.5',
     'merchant_customer_id' => 'player-981'
   ],
   'customer_reference' => 'player-981',
@@ -279,7 +292,9 @@ request.body = <<~JSON
   "customer": {
     "first_name": "Jane",
     "last_name": "Doe",
+    "email": "jane@example.com",
     "country_code": "GB",
+    "ip_address": "198.51.100.5",
     "merchant_customer_id": "player-981"
   },
   "customer_reference": "player-981",
@@ -308,7 +323,9 @@ let jsonBody = #"""
   "customer": {
     "first_name": "Jane",
     "last_name": "Doe",
+    "email": "jane@example.com",
     "country_code": "GB",
+    "ip_address": "198.51.100.5",
     "merchant_customer_id": "player-981"
   },
   "customer_reference": "player-981",
@@ -374,6 +391,11 @@ The response gives you everything the flow needs:
 The `reference` must be unique and [duplicate protection](/guides/duplicate-protection) applies. Reusing a reference that has an active session or transaction returns HTTP 409.
 
 Partner API keys create sessions on behalf of a linked merchant by adding `merchant_id` to the body, with the same rules as [partner card payments](/guides/partner-integration).
+
+Two `customer` fields deserve special care:
+
+- `customer.country_code` is the customer's country. It is checked against the method's availability before anything is sent to the provider (see [Availability](#availability)).
+- `customer.ip_address` is the customer's IP address as your server saw it, IPv4 or IPv6. Your call to this API is server-to-server, so without this field the provider only ever sees the IP of your server. Pass the value you actually observed and never a substitute: it is your attestation about the customer, and the provider uses it for its risk decision.
 
 ## Step 2: Redirect the customer
 
@@ -586,13 +608,24 @@ print(String(data: data, encoding: .utf8) ?? "")
 
 Credit the customer only when the session is `paid` or the `transaction.captured` webhook arrives. The full session lifecycle (`created`, `pending_redirect`, `pending_provider`, `paid`, `failed`, `cancelled`, `chargeback`, `expired`) is documented in the [statuses reference](/guides/transaction-statuses).
 
+## Availability
+
+Alternative payment methods are not available everywhere. Two checks decide whether a session can be opened:
+
+1. **Country.** Each method has a list of countries it can serve. For Paysafecard (`psc`) that is paysafecard's published availability (most of Europe plus, among others, Australia, Canada, Mexico, New Zealand, the United Kingdom and the United States; not, for example, South Africa or Costa Rica). Your account may carry a narrower list. The check runs on `customer.country_code` before the provider is contacted, and a country the method does not serve is refused with HTTP 400 `ERR_PAYMENT_METHOD_NOT_AVAILABLE_IN_COUNTRY`. Nothing is created and the `reference` stays free. If you do not send `customer.country_code` the check is skipped and the provider decides on its hosted page.
+2. **Provider risk rules on the customer's IP.** The provider risk-checks the IP it receives as the customer's device IP. That IP is `customer.ip_address` when you send it, and the IP of the server calling this API when you do not. A server in a country the method does not serve therefore gets every payment refused unless it forwards the real customer IP. When the provider declines to open the checkout, the session fails with HTTP 400 `ERR_PROVIDER_REJECTED`, the `message` carries the provider's reason (for example `The transaction has been blocked`), the linked transaction is `failed` with the same `status_reason`, and the `reference` is released.
+
+To avoid surprises, always send both `customer.country_code` and `customer.ip_address`, and offer the customer another method when you receive either code. Neither check creates a provider payment, so they are safe to hit as often as your checkout needs.
+
 ## Errors you should handle
 
 | Response | Meaning | What to do |
 |---|---|---|
-| 400 `ERR_PAYMENT_METHOD_NOT_ENABLED` | The method, currency or customer country is not enabled for the merchant. | Offer a different payment method or contact [support](/api-basics/support) about enablement. |
+| 400 `ERR_PAYMENT_METHOD_NOT_ENABLED` | The method or currency is not enabled for the merchant. | Offer a different payment method or contact [support](/api-basics/support) about enablement. |
+| 400 `ERR_PAYMENT_METHOD_NOT_AVAILABLE_IN_COUNTRY` | The method is not available for `customer.country_code`. Checked before the provider is called; nothing is created. | Offer a different payment method for that country. See [Availability](#availability). |
+| 400 `ERR_PROVIDER_REJECTED` | The provider refused to open the payment for this customer (risk or availability rules, typically the customer's country or IP). `message` carries the provider's reason. The session and transaction are marked failed and the `reference` is released. | Make sure you send the real `customer.ip_address` and `customer.country_code`. Do not retry the same data blindly; offer another method. |
 | 409 `ERR_DUPLICATE` | A session or transaction with this `reference` already exists. | Fetch the existing session instead of retrying. See [duplicate protection](/guides/duplicate-protection). |
-| 422 `ERR_VALIDATION_FAILED` | A field failed validation. This includes any request carrying card, token, CVV or voucher data. | Fix the request. Card data never belongs in a redirect session. |
+| 422 `ERR_VALIDATION_FAILED` | A field failed validation. This includes any request carrying card, token, CVV or voucher data, and a `customer.ip_address` that is not a valid IP. | Fix the request. Card data never belongs in a redirect session. |
 | 429 `ERR_RATE_LIMITED` | Too many requests. | Back off and retry. See [rate limits](/api-basics/rate-limits). |
 | 502 `ERR_GATEWAY_ERROR` | The provider could not prepare the hosted session. The session and its transaction are marked failed. | Create a new session to retry. |
 

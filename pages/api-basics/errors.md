@@ -83,7 +83,9 @@ All decline codes are returned with HTTP 400 from the transaction endpoints. The
 | `ERR_CARD_SECURITY_VIOLATION` | The issuer flagged a security violation. | Ask the customer to contact their bank. |
 | `ERR_CARD_ISSUER_UNAVAILABLE` | The card issuer is temporarily unavailable. | Retry after several seconds. Spacing retries prevents load on the card network. |
 | `ERR_CARD_SYSTEM_ERROR` | Card provider system error. | Usually transient. Retry after a short wait. |
-| `ERR_PAYMENT_METHOD_NOT_ENABLED` | The payment method is not enabled for this merchant. | Contact SoftLemon to enable the method on your account. |
+| `ERR_PAYMENT_METHOD_NOT_ENABLED` | The payment method is not enabled for this merchant, or the currency is not enabled for it. | Contact SoftLemon to enable the method on your account. |
+| `ERR_PAYMENT_METHOD_NOT_AVAILABLE_IN_COUNTRY` | The payment method is not available for the customer's country (`customer.country_code`). Checked before the provider is called; nothing is created and the `reference` stays free. | Offer a different payment method for that country. See [availability](/guides/accept-an-alternative-payment#availability). |
+| `ERR_PROVIDER_REJECTED` | The payment provider refused to open the payment for this customer under its own risk or availability rules, typically because of the customer's country or IP. `message` carries the provider's reason. For payment sessions the session and its transaction are marked failed and the `reference` is released. | Send the real `customer.ip_address` and `customer.country_code`. Do not retry the same data blindly; offer the customer another payment method. |
 | `ERR_REFUND_NOT_SUPPORTED` | Refunds are not supported for this payment method. | Settle with the customer through another channel. |
 | `ERR_WALLET_NOT_SUPPORTED` | Digital wallet payments are not supported for this payment processor. | Offer a card payment instead. |
 
