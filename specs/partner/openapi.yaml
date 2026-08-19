@@ -134,14 +134,20 @@ components:
       description: 'Snapshot of the transaction row that triggered the event.'
       required:
         - id
+        - public_id
         - transaction_type
         - status
+        - payment_method
         - amount
         - currency
       properties:
         id:
           type: integer
-          description: 'Gateway transaction id, the unique identifier to reconcile on.'
+          description: 'Gateway transaction id, the value the transaction routes currently take. Leaves the payload on a future api_version once the routes accept public ids.'
+        public_id:
+          type: string
+          pattern: '^txn_[0-9a-z]{26}$'
+          description: "The transaction's opaque public id, the stable Softlemon reference to store."
         merchant_trans_id:
           type:
             - string
@@ -163,6 +169,18 @@ components:
         status:
           type: string
           description: 'Transaction status. See the [transaction statuses guide](/guides/transaction-statuses).'
+        payment_method:
+          type: string
+          description: '`card` for the card lane, otherwise the alternative payment method code (for example `psc`).'
+        payment_session_id:
+          type: string
+          pattern: '^ps_[0-9a-z]{26}$'
+          description: 'Present on redirect/APM transactions only: the payment session public id to reconcile against the payment sessions API.'
+        provider_transaction_id:
+          type:
+            - string
+            - 'null'
+          description: "Present on redirect/APM transactions only: the provider's own transaction id."
         amount:
           type: integer
           description: 'Amount in minor units.'
@@ -206,6 +224,7 @@ components:
       description: "Present only on child-row events (captures, refunds and voids). Contains the parent's updated totals."
       required:
         - id
+        - public_id
         - status
         - amount
         - captured_amount
@@ -213,6 +232,9 @@ components:
       properties:
         id:
           type: integer
+        public_id:
+          type: string
+          pattern: '^txn_[0-9a-z]{26}$'
         status:
           type: string
         amount:
@@ -314,10 +336,12 @@ webhooks:
               data:
                 transaction:
                   id: 123457
+                  public_id: txn_01k20bhq3rw9mk4t8vczs0e6xk
                   merchant_trans_id: ORDER-100045
                   related_trans_id: 123456
                   transaction_type: capture
                   status: captured
+                  payment_method: card
                   amount: 5000
                   currency: EUR
                   refunded_amount: 0
@@ -329,6 +353,7 @@ webhooks:
                   updated_at: '2026-08-05T12:00:00Z'
                 parent_transaction:
                   id: 123456
+                  public_id: txn_01k20b9v6ye2ttfvghw2hcaa8q
                   status: captured
                   amount: 5000
                   captured_amount: 5000
@@ -369,10 +394,12 @@ webhooks:
               data:
                 transaction:
                   id: 123456
+                  public_id: txn_01k20b9v6ye2ttfvghw2hcaa8q
                   merchant_trans_id: ORDER-100045
                   related_trans_id: null
                   transaction_type: sale
                   status: success
+                  payment_method: card
                   amount: 5000
                   currency: EUR
                   refunded_amount: 0
@@ -558,10 +585,12 @@ webhooks:
               data:
                 transaction:
                   id: 123460
+                  public_id: txn_01k20bt64k2c14n5xw8ahb62pe
                   merchant_trans_id: ORDER-100045
                   related_trans_id: 123456
                   transaction_type: refund
                   status: refunded
+                  payment_method: card
                   amount: 2000
                   currency: EUR
                   acquirer_provider: qashpay
@@ -572,6 +601,7 @@ webhooks:
                   updated_at: '2026-08-05T14:30:00Z'
                 parent_transaction:
                   id: 123456
+                  public_id: txn_01k20b9v6ye2ttfvghw2hcaa8q
                   status: success
                   amount: 5000
                   captured_amount: 5000
@@ -3260,6 +3290,151 @@ paths:
                   example: 123
               required:
                 - url
+    delete:
+      summary: 'Delete the webhook endpoint'
+      operationId: deleteTheWebhookEndpoint
+      description: "Remove the webhook endpoint. Deliveries stop immediately, any event\nstill queued for it is marked failed, and the stored URL and signing\nsecret are erased. Delivery history stays readable through the\nevents endpoints. A new endpoint can be registered afterwards with\n`PUT /api/v1/webhook`, which issues a new signing secret. To pause\ndeliveries without losing the configuration, set `is_active` to\nfalse instead.\n\nMerchant API keys delete their own endpoint. Partner API keys must\ninclude `merchant_id` for a linked merchant."
+      parameters:
+        -
+          in: query
+          name: merchant_id
+          description: 'Required for partner API keys. Must be a merchant linked to the authenticated partner.'
+          example: 123
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Webhook endpoint deleted successfully'
+                  code: ''
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Webhook endpoint deleted successfully'
+                  code:
+                    type: string
+                    example: ''
+                  data:
+                    type: string
+                    example: null
+        400:
+          description: 'A partner API key omitted `merchant_id` or referenced a merchant that is not linked to it.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'merchant_id is required for partner transactions. Please specify which merchant account to use.'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Authentication failed'
+                  code: ERR_AUTH_FAILED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Authentication failed'
+                  code:
+                    type: string
+                    example: ERR_AUTH_FAILED
+                  data:
+                    type: string
+                    example: null
+        404:
+          description: 'No webhook endpoint is configured.'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Webhook endpoint not found for this merchant.'
+                  code: ERR_NOT_FOUND
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Webhook endpoint not found for this merchant.'
+                  code:
+                    type: string
+                    example: ERR_NOT_FOUND
+                  data:
+                    type: string
+                    example: null
+        429:
+          description: 'Rate limit exceeded. See [rate limits](/api-basics/rate-limits).'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Too many requests'
+                  code: ERR_RATE_LIMITED
+                  data: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Too many requests'
+                  code:
+                    type: string
+                    example: ERR_RATE_LIMITED
+                  data:
+                    type: string
+                    example: null
+          headers:
+            Retry-After:
+              description: 'Seconds until the current rate limit window frees up.'
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: 'Requests left in the current 60 second window. Sent on every response and 0 here.'
+              schema:
+                type: integer
+      tags:
+        - 'Webhook Management'
   /api/v1/webhook/rotate-secret:
     post:
       summary: 'Rotate the webhook signing secret'
