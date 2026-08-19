@@ -784,7 +784,9 @@ paths:
                       amount_formatted: '12.50 EUR'
                       currency: EUR
                       status: auth
+                      status_reason: null
                       transaction_type: auth
+                      payment_method: card
                       description: null
                       acquirer_provider: null
                       acquirer_trans_id: '514009741995'
@@ -850,9 +852,15 @@ paths:
                           status:
                             type: string
                             example: auth
+                          status_reason:
+                            type: string
+                            example: null
                           transaction_type:
                             type: string
                             example: auth
+                          payment_method:
+                            type: string
+                            example: card
                           description:
                             type: string
                             example: null
@@ -1419,7 +1427,9 @@ paths:
                     amount_formatted: '12.50 EUR'
                     currency: EUR
                     status: captured
+                    status_reason: null
                     transaction_type: capture
+                    payment_method: card
                     description: null
                     acquirer_provider: null
                     acquirer_trans_id: '995140741995'
@@ -1470,9 +1480,15 @@ paths:
                       status:
                         type: string
                         example: captured
+                      status_reason:
+                        type: string
+                        example: null
                       transaction_type:
                         type: string
                         example: capture
+                      payment_method:
+                        type: string
+                        example: card
                       description:
                         type: string
                         example: null
@@ -1743,7 +1759,9 @@ paths:
                     amount_formatted: '12.50 EUR'
                     currency: EUR
                     status: refunded
+                    status_reason: null
                     transaction_type: refund
+                    payment_method: card
                     description: null
                     acquirer_provider: null
                     acquirer_trans_id: '514009741995'
@@ -1793,9 +1811,15 @@ paths:
                       status:
                         type: string
                         example: refunded
+                      status_reason:
+                        type: string
+                        example: null
                       transaction_type:
                         type: string
                         example: refund
+                      payment_method:
+                        type: string
+                        example: card
                       description:
                         type: string
                         example: null
@@ -2062,7 +2086,9 @@ paths:
                     amount_formatted: '12.50 EUR'
                     currency: EUR
                     status: auth
+                    status_reason: null
                     transaction_type: auth
+                    payment_method: card
                     description: null
                     acquirer_provider: null
                     acquirer_trans_id: '514009741995'
@@ -2113,9 +2139,15 @@ paths:
                       status:
                         type: string
                         example: auth
+                      status_reason:
+                        type: string
+                        example: null
                       transaction_type:
                         type: string
                         example: auth
+                      payment_method:
+                        type: string
+                        example: card
                       description:
                         type: string
                         example: null
@@ -2288,7 +2320,9 @@ paths:
                     amount_formatted: '12.50 EUR'
                     currency: EUR
                     status: voided
+                    status_reason: null
                     transaction_type: void
+                    payment_method: card
                     description: null
                     acquirer_provider: null
                     acquirer_trans_id: '514009741995'
@@ -2338,9 +2372,15 @@ paths:
                       status:
                         type: string
                         example: voided
+                      status_reason:
+                        type: string
+                        example: null
                       transaction_type:
                         type: string
                         example: void
+                      payment_method:
+                        type: string
+                        example: card
                       description:
                         type: string
                         example: null
