@@ -1,0 +1,92 @@
+# Paysafecard via Skrill: Customer Journey
+
+This page follows a Paysafecard deposit from the customer's first click to the money being confirmed and names who does what at each step. It is the companion to [Accept an Alternative Payment](/guides/accept-an-alternative-payment), which has the request and response details for every call mentioned here.
+
+Paysafecard (`psc`) is presented to the customer on a hosted checkout page run by Skrill. Your integration never sees the voucher. You open a payment session, send the customer to Skrill and wait for the gateway to tell you the outcome.
+
+## Who is involved
+
+| Party | Role in the flow |
+|---|---|
+| Customer | Picks Paysafecard on your site and pays on Skrill's hosted page with their voucher. |
+| You (the merchant) | Create the payment session, redirect the customer to `checkout_url` and act on the outcome the gateway reports. |
+| Softlemon gateway | Opens the session with Skrill, receives Skrill's server-to-server notification, verifies it and updates the transaction. Delivers your webhooks and answers status calls. |
+| Skrill Quick Checkout | The hosted payment page. Presents Paysafecard, collects the voucher, obtains the authorisation and notifies the gateway. |
+| Paysafecard | The voucher scheme behind the page. Approves or declines the payment. |
+
+## The journey at a glance
+
+<Mermaid chart={`sequenceDiagram
+    autonumber
+    participant C as Customer
+    participant M as Your site
+    participant G as Softlemon gateway
+    participant S as Skrill hosted checkout
+    participant P as Paysafecard
+
+    C->>M: Chooses Paysafecard and enters the amount
+    M->>G: POST /api/v1/payment-sessions (payment_method psc)
+    G->>S: Opens the checkout session
+    S-->>G: Session id
+    G-->>M: 200 pending_redirect with checkout_url
+    M->>C: Redirects the browser to checkout_url
+    C->>S: Enters the voucher and confirms
+    S->>P: Authorisation request
+    alt Approved
+        P-->>S: Approved
+        S-->>C: Shows confirmation, browser lands on your success_url
+        S->>G: Server-to-server notification (paid)
+        G->>G: Verifies signature, amount and currency
+        G-->>M: transaction.captured webhook
+        M->>C: Credits the customer
+    else Declined or abandoned
+        P-->>S: Declined
+        S-->>C: Shows the decline, browser lands on your cancel_url
+        S->>G: Server-to-server notification (failed or cancelled)
+        G-->>M: transaction.failed or transaction.cancelled webhook
+        M->>C: Does not credit the customer
+    end
+`} />
+
+The browser return and the webhook can arrive in either order. The browser landing on your site is never the signal to credit the customer. The webhook, or a status call, is.
+
+## Step by step
+
+1. **The customer chooses Paysafecard.** On your deposit page the customer picks Paysafecard and enters the amount. Nothing is collected from them on your site.
+2. **You create a payment session.** Call `POST /api/v1/payment-sessions` with the amount, currency, your `reference`, `payment_method: "psc"`, your `success_url` and `cancel_url` and the customer's `country_code` and `ip_address`. The response is `pending_redirect` with a `checkout_url`. Details are in [Step 1 of the alternative payment guide](/guides/accept-an-alternative-payment#step-1-create-a-payment-session).
+3. **You redirect the customer.** Send the browser to `checkout_url`. This is a full page redirect to Skrill's hosted checkout, not an iframe. The session is valid for 15 minutes.
+4. **The customer pays on Skrill's page.** Skrill presents Paysafecard, the customer enters their voucher PIN and confirms. Skrill asks Paysafecard to authorise the payment and shows the customer the result.
+5. **The customer comes back to your site.** After the hosted page the browser lands on your `success_url` or `cancel_url`. Treat this as navigation only and show a waiting state until the outcome is confirmed. See [Step 3](/guides/accept-an-alternative-payment#step-3-handle-the-browser-return).
+6. **Skrill notifies the gateway.** Skrill sends the outcome to Softlemon server-to-server. The gateway checks the notification's signature and compares the paid amount and currency with the session before it changes anything. A notification that does not verify is held for review and the transaction is left as it was.
+7. **You learn the outcome.** The transaction moves to `captured`, `failed` or `cancelled` and the matching webhook is delivered to your endpoint. You can also poll `GET /api/v1/payment-sessions/{id}` or the transaction. Credit the customer only on `transaction.captured` or a status read that shows `captured`. See [Step 4](/guides/accept-an-alternative-payment#step-4-confirm-the-outcome).
+
+## What each outcome looks like
+
+| What happened | Session status | Transaction status | Webhook |
+|---|---|---|---|
+| Paysafecard approved the payment. | `paid` | `captured` | `transaction.captured` |
+| Skrill reported the payment as still in progress. | `pending_provider` | `pending` | `transaction.pending` (only if your endpoint subscribes to it) |
+| Paysafecard declined the payment. | `failed` | `failed` | `transaction.failed` |
+| The customer cancelled on the hosted page. | `cancelled` | `cancelled` | `transaction.cancelled` |
+| The customer did not finish within 15 minutes. | `expired` | `cancelled` | `transaction.cancelled` |
+| Skrill reported a chargeback on a paid deposit. | `chargeback` | `chargeback` | `transaction.chargeback` |
+
+The full session lifecycle is in [transaction statuses](/guides/transaction-statuses#payment-session-statuses). Webhook payloads, signatures and retries are in the [webhooks reference](/guides/webhooks).
+
+## What to rely on
+
+- **The webhook or a status read, never the browser.** The customer can close the tab, land on `success_url` before the gateway has heard from Skrill or land on `cancel_url` for a payment that later succeeds. Only `transaction.captured`, or a status call showing `captured`, means the money is confirmed.
+- **A late payment can turn a cancelled transaction into a captured one.** If the customer finishes on Skrill's page after the session expired, you first receive `transaction.cancelled` for the expiry and then `transaction.captured` when Skrill's notification arrives. Treat `captured` after `cancelled` on the same transaction as a successful deposit.
+- **Your `reference` is reserved while the session is live.** Sending the same `reference` again while a session is open returns the existing session instead of creating a second one. Once the session has finished or expired you can reuse it for a genuine retry. See [duplicate protection](/guides/duplicate-protection).
+- **Sessions expire after 15 minutes.** If the customer wants to try again after that, create a new session.
+- **Repeated notifications are safe.** If Skrill sends the same notification twice the gateway ignores the repeat, so you never see two `transaction.captured` events for one deposit.
+
+## Refunds
+
+A Paysafecard deposit taken through Skrill is refunded like any other transaction with `POST /api/v1/transactions/{id}/refund`, in full or in part. The transaction must be `captured` first, so a session that never reached `paid` cannot be refunded. The refund is recorded as a child transaction and delivers `transaction.refunded` when Skrill confirms it. See the [refunds guide](/guides/refunds).
+
+## Related
+
+- [Accept an Alternative Payment](/guides/accept-an-alternative-payment) for the request and response details of every call above.
+- [Set up webhooks](/guides/set-up-webhooks) and the [webhooks reference](/guides/webhooks).
+- [Transaction statuses](/guides/transaction-statuses).
