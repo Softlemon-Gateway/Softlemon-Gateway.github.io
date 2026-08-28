@@ -12,6 +12,7 @@ For a walkthrough of the Paysafecard flow party by party, with a diagram, see [P
 - All examples use the sandbox base URL `https://api.sandbox.softlemons.com`.
 - Redirect payments and the specific payment method must be enabled for your account. Requests for a method that is not enabled fail with `ERR_PAYMENT_METHOD_NOT_ENABLED`. Contact [support](/api-basics/support) to get a method enabled.
 - Each method is only available in certain countries, and the provider risk-checks the customer's IP. Send `customer.country_code` and `customer.ip_address` on every session. See [Availability](#availability) below.
+- Send `customer.email` too. For Paysafecard, Skrill uses it to take the customer straight to paysafecard's page instead of showing its own checkout form first.
 - You need two browser URLs on your site: a success URL and a cancel URL for the customer's return.
 - Amounts are major units in requests (`25.00`) and minor units in responses (`2500`). See [conventions](/api-basics/conventions).
 - Never send card fields. A session request carrying card, token, CVV or voucher data is rejected with HTTP 422 regardless of where the field appears in the payload.
