@@ -45,7 +45,7 @@ Hosted redirect payments create a [payment session](/guides/accept-an-alternativ
 |---|---|---|---|
 | `created` | Session created but the provider has not returned a checkout URL yet. | No | `init` |
 | `pending_redirect` | The hosted page is ready. Send the customer to the `checkout_url`. | No | `init` |
-| `pending_provider` | The customer is completing the payment on the provider's hosted page. | No | `pending` |
+| `pending_provider` | The provider reported the payment as still in progress. The final outcome follows by notification. | No | `pending` |
 | `paid` | The provider confirmed the payment. The only successful terminal status. | Yes | `captured` |
 | `failed` | The payment failed at the provider. | Yes | `failed` |
 | `cancelled` | The customer cancelled at the provider. | Yes | `cancelled` |

@@ -367,7 +367,7 @@ print(String(data: data, encoding: .utf8) ?? "")
       "amount": 2500,
       "amount_formatted": "25.00",
       "currency": "EUR",
-      "checkout_url": "https://pay.skrill.com/app/?sid=a1b2c3d4e5",
+      "checkout_url": "https://pay.skrill.com/?sid=a1b2c3d4e5",
       "return_url": "https://merchant.example.com/deposit/complete",
       "cancel_url": "https://merchant.example.com/deposit/cancelled",
       "provider_session_id": "a1b2c3d4e5",
@@ -403,14 +403,14 @@ Two `customer` fields deserve special care:
 
 Send the customer's browser to `checkout_url`. This is a full page redirect, not an iframe. The customer confirms the payment on the provider's page, for Paysafecard by entering their voucher PIN there.
 
-While the customer is on the hosted page the session status moves from `pending_redirect` to `pending_provider`. If the customer does not finish within 15 minutes the session becomes `expired` and you need to create a new one.
+The session stays `pending_redirect` while the customer is on the hosted page. It only changes when the provider reports back: `pending_provider` if the provider says the payment is still in progress, otherwise straight to `paid`, `failed` or `cancelled`. If the customer does not finish within 15 minutes the session becomes `expired` and you need to create a new one.
 
 ## Step 3: Handle the browser return
 
 After the hosted page the provider sends the customer back through the gateway, which immediately redirects the browser to your `success_url` or `cancel_url` with three query parameters appended:
 
 ```
-https://merchant.example.com/deposit/complete?payment_session_id=ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE&reference=DEP-2048&status=pending_provider
+https://merchant.example.com/deposit/complete?payment_session_id=ps_01J8FYK3ZQ4T9RB2M6XD5A7CWE&reference=DEP-2048&status=pending_redirect
 ```
 
 Treat this landing as navigation only. It tells you which session the customer came back from, never whether money moved. Confirmation of the provider's outcome can arrive before or after the browser does, so render a waiting state and resolve it in Step 4. Customers who close the tab never hit your return URL at all and the outcome still arrives by webhook.
@@ -593,7 +593,7 @@ print(String(data: data, encoding: .utf8) ?? "")
       "amount": 2500,
       "amount_formatted": "25.00",
       "currency": "EUR",
-      "checkout_url": "https://pay.skrill.com/app/?sid=a1b2c3d4e5",
+      "checkout_url": "https://pay.skrill.com/?sid=a1b2c3d4e5",
       "return_url": "https://merchant.example.com/deposit/complete",
       "cancel_url": "https://merchant.example.com/deposit/cancelled",
       "provider_session_id": "a1b2c3d4e5",
