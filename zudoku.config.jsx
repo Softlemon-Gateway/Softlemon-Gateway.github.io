@@ -1,5 +1,6 @@
 import { DropdownCodeTabs } from "./src/CodeTabs.jsx";
 import { MdxCode } from "./src/MdxCode.jsx";
+import { Mermaid } from "zudoku/mermaid";
 
 /** @type {import('zudoku').ZudokuConfig} */
 const config = {
@@ -9,6 +10,8 @@ const config = {
       CodeTabs: DropdownCodeTabs,
       // Untitled fences show their language ("JSON") instead of "Code".
       code: MdxCode,
+      // Sequence diagrams on the customer journey pages, rendered client side.
+      Mermaid,
     },
   },
   site: {
@@ -101,6 +104,7 @@ const config = {
             "/guides/refunds",
             "/guides/returning-customers",
             "/guides/accept-an-alternative-payment",
+            "/guides/paysafecard-via-skrill",
             "/guides/set-up-webhooks",
             "/guides/partner-integration",
           ],

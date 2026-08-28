@@ -16,6 +16,7 @@
     "postman": "node scripts/generate-postman.mjs"
   },
   "dependencies": {
+    "mermaid": "^11.17.2",
     "react": ">=19.2.0",
     "react-dom": ">=19.2.0",
     "zudoku": "0.83.0"

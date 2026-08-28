@@ -28,7 +28,6 @@ https://softlemon-gateway.github.io/.
   after changing a request definition.
 - `scripts/generate-postman.mjs`: regenerates the Postman collections from the
   specs (`npm run postman`). Rerun after any spec change.
-- `diagrams/`: hand-maintained diagrams (not rendered on the site).
 - `.github/workflows/deploy-pages.yml`: builds and deploys on push to main. It
   checks the Pages source setting before building and smoke tests the live
   site after deploying (see Deployment below).
