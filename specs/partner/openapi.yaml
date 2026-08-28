@@ -2071,7 +2071,7 @@ paths:
                       type:
                         - string
                         - 'null'
-                      description: 'Customer email (required by some providers e.g. Paycent).'
+                      description: 'Customer email. Required by Paycent. Recommended for psc: with it Skrill sends the customer straight to the paysafecard page instead of showing its own checkout form first.'
                       example: jane@example.com
                     first_name:
                       type:
