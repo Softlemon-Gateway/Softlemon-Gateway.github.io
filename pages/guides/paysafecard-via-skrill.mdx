@@ -2,17 +2,17 @@
 
 This page follows a Paysafecard deposit from the customer's first click to the money being confirmed and names who does what at each step. It is the companion to [Accept an Alternative Payment](/guides/accept-an-alternative-payment), which has the request and response details for every call mentioned here.
 
-Paysafecard (`psc`) is presented to the customer on a hosted checkout page run by Skrill. Your integration never sees the voucher. You open a payment session, send the customer to Skrill and wait for the gateway to tell you the outcome.
+Paysafecard (`psc`) is reached through a hosted checkout run by Skrill. Your integration never sees the voucher. You open a payment session, send the customer to `checkout_url` and wait for the gateway to tell you the outcome.
 
 ## Who is involved
 
 | Party | Role in the flow |
 |---|---|
-| Customer | Picks Paysafecard on your site and pays on Skrill's hosted page with their voucher. |
+| Customer | Picks Paysafecard on your site and pays on paysafecard's page with their voucher PIN. |
 | You (the merchant) | Create the payment session, redirect the customer to `checkout_url` and act on the outcome the gateway reports. |
 | Softlemon gateway | Opens the session with Skrill, receives Skrill's server-to-server notification, verifies it and updates the transaction. Delivers your webhooks and answers status calls. |
-| Skrill Quick Checkout | The hosted payment page. Presents Paysafecard, collects the voucher, obtains the authorisation and notifies the gateway. |
-| Paysafecard | The voucher scheme behind the page. Approves or declines the payment. |
+| Skrill Quick Checkout | The hosted checkout behind `checkout_url`. Sends the customer on to paysafecard, receives the outcome and notifies the gateway. |
+| Paysafecard | The voucher scheme. Takes the voucher PIN on its own page and approves or declines the payment. |
 
 ## The journey at a glance
 
@@ -30,8 +30,8 @@ Paysafecard (`psc`) is presented to the customer on a hosted checkout page run b
     S-->>G: Session id
     G-->>M: 200 pending_redirect with checkout_url
     M->>C: Redirects the browser to checkout_url
-    C->>S: Enters the voucher and confirms
-    S->>P: Authorisation request
+    S->>C: Sends the browser on to paysafecard's page
+    C->>P: Enters the voucher PIN and confirms
     alt Approved
         P-->>S: Approved
         S-->>C: Shows confirmation, browser lands on your success_url
@@ -53,9 +53,9 @@ The browser return and the webhook can arrive in either order. The browser landi
 ## Step by step
 
 1. **The customer chooses Paysafecard.** On your deposit page the customer picks Paysafecard and enters the amount. Nothing is collected from them on your site.
-2. **You create a payment session.** Call `POST /api/v1/payment-sessions` with the amount, currency, your `reference`, `payment_method: "psc"`, your `success_url` and `cancel_url` and the customer's `country_code` and `ip_address`. The response is `pending_redirect` with a `checkout_url`. Details are in [Step 1 of the alternative payment guide](/guides/accept-an-alternative-payment#step-1-create-a-payment-session).
+2. **You create a payment session.** Call `POST /api/v1/payment-sessions` with the amount, currency, your `reference`, `payment_method: "psc"`, your `success_url` and `cancel_url` and the customer's `email`, `country_code` and `ip_address`. Send `customer.email` on every Paysafecard session. Skrill uses it to take the customer straight to paysafecard's page. Without it the customer first sees Skrill's own checkout form, enters their email there and clicks through to paysafecard. The response is `pending_redirect` with a `checkout_url`. Details are in [Step 1 of the alternative payment guide](/guides/accept-an-alternative-payment#step-1-create-a-payment-session).
 3. **You redirect the customer.** Send the browser to `checkout_url`. This is a full page redirect to Skrill's hosted checkout, not an iframe. The session is valid for 15 minutes.
-4. **The customer pays on Skrill's page.** Skrill presents Paysafecard, the customer enters their voucher PIN and confirms. Skrill asks Paysafecard to authorise the payment and shows the customer the result.
+4. **The customer pays on paysafecard's page.** Skrill sends the browser straight on to paysafecard, where the customer enters their voucher PIN and confirms. Paysafecard authorises or declines the payment and the customer is shown the result. If the session had no `customer.email`, Skrill shows its checkout form first and the customer reaches paysafecard from there.
 5. **The customer comes back to your site.** After the hosted page the browser lands on your `success_url` or `cancel_url`. Treat this as navigation only and show a waiting state until the outcome is confirmed. See [Step 3](/guides/accept-an-alternative-payment#step-3-handle-the-browser-return).
 6. **Skrill notifies the gateway.** Skrill sends the outcome to Softlemon server-to-server. The gateway checks the notification's signature and compares the paid amount and currency with the session before it changes anything. A notification that does not verify is held for review and the transaction is left as it was.
 7. **You learn the outcome.** The transaction moves to `captured`, `failed` or `cancelled` and the matching webhook is delivered to your endpoint. You can also poll `GET /api/v1/payment-sessions/{id}` or the transaction. Credit the customer only on `transaction.captured` or a status read that shows `captured`. See [Step 4](/guides/accept-an-alternative-payment#step-4-confirm-the-outcome).
