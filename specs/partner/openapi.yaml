@@ -1805,7 +1805,7 @@ paths:
               schema:
                 oneOf:
                   -
-                    description: 'Session rejected. The `code` field identifies the reason, for example ERR_PAYMENT_METHOD_NOT_ENABLED when the method or currency is not enabled for the merchant. See the [error catalogue](/api-basics/errors).'
+                    description: 'Session rejected. The `code` field identifies the reason, for example ERR_PAYMENT_METHOD_NOT_ENABLED when the method or currency is not enabled, or ERR_RISK_REJECTED when amount or velocity rules block the payment. See the [error catalogue](/api-basics/errors).'
                     type: object
                     example:
                       success: false
