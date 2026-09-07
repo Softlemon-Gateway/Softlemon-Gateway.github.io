@@ -69,6 +69,10 @@ Requests take amounts in major units as decimal numbers, so `12.50` means EUR 12
 
 Currencies are three-letter uppercase ISO 4217 codes such as `EUR`. Each request validates the currency against the platform's supported set and an unsupported code fails with HTTP 422. Which currencies your account can process depends on your acquirer setup, so confirm your currency list with SoftLemon before going live.
 
+## Card expiry
+
+`card.exp_month` and `card.exp_year` accept an integer or a string. The month is 1 to 12 with or without a leading zero, so `1`, `"1"` and `"01"` all mean January. The year is the four digit year, `2030` or `"2030"`. The same `card` object works on `POST /api/v1/3ds/verify` and `POST /api/v1/transactions`.
+
 ## Timestamps
 
 Timestamps such as `created_at` and `updated_at` are ISO 8601 strings in UTC, for example `2026-08-07T12:34:56.000000Z`.
