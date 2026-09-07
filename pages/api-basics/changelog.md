@@ -2,6 +2,10 @@
 
 Notable changes to the SoftLemon API and this documentation, newest first.
 
+## 2026-09-07
+
+- `card.exp_month` and `card.exp_year` now take the same formats on `POST /api/v1/3ds/verify` and `POST /api/v1/transactions`: an integer or a string, with or without a leading zero on the month. Before this, `/3ds/verify` refused `"01"` and `/transactions` refused `1`, so months January to September needed a different format per endpoint. See [conventions](/api-basics/conventions#card-expiry).
+
 ## 2026-08-19
 
 - New `GET /api/v1/payment-methods` lists the alternative payment methods enabled for a merchant and, given `country` and `currency`, whether each one can be offered to that customer and why not (`country_not_supported`, `currency_not_supported`, `provider_not_offering`). Read-only and side-effect free. See [Ask before you show a method](/guides/accept-an-alternative-payment#ask-before-you-show-a-method).
