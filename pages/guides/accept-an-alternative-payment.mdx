@@ -1,6 +1,6 @@
 # Accept an Alternative Payment
 
-This guide covers hosted redirect payments through payment sessions, using Paysafecard (`psc`) as the payment method. The customer completes the payment on the provider's hosted page instead of entering details on your site, so no card or voucher data ever touches your integration.
+This guide covers hosted redirect payments through payment sessions, using Paysafecard (`psc`) as the example. eps (`eps`) works the same way with a different `payment_method`, see [Supported methods](#supported-methods). The customer completes the payment on the provider's hosted page instead of entering details on your site, so no card or voucher data ever touches your integration.
 
 Creating a session also creates a linked transaction. The transaction follows the standard [transaction lifecycle](/guides/transaction-statuses) and emits the standard [webhook events](/guides/webhooks), so payment sessions plug into the same confirmation machinery as card payments.
 
@@ -13,9 +13,19 @@ For a walkthrough of the Paysafecard flow party by party, with a diagram, see [P
 - Redirect payments and the specific payment method must be enabled for your account. Requests for a method that is not enabled fail with `ERR_PAYMENT_METHOD_NOT_ENABLED`. Contact [support](/api-basics/support) to get a method enabled.
 - Each method is only available in certain countries, and the provider risk-checks the customer's IP. Send `customer.country_code` and `customer.ip_address` on every session. See [Availability](#availability) below.
 - Send `customer.email` too. For Paysafecard, Skrill uses it to take the customer straight to paysafecard's page instead of showing its own checkout form first.
+- For eps, also send `customer.first_name` and `customer.last_name`. Skrill fills them in on the eps page so the customer only has to pick their bank.
 - You need two browser URLs on your site: a success URL and a cancel URL for the customer's return.
 - Amounts are major units in requests (`25.00`) and minor units in responses (`2500`). See [conventions](/api-basics/conventions).
 - Never send card fields. A session request carrying card, token, CVV or voucher data is rejected with HTTP 422 regardless of where the field appears in the payload.
+
+## Supported methods
+
+| Method | `payment_method` | Countries | Currency | What the customer does |
+|---|---|---|---|---|
+| Paysafecard | `psc` | Most of Europe and more, see [Availability](#availability) | As enabled for your account | Enters the 16 digit PIN of a paysafecard voucher |
+| eps | `eps` | Austria | EUR | Picks their Austrian bank and approves the transfer in online banking |
+
+Each method has to be enabled for your account before you can use it. [Ask before you show a method](#ask-before-you-show-a-method) tells you which ones are enabled and whether they can be offered to a given customer. Everything else in this guide applies to both methods: the request, the redirect, the return and the webhooks are the same.
 
 ## Step 1: Create a payment session
 
@@ -402,7 +412,7 @@ Two `customer` fields deserve special care:
 
 ## Step 2: Redirect the customer
 
-Send the customer's browser to `checkout_url`. This is a full page redirect, not an iframe. The customer confirms the payment on the provider's page, for Paysafecard by entering their voucher PIN there.
+Send the customer's browser to `checkout_url`. This is a full page redirect, not an iframe. The customer confirms the payment on the provider's page. For Paysafecard they enter their voucher PIN there. For eps they pick their bank and are sent on to their online banking to approve the transfer.
 
 The session stays `pending_redirect` while the customer is on the hosted page. It only changes when the provider reports back: `pending_provider` if the provider says the payment is still in progress, otherwise straight to `paid`, `failed` or `cancelled`. If the customer does not finish within 15 minutes the session becomes `expired` and you need to create a new one.
 
@@ -615,7 +625,7 @@ Credit the customer only when the session is `paid` or the `transaction.captured
 
 Alternative payment methods are not available everywhere. Two checks decide whether a session can be opened:
 
-1. **Country.** Each method has a list of countries it can serve. For Paysafecard (`psc`) that is paysafecard's published availability (most of Europe plus, among others, Australia, Canada, Mexico, New Zealand, the United Kingdom and the United States; not, for example, South Africa or Costa Rica). Your account may carry a narrower list. The check runs on `customer.country_code` before the provider is contacted, and a country the method does not serve is refused with HTTP 400 `ERR_PAYMENT_METHOD_NOT_AVAILABLE_IN_COUNTRY`. Nothing is created and the `reference` stays free. If you do not send `customer.country_code` the check is skipped and the provider decides on its hosted page.
+1. **Country.** Each method has a list of countries it can serve. For Paysafecard (`psc`) that is paysafecard's published availability (most of Europe plus, among others, Australia, Canada, Mexico, New Zealand, the United Kingdom and the United States; not, for example, South Africa or Costa Rica). Your account may carry a narrower list. The check runs on `customer.country_code` before the provider is contacted, and a country the method does not serve is refused with HTTP 400 `ERR_PAYMENT_METHOD_NOT_AVAILABLE_IN_COUNTRY`. Nothing is created and the `reference` stays free. If you do not send `customer.country_code` the check is skipped and the provider decides on its hosted page. eps (`eps`) serves customers in Austria only and only in EUR. An eps session in any other currency is refused with HTTP 400 `ERR_PAYMENT_METHOD_NOT_ENABLED` before the provider is contacted.
 2. **Provider risk rules on the customer's IP.** The provider risk-checks the IP it receives as the customer's device IP. That IP is `customer.ip_address` when you send it, and the IP of the server calling this API when you do not. A server in a country the method does not serve therefore gets every payment refused unless it forwards the real customer IP. When the provider declines to open the checkout, the session fails with HTTP 400 `ERR_PROVIDER_REJECTED`, the `message` carries the provider's reason (for example `The transaction has been blocked`), the linked transaction is `failed` with the same `status_reason`, and the `reference` is released.
 
 To avoid surprises, always send both `customer.country_code` and `customer.ip_address`, and offer the customer another method when you receive either code. Neither check creates a provider payment, so they are safe to hit as often as your checkout needs.
@@ -792,19 +802,19 @@ print(String(data: data, encoding: .utf8) ?? "")
       {
         "payment_method": "psc",
         "label": "Paysafecard",
-        "provider": "paycent",
+        "provider": "skrill",
         "available": true,
         "unavailable_reasons": [],
         "supported_countries": ["AR", "AT", "AU", "BE", "BG", "CA", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "GE", "DE", "GI", "GR", "HU", "IS", "IE", "IT", "KW", "LV", "LI", "LT", "LU", "MT", "MX", "MD", "ME", "NL", "NZ", "NO", "PY", "PE", "PL", "PT", "RO", "SA", "SK", "SI", "ES", "SE", "CH", "TR", "AE", "GB", "US", "UY"],
         "supported_currencies": ["EUR", "GBP", "USD"]
       },
       {
-        "payment_method": "ideal",
-        "label": "iDEAL",
-        "provider": "paycent",
+        "payment_method": "eps",
+        "label": "eps",
+        "provider": "skrill",
         "available": false,
         "unavailable_reasons": ["country_not_supported"],
-        "supported_countries": ["NL"],
+        "supported_countries": ["AT"],
         "supported_currencies": ["EUR"]
       }
     ]
