@@ -2057,12 +2057,13 @@ paths:
                   example: DEP-2048
                 payment_method:
                   type: string
-                  description: 'Redirect payment method.'
+                  description: 'Redirect payment method. eps is Austria and EUR only.'
                   example: psc
                   enum:
                     - psc
                     - ideal
                     - giropay
+                    - eps
                 customer:
                   type: object
                   description: 'Customer details.'
@@ -2077,13 +2078,13 @@ paths:
                       type:
                         - string
                         - 'null'
-                      description: 'Customer first name.'
+                      description: 'Customer first name. Recommended for eps: with first and last name Skrill opens the eps bank selection directly.'
                       example: Jane
                     last_name:
                       type:
                         - string
                         - 'null'
-                      description: 'Customer last name.'
+                      description: 'Customer last name. Recommended for eps, see customer.first_name.'
                       example: Doe
                     country_code:
                       type:
