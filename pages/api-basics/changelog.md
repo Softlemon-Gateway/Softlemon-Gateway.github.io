@@ -2,6 +2,11 @@
 
 Notable changes to the SoftLemon API and this documentation, newest first.
 
+## 2026-09-17
+
+- eps is available as a payment method on `POST /api/v1/payment-sessions`. Send `payment_method: eps` for customers in Austria paying in EUR, plus `customer.first_name` and `customer.last_name` so the eps page opens with the names filled in. The method has to be enabled for your account first. See [Supported methods](/guides/accept-an-alternative-payment#supported-methods).
+- `GET /api/v1/payment-methods` lists eps with `supported_countries` `["AT"]` and `supported_currencies` `["EUR"]`, and reports `provider_not_offering` for a method your account's provider cannot process.
+
 ## 2026-09-07
 
 - `card.exp_month` and `card.exp_year` now take the same formats on `POST /api/v1/3ds/verify` and `POST /api/v1/transactions`: an integer or a string, with or without a leading zero on the month. Before this, `/3ds/verify` refused `"01"` and `/transactions` refused `1`, so months January to September needed a different format per endpoint. See [conventions](/api-basics/conventions#card-expiry).
