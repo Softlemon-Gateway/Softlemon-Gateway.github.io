@@ -337,7 +337,7 @@ The immediate response is not always a full authentication. Read `status`, not j
 
 Some cards trigger a bank challenge instead (test with `4200000000000042`). In that case the response carries a `challenge_url` and no final status yet:
 
-1. Redirect the cardholder to `challenge_url`. The bank runs its own verification there (a code, an app approval or similar).
+1. Redirect the cardholder to `challenge_url` as a full page redirect, never inside an iframe. The bank runs its own verification there (a code, an app approval or similar). Bank pages do not complete inside a frame, so a framed challenge leaves the cardholder on a spinner and never returns them to you. If your checkout itself runs inside a frame, navigate the top window (`window.top.location`) rather than the frame.
 2. When the cardholder finishes, the gateway redirects them back to your `auth_url` with query parameters: `?card_verification_id={public_id}&status={outcome}`, where `card_verification_id` is the verification's `tds_...` public id and the outcome is one of the statuses in the table above (`full_auth`, `attempt`, `unavailable` or `failed`).
 3. On `full_auth` or `attempt`, use the `card_verification_id` value exactly like the `public_id` from the frictionless case, passed through unchanged. On `unavailable`, decide whether to charge without 3DS. On `failed`, show the customer a payment failure and let them try another card.
 

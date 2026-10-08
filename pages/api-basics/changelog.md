@@ -2,6 +2,10 @@
 
 Notable changes to the SoftLemon API and this documentation, newest first.
 
+## 2026-10-08
+
+- The [accept a payment guide](/guides/accept-a-payment#step-2-handle-the-challenge-when-the-issuer-requires-one) and the [SCA page](/api-basics/sca-and-psd2) now say that `challenge_url` must be opened as a full page redirect, never inside an iframe. Bank authentication pages do not complete inside a frame, so a framed challenge never returns the cardholder to your `auth_url`. Nothing changed in the API.
+
 ## 2026-09-17
 
 - eps is available as a payment method on `POST /api/v1/payment-sessions`. Send `payment_method: eps` for customers in Austria paying in EUR, plus `customer.first_name` and `customer.last_name` so the eps page opens with the names filled in. The method has to be enabled for your account first. See [Supported methods](/guides/accept-an-alternative-payment#supported-methods).
