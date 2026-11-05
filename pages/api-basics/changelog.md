@@ -2,6 +2,10 @@
 
 Notable changes to the SoftLemon API and this documentation, newest first.
 
+## 2026-11-05
+
+- New opt-in webhook event `card_verification.completed`: a signed server side notification when a 3D Secure verification started with `POST /api/v1/3ds/verify` reaches a final status, after a challenge and also for frictionless and failed verifications, so your server can create the sale without depending on the browser redirect to `auth_url`. Subscribe by listing it in the endpoint's `events` (an explicit list replaces the default set). The payload's `data.card_verification` carries `public_id`, `status`, `auth_type`, `amount`, `currency`, `version`, `eci` and `acquirer_provider`, never authentication values. Delivery history rows gain `card_verification_id`. Existing payloads and the default subscription are unchanged. See the [event catalogue](/guides/webhooks#event-catalogue) and [accept a payment](/guides/accept-a-payment#step-2-handle-the-challenge-when-the-issuer-requires-one).
+
 ## 2026-10-08
 
 - The [accept a payment guide](/guides/accept-a-payment#step-2-handle-the-challenge-when-the-issuer-requires-one) and the [SCA page](/api-basics/sca-and-psd2) now say that `challenge_url` must be opened as a full page redirect, never inside an iframe. Bank authentication pages do not complete inside a frame, so a framed challenge never returns the cardholder to your `auth_url`. Nothing changed in the API.

@@ -343,6 +343,8 @@ Some cards trigger a bank challenge instead (test with `4200000000000042`). In t
 
 Your return page should handle every outcome. Nothing has been charged at this point in either flow, and a sale that references a `failed` or unfinished verification is refused with HTTP 422.
 
+If your server needs the outcome without depending on the cardholder's browser coming back, subscribe your webhook endpoint to the opt-in `card_verification.completed` event (see [event subscriptions](/guides/webhooks#event-subscriptions)). It fires once for every final result, after a challenge and also for frictionless and failed verifications, carries the `public_id`, `status` and `auth_type`, and is signed like every other event. The redirect to `auth_url` still happens. The event can arrive before or after the redirect, and before the response to the verify call for a frictionless result, so correlate on `public_id` and create the sale from whichever signal reaches you first.
+
 ## Step 3: Create the sale
 
 Now charge the card with `POST /api/v1/transactions`. Three fields matter beyond the card details:

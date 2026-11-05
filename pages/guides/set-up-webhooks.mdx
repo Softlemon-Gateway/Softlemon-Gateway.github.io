@@ -464,7 +464,7 @@ The HTTP status of this response is 200 whether or not your receiver answered. C
 
 ## Step 3: Choose your events
 
-By default the endpoint receives every event type except `transaction.pending` (opt in by listing it explicitly). Send an `events` list to narrow the subscription:
+By default the endpoint receives every event type except the opt-in types `transaction.pending` and `card_verification.completed` (opt in by listing them explicitly). Send an `events` list to narrow or extend the subscription. An explicit list replaces the default set, so list every type you want:
 
 {/* snippet:set-up-webhooks:choose-events */}
 <CodeTabs syncKey="request-lang">
@@ -743,6 +743,7 @@ Subscription rules:
 
 - Omit `events` to keep the stored subscription unchanged.
 - Send `"events": null` to reset to the default set.
+- `transaction.pending` and `card_verification.completed` are opt-in: they are delivered only when your list names them.
 - An empty list is rejected. To pause deliveries entirely, send `"is_active": false` instead. The configuration and secret survive a pause.
 - Unsubscribed event types are not recorded at all, so they never appear in delivery history.
 
@@ -1076,6 +1077,7 @@ print(String(data: data, encoding: .utf8) ?? "")
         "event_type": "transaction.refunded",
         "transaction_id": 123401,
         "merchant_trans_id": "ORDER-2038",
+        "card_verification_id": null,
         "status": "pending",
         "attempts": 2,
         "created_at": "2026-08-09T13:55:10.000000Z",
@@ -1472,6 +1474,7 @@ print(String(data: data, encoding: .utf8) ?? "")
       "event_type": "transaction.captured",
       "transaction_id": 123456,
       "merchant_trans_id": "ORDER-2041",
+      "card_verification_id": null,
       "status": "delivered",
       "attempts": 2,
       "created_at": "2026-08-09T14:11:58.000000Z",

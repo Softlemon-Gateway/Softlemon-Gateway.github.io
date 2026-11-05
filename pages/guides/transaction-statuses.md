@@ -35,7 +35,7 @@ Use `captured` as the canonical revenue state. `success` indicates a completed s
 
 ## Statuses and webhooks
 
-A webhook fires when a transaction transitions into a status with an event in the table above. `init`, `pending_3ds` and `authenticated_3ds` never emit events. `transaction.pending` is delivered only to endpoints whose event subscription lists it explicitly. Captures, refunds and voids are recorded as their own child transaction rows with their own lifecycles, so a single operation can produce events on both the child row and the parent's roll-up. See the [webhook integration guide](/guides/webhooks) for payload shapes, signatures and delivery semantics.
+A webhook fires when a transaction transitions into a status with an event in the table above. `init`, `pending_3ds` and `authenticated_3ds` never emit events. `transaction.pending` is delivered only to endpoints whose event subscription lists it explicitly. Card verifications are not transactions: a verification reaching a final status emits the opt-in `card_verification.completed` event on its own, see the [event catalogue](/guides/webhooks#event-catalogue). Captures, refunds and voids are recorded as their own child transaction rows with their own lifecycles, so a single operation can produce events on both the child row and the parent's roll-up. See the [webhook integration guide](/guides/webhooks) for payload shapes, signatures and delivery semantics.
 
 ## Payment session statuses
 
