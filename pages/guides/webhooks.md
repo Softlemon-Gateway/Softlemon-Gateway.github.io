@@ -162,7 +162,6 @@ A completed card verification (opt-in, see [Event subscriptions](#event-subscrip
     "api_version": "2026-08-01",
     "data": {
         "card_verification": {
-            "id": 1310,
             "public_id": "tds_01k20c4x9y5r08qwj6dfhm3bzu",
             "amount": 1250,
             "currency": "EUR",
@@ -193,7 +192,7 @@ Field notes:
 | `data.transaction.captured_amount` | Present only on authorization rows (`transaction_type: "auth"`). |
 | `data.transaction.refunded_amount` | Present only on `sale` and `capture` rows. |
 | `data.parent_transaction` | Present only on child-row events (captures, refunds, voids): id, public id, status and amount totals of the parent. |
-| `data.card_verification` | Present only on `card_verification.completed`: the verification's `id`, `public_id` (the `tds_` value returned by `POST /api/v1/3ds/verify` and sent back as `card_verification_id` on the redirect), `amount`, `currency`, `status`, `auth_type` (`frictionless` or `challenge`), `version`, `eci`, `acquirer_provider` and timestamps. Never the authentication values (`cavv`, `xid`, `ds_trans_id`): the gateway attaches those to the payment when you send `card_verification_data.id`. |
+| `data.card_verification` | Present only on `card_verification.completed`: the verification's `public_id` (the `tds_` value returned by `POST /api/v1/3ds/verify` and sent back as `card_verification_id` on the redirect, the only identifier in the event), `amount`, `currency`, `status`, `auth_type` (the flow the acquirer reports, normally `frictionless` or `challenge`, `null` when the verification failed before a flow was chosen), `version`, `eci`, `acquirer_provider` and timestamps. Never the authentication values (`cavv`, `xid`, `ds_trans_id`): the gateway attaches those to the payment when you send `card_verification_data.id`. |
 
 **The contract is additive-by-default: new fields may appear at any time without a version bump. Receivers must ignore unknown fields and unknown event types.** Payloads never contain cardholder data, payment instrument details, PAN, CVV or IP addresses.
 
