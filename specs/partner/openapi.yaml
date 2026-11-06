@@ -85,7 +85,7 @@ components:
   schemas:
     WebhookTransactionEvent:
       type: object
-      description: 'Envelope for every transaction webhook. The contract is additive by default. New fields may appear at any time without a version bump and receivers must ignore unknown fields. Payloads never contain cardholder data. Amounts are integers in minor units.'
+      description: 'Envelope for every transaction webhook. The contract is additive by default. New fields may appear at any time without a version bump and receivers must ignore unknown fields and unknown event types (new opt-in types such as card_verification.completed use their own envelope). Payloads never contain cardholder data. Amounts are integers in minor units.'
       required:
         - id
         - type
@@ -243,6 +243,95 @@ components:
           type: integer
         refunded_amount:
           type: integer
+    WebhookCardVerificationEvent:
+      type: object
+      description: 'Envelope for the card_verification.completed webhook. Same contract as the transaction envelope: additive by default, receivers must ignore unknown fields and unknown event types, payloads never contain cardholder data or authentication values, amounts are integers in minor units.'
+      required:
+        - id
+        - type
+        - created_at
+        - api_version
+        - data
+      properties:
+        id:
+          type: string
+          pattern: '^evt_[0-9a-z]{26}$'
+          description: 'Event id, the idempotency key across retries and replays.'
+        type:
+          type: string
+          const: card_verification.completed
+        created_at:
+          type: string
+          format: date-time
+          description: 'Event creation time (ISO 8601 UTC).'
+        api_version:
+          type: string
+          description: 'Payload schema version.'
+        data:
+          type: object
+          required:
+            - card_verification
+          properties:
+            card_verification:
+              $ref: '#/components/schemas/WebhookCardVerificationSnapshot'
+    WebhookCardVerificationSnapshot:
+      type: object
+      description: 'Snapshot of the verification that reached a final status. The authentication values (cavv, xid, ds_trans_id) are never included: the gateway attaches them to the payment itself when you send `card_verification_data.id`.'
+      required:
+        - public_id
+        - amount
+        - currency
+        - status
+      properties:
+        public_id:
+          type: string
+          pattern: '^tds_[0-9a-z]{26}$'
+          description: "The verification's `tds_` public id, the value returned by `POST /api/v1/3ds/verify` and sent back as `card_verification_id` on the redirect to `auth_url`. It is the only identifier in the event. Pass it as `card_verification_data.id` when creating the payment."
+        amount:
+          type: integer
+          description: 'Verified amount in minor units.'
+        currency:
+          type: string
+          description: 'ISO 4217 currency code.'
+        status:
+          type: string
+          enum:
+            - full_auth
+            - partial_auth
+            - attempt
+            - unavailable
+            - failed
+            - error
+          description: 'The final outcome. `full_auth`, `partial_auth`, `attempt` and `unavailable` allow a payment; `failed` and `error` do not (a payment referencing them is refused with HTTP 422).'
+        auth_type:
+          type:
+            - string
+            - 'null'
+          description: 'The flow the acquirer reports, normally `frictionless` or `challenge`. Null when the verification failed before a flow was chosen.'
+        version:
+          type:
+            - string
+            - 'null'
+          description: '3D Secure protocol version, e.g. `2.2.0`.'
+        eci:
+          type:
+            - string
+            - 'null'
+          description: 'Electronic Commerce Indicator returned by the issuer.'
+        acquirer_provider:
+          type:
+            - string
+            - 'null'
+        created_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+        updated_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
     WebhookPingEvent:
       type: object
       description: 'Test ping payload. Signed like a real event and never persisted.'
@@ -718,6 +807,34 @@ webhooks:
           application/json:
             schema:
               $ref: '#/components/schemas/WebhookTransactionEvent'
+      responses:
+        200:
+          description: 'Any 2xx status acknowledges the delivery.'
+  card_verification.completed:
+    post:
+      summary: 'Card verification completed (opt-in)'
+      description: 'A 3D Secure verification started with `POST /api/v1/3ds/verify` reached a final status (`full_auth`, `partial_auth`, `attempt`, `unavailable`, `failed` or `error`), after a challenge and also for frictionless and immediately failed verifications. Exactly one event per verification. Delivered only to endpoints whose `events` subscription explicitly lists `card_verification.completed`. It is not part of the default event set. Ordering is not guaranteed: the event can arrive before the response to the verify call (frictionless) and before or after the cardholder reaches your `auth_url` (challenge). Correlate on `data.card_verification.public_id`.'
+      parameters:
+        -
+          $ref: '#/components/parameters/XSoftlemonEventId'
+        -
+          $ref: '#/components/parameters/XSoftlemonDeliveryId'
+        -
+          $ref: '#/components/parameters/XSoftlemonEventType'
+        -
+          $ref: '#/components/parameters/XSoftlemonTimestamp'
+        -
+          $ref: '#/components/parameters/XSoftlemonSignature'
+        -
+          $ref: '#/components/parameters/XSoftlemonWebhookVersion'
+        -
+          $ref: '#/components/parameters/XSoftlemonReplay'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookCardVerificationEvent'
       responses:
         200:
           description: 'Any 2xx status acknowledges the delivery.'
@@ -3741,10 +3858,11 @@ paths:
                   example: true
                 events:
                   type: array
-                  description: 'Event types to deliver. Omit to keep the stored subscription. Send null to reset to the default set (every type except transaction.pending). An empty list is rejected.'
+                  description: 'Event types to deliver. Omit to keep the stored subscription. Send null to reset to the default set (every type except the opt-in types transaction.pending and card_verification.completed). An explicit list replaces the default set, so list every type you want. An empty list is rejected.'
                   example:
                     - transaction.captured
                     - transaction.refunded
+                    - card_verification.completed
                   items:
                     type: string
                 merchant_id:
@@ -4366,6 +4484,7 @@ paths:
                         event_type: transaction.captured
                         transaction_id: 123456
                         merchant_trans_id: ORDER-2041
+                        card_verification_id: null
                         status: delivered
                         attempts: 1
                         created_at: '2026-08-09T14:11:58.000000Z'
@@ -4385,6 +4504,7 @@ paths:
                         event_type: transaction.refunded
                         transaction_id: 123401
                         merchant_trans_id: ORDER-2038
+                        card_verification_id: null
                         status: pending
                         attempts: 2
                         created_at: '2026-08-09T13:55:10.000000Z'
@@ -4399,11 +4519,31 @@ paths:
                           duration_ms: 912
                           is_replay: false
                           created_at: '2026-08-09T14:10:11.000000Z'
+                      -
+                        id: evt_01k20bz3v7w6p05nth4bdgk1yr
+                        event_type: card_verification.completed
+                        transaction_id: null
+                        merchant_trans_id: null
+                        card_verification_id: tds_01k20bz1r4m9n02kse3acfj0xq
+                        status: delivered
+                        attempts: 1
+                        created_at: '2026-08-09T13:41:27.000000Z'
+                        delivered_at: '2026-08-09T13:41:28.000000Z'
+                        failed_at: null
+                        last_attempt:
+                          delivery_id: whd_01k20bz3x1y2z3a4b5c6d7e8f9
+                          attempt: 1
+                          status_code: 200
+                          error_reason: null
+                          response_excerpt: null
+                          duration_ms: 142
+                          is_replay: false
+                          created_at: '2026-08-09T13:41:28.000000Z'
                     pagination:
                       current_page: 1
                       last_page: 1
                       per_page: 25
-                      total: 2
+                      total: 3
                 properties:
                   success:
                     type: boolean
@@ -4425,6 +4565,7 @@ paths:
                             event_type: transaction.captured
                             transaction_id: 123456
                             merchant_trans_id: ORDER-2041
+                            card_verification_id: null
                             status: delivered
                             attempts: 1
                             created_at: '2026-08-09T14:11:58.000000Z'
@@ -4444,6 +4585,7 @@ paths:
                             event_type: transaction.refunded
                             transaction_id: 123401
                             merchant_trans_id: ORDER-2038
+                            card_verification_id: null
                             status: pending
                             attempts: 2
                             created_at: '2026-08-09T13:55:10.000000Z'
@@ -4458,6 +4600,26 @@ paths:
                               duration_ms: 912
                               is_replay: false
                               created_at: '2026-08-09T14:10:11.000000Z'
+                          -
+                            id: evt_01k20bz3v7w6p05nth4bdgk1yr
+                            event_type: card_verification.completed
+                            transaction_id: null
+                            merchant_trans_id: null
+                            card_verification_id: tds_01k20bz1r4m9n02kse3acfj0xq
+                            status: delivered
+                            attempts: 1
+                            created_at: '2026-08-09T13:41:27.000000Z'
+                            delivered_at: '2026-08-09T13:41:28.000000Z'
+                            failed_at: null
+                            last_attempt:
+                              delivery_id: whd_01k20bz3x1y2z3a4b5c6d7e8f9
+                              attempt: 1
+                              status_code: 200
+                              error_reason: null
+                              response_excerpt: null
+                              duration_ms: 142
+                              is_replay: false
+                              created_at: '2026-08-09T13:41:28.000000Z'
                         items:
                           type: object
                           properties:
@@ -4473,6 +4635,9 @@ paths:
                             merchant_trans_id:
                               type: string
                               example: ORDER-2041
+                            card_verification_id:
+                              type: string
+                              example: null
                             status:
                               type: string
                               example: delivered
@@ -4529,7 +4694,7 @@ paths:
                             example: 25
                           total:
                             type: integer
-                            example: 2
+                            example: 3
         400:
           description: 'A partner API key omitted `merchant_id` or referenced a merchant that is not linked to it.'
           content:
@@ -4635,6 +4800,7 @@ paths:
                     event_type: transaction.captured
                     transaction_id: 123456
                     merchant_trans_id: ORDER-2041
+                    card_verification_id: null
                     status: delivered
                     attempts: 2
                     payload:
@@ -4705,6 +4871,9 @@ paths:
                       merchant_trans_id:
                         type: string
                         example: ORDER-2041
+                      card_verification_id:
+                        type: string
+                        example: null
                       status:
                         type: string
                         example: delivered
