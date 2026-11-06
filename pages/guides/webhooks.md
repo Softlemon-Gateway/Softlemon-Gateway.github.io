@@ -1,6 +1,6 @@
 # Merchant Transaction Webhooks
 
-This document explains the outbound webhooks the gateway sends to merchant systems when transactions change state. Part 1 is written for non-technical readers (operations, merchant support). Part 2 is the integration reference for the developers building a webhook receiver.
+This document explains the outbound webhooks the gateway sends to merchant systems when transactions change state and, for endpoints that opt in, when a card verification completes. Part 1 is written for non-technical readers (operations, merchant support). Part 2 is the integration reference for the developers building a webhook receiver.
 
 ---
 
@@ -60,9 +60,10 @@ The `type` field of every event (also sent as the `X-Softlemon-Event-Type` heade
 | `transaction.cancelled` | A transaction is cancelled, including risk rejections and decline-cooldown blocks. Duplicate paper-trail rows (already rejected synchronously with HTTP 409) never emit events. |
 | `transaction.chargeback` | A chargeback is recorded. |
 | `transaction.pending` | **Opt-in only** (see [Event subscriptions](#event-subscriptions)): a transaction enters `pending`. |
+| `card_verification.completed` | **Opt-in only** (see [Event subscriptions](#event-subscriptions)): a 3D Secure verification started with `POST /api/v1/3ds/verify` reaches a final status (`full_auth`, `partial_auth`, `attempt`, `unavailable`, `failed` or `error`), after a challenge and also for frictionless and immediately failed verifications. Exactly one event per verification. |
 | `ping` | Test delivery triggered by an administrator. Signed and structured like a real event but never persisted. `data` contains only `merchant_id`. |
 
-The **default subscription** covers every type except `transaction.pending` (opt-in) and `ping` (test-only, cannot be subscribed).
+The **default subscription** covers every type except the opt-in types `transaction.pending` and `card_verification.completed`, and `ping` (test-only, cannot be subscribed).
 
 The transaction `status` values themselves are documented in `docs/guides/transaction-statuses.md`.
 
@@ -151,6 +152,31 @@ A partial refund (child transaction plus parent summary):
 }
 ```
 
+A completed card verification (opt-in, see [Event subscriptions](#event-subscriptions)):
+
+```json
+{
+    "id": "evt_01k20c4x9y5r08qwj6dfhm3bzt",
+    "type": "card_verification.completed",
+    "created_at": "2026-11-05T14:12:03Z",
+    "api_version": "2026-08-01",
+    "data": {
+        "card_verification": {
+            "public_id": "tds_01k20c4x9y5r08qwj6dfhm3bzu",
+            "amount": 1250,
+            "currency": "EUR",
+            "status": "full_auth",
+            "auth_type": "challenge",
+            "version": "2.2.0",
+            "eci": "05",
+            "acquirer_provider": "qashpay",
+            "created_at": "2026-11-05T14:11:40Z",
+            "updated_at": "2026-11-05T14:12:03Z"
+        }
+    }
+}
+```
+
 Field notes:
 
 | Field | Notes |
@@ -166,8 +192,9 @@ Field notes:
 | `data.transaction.captured_amount` | Present only on authorization rows (`transaction_type: "auth"`). |
 | `data.transaction.refunded_amount` | Present only on `sale` and `capture` rows. |
 | `data.parent_transaction` | Present only on child-row events (captures, refunds, voids): id, public id, status and amount totals of the parent. |
+| `data.card_verification` | Present only on `card_verification.completed`: the verification's `public_id` (the `tds_` value returned by `POST /api/v1/3ds/verify` and sent back as `card_verification_id` on the redirect, the only identifier in the event), `amount`, `currency`, `status`, `auth_type` (the flow the acquirer reports, normally `frictionless` or `challenge`, `null` when the verification failed before a flow was chosen), `version`, `eci`, `acquirer_provider` and timestamps. Never the authentication values (`cavv`, `xid`, `ds_trans_id`): the gateway attaches those to the payment when you send `card_verification_data.id`. |
 
-**The contract is additive-by-default: new fields may appear at any time without a version bump. Receivers must ignore unknown fields.** Payloads never contain cardholder data, payment instrument details, PAN, CVV or IP addresses.
+**The contract is additive-by-default: new fields may appear at any time without a version bump. Receivers must ignore unknown fields and unknown event types.** Payloads never contain cardholder data, payment instrument details, PAN, CVV or IP addresses.
 
 ### Delivery headers
 
@@ -335,6 +362,7 @@ Delivery is at-least-once: a recorded event whose delivery was interrupted (for 
 
 - **Deduplicate on `X-Softlemon-Event-Id`** (equal to payload `id`). Retries, sweeper re-dispatches and replays all reuse it. Only `X-Softlemon-Delivery-Id` changes per attempt.
 - **Ordering is not guaranteed.** Retry backoff means a later event can arrive before an earlier one's retry succeeds. Reconcile using the payload `created_at`, the transaction `status` and `related_trans_id` links rather than arrival order.
+- **`card_verification.completed` is not ordered against the verify response or the browser redirect.** For a frictionless verification the event can arrive before the HTTP response to `POST /api/v1/3ds/verify`; after a challenge it can arrive before or after the cardholder reaches your `auth_url`. Correlate on `data.card_verification.public_id` and never depend on the redirect having happened first.
 
 ### Replays
 
@@ -348,8 +376,8 @@ The signing secret is generated by the gateway (`whsec_` + 64 hex chars), stored
 
 Each endpoint has an optional `events` list controlling which types are delivered:
 
-- `events: null` (the default): every type except `transaction.pending` and `ping`.
-- An explicit list: only the listed types. `transaction.pending` must be listed explicitly to be received. `ping` can never be subscribed (it is delivered only via the admin test action).
+- `events: null` (the default): every type except the opt-in types `transaction.pending` and `card_verification.completed`, and `ping`.
+- An explicit list: only the listed types, and it replaces the default set, so list every type you want. `transaction.pending` and `card_verification.completed` must be listed explicitly to be received. `ping` can never be subscribed (it is delivered only via the admin test action).
 - An empty list is rejected. To pause deliveries entirely, deactivate the endpoint instead.
 
 Unsubscribed event types are not recorded at all. The delivery history only ever contains events the gateway actually tried to send.
@@ -360,7 +388,7 @@ Unsubscribed event types are not recorded at all. The delivery history only ever
 - Respond 2xx within 10 seconds. Acknowledge first, process asynchronously.
 - Never respond with a redirect.
 - Verify the signature on the raw body before trusting or parsing the payload.
-- Process idempotently by event id. Tolerate out-of-order arrival and unknown payload fields.
+- Process idempotently by event id. Tolerate out-of-order arrival, unknown payload fields and unknown event types.
 
 ### Test coverage
 

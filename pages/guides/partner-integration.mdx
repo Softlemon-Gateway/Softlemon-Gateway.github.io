@@ -505,7 +505,7 @@ The response contains a `transactions` array and a `pagination` object. Reconcil
 
 ## Step 4: Process a payment for a merchant
 
-Partner keys can call the Merchant API payment endpoints by adding `merchant_id` to the request body. The flow is the same as [Accept a card payment](/guides/accept-a-payment) with one extra field at each step.
+Partner keys can call the Merchant API payment endpoints by adding `merchant_id` to the request body. The flow is the same as [Accept a card payment](/guides/accept-a-payment) with one extra field at each step. The merchant's webhook endpoint can subscribe to the opt-in `card_verification.completed` event to receive the 3DS outcome server side instead of relying on the browser redirect to `auth_url` (see [event subscriptions](/guides/webhooks#event-subscriptions)).
 
 3DS verification for the merchant:
 
